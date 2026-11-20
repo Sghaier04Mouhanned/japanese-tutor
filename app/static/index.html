@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Japanese Tutor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home"><span class="brand-jp" lang="ja">日本語</span> Tutor</a>
+    <nav class="nav">
+      <a href="#home" data-view="home">Home</a>
+      <a href="#learn" data-view="learn">Learn</a>
+      <a href="#review" data-view="review">Review <span class="badge" id="due-badge" hidden></span></a>
+      <a href="#practice" data-view="practice">Practice</a>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <!-- HOME -->
+    <section class="view" id="view-home">
+      <div class="stats">
+        <div class="stat stat-primary">
+          <div class="stat-label">Due now</div>
+          <div class="stat-value" id="stat-due">–</div>
+          <a class="btn btn-primary" href="#review" id="stat-due-btn" hidden>Start review</a>
+          <div class="stat-sub" id="stat-next"></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Streak</div>
+          <div class="stat-value" id="stat-streak">–</div>
+          <div class="stat-sub">days in a row</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Today</div>
+          <div class="stat-value" id="stat-today">–</div>
+          <div class="stat-sub" id="stat-accuracy">reviews</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Kana chart</h2>
+          <div class="segmented" data-script-toggle="home">
+            <button data-script="hiragana" class="active" lang="ja">ひらがな</button>
+            <button data-script="katakana" lang="ja">カタカナ</button>
+          </div>
+        </div>
+        <div class="progress-line">
+          <div class="progress"><div class="progress-fill" id="chart-progress"></div></div>
+          <span id="chart-progress-label"></span>
+        </div>
+        <div class="legend">
+          <span><i class="dot locked"></i>Not learned</span>
+          <span><i class="dot learning"></i>Learning</span>
+          <span><i class="dot known"></i>Known</span>
+          <span><i class="dot mastered"></i>Mastered</span>
+        </div>
+        <div id="kana-chart" class="chart"></div>
+        <p class="hint">Tap any kana to hear it.</p>
+      </div>
+    </section>
+
+    <!-- LEARN -->
+    <section class="view" id="view-learn" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Learn new kana</h2>
+          <div class="segmented" data-script-toggle="learn">
+            <button data-script="hiragana" class="active" lang="ja">ひらがな</button>
+            <button data-script="katakana" lang="ja">カタカナ</button>
+          </div>
+        </div>
+        <div id="learn-body"></div>
+      </div>
+    </section>
+
+    <!-- REVIEW -->
+    <section class="view" id="view-review" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Review</h2>
+          <label class="toggle"><input type="checkbox" id="opt-autoplay" checked> Play sound after answering</label>
+        </div>
+        <div id="review-body"></div>
+      </div>
+    </section>
+
+    <!-- PRACTICE -->
+    <section class="view" id="view-practice" hidden>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Free practice</h2>
+          <span class="muted">Doesn't affect your review schedule</span>
+        </div>
+        <div id="practice-body"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
