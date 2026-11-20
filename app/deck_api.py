@@ -21,7 +21,7 @@ def _has_kanji(text: str) -> bool:
 # ---------- dictionary ----------
 
 @router.get("/dict/lookup")
-def dict_lookup(q: str, k: str | None = None, next: str = ""):
+def dict_lookup(q: str, k: str | None = None, next: str = "", p: str | None = None):
     """Look up a clicked word. `next` holds the following words' text so that
     図書 + 館 can be found as 図書館; the longest match wins."""
     if not dictionary.available():
@@ -35,7 +35,7 @@ def dict_lookup(q: str, k: str | None = None, next: str = ""):
             matched = candidate
             break
     if not entries:
-        entries = dictionary.lookup(q, k)
+        entries = dictionary.lookup(q, k, pos=p)
 
     with connect() as conn:
         saved = {r["entry_id"] for r in conn.execute("SELECT entry_id FROM vocab WHERE entry_id IS NOT NULL")}

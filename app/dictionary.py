@@ -108,9 +108,20 @@ def available() -> bool:
     return _connection() is not None
 
 
-def lookup(word: str, reading: str | None = None, limit: int = 5) -> list[dict]:
+# Our part-of-speech labels (from furigana.py) -> words JMdict uses for them.
+_POS_HINTS = {
+    "noun": ("noun",), "pronoun": ("pronoun",), "verb": ("verb",),
+    "i-adjective": ("adjective (keiyoushi)",), "na-adjective": ("keiyodoshi",),
+    "adverb": ("adverb",), "particle": ("particle",), "auxiliary": ("auxiliary", "copula"),
+    "suffix": ("suffix",), "prefix": ("prefix",), "interjection": ("interjection",),
+    "pre-noun": ("pre-noun",), "conjunction": ("conjunction",),
+}
+
+
+def lookup(word: str, reading: str | None = None, limit: int = 5, pos: str | None = None) -> list[dict]:
     """Entries whose kanji or kana form is exactly `word`, best match first.
 
+    `pos` keeps grammar words straight (the particle は, not 葉 "leaf");
     `reading` (hiragana) breaks ties between homographs: 生 as せい vs なま.
     """
     conn = _connection()
@@ -122,11 +133,15 @@ def lookup(word: str, reading: str | None = None, limit: int = 5) -> list[dict]:
         (word,),
     ).fetchall()
     entries = [json.loads(r["data"]) for r in rows]
-    if reading:
-        hira = "".join(chr(ord(c) - 0x60) if "ァ" <= c <= "ヶ" else c for c in reading)
-        entries.sort(key=lambda e: not any(
-            hira == "".join(chr(ord(c) - 0x60) if "ァ" <= c <= "ヶ" else c for c in r)
-            for r in e["readings"]))
+    to_hira = lambda s: "".join(chr(ord(c) - 0x60) if "ァ" <= c <= "ヶ" else c for c in s)  # noqa: E731
+    hints = _POS_HINTS.get(pos or "", ())
+
+    def rank(e: dict) -> tuple[bool, bool]:
+        pos_ok = not hints or any(h in p for s in e["senses"] for p in s["pos"] for h in hints)
+        reading_ok = not reading or any(to_hira(reading) == to_hira(r) for r in e["readings"])
+        return (not pos_ok, not reading_ok)  # sort is stable, so frequency order is kept within ties
+
+    entries.sort(key=rank)
     return entries[:limit]
 
 

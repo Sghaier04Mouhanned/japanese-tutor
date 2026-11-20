@@ -1123,12 +1123,12 @@ async function openWordPopup(span, seg, next) {
   document.body.append(wordPopup);
   placePopup(span);
 
-  const conjugated = seg.t !== seg.b && el("p", { class: "muted word-form" },
-    el("span", { lang: "ja" }, seg.t), ` is a form of `, el("span", { lang: "ja" }, seg.b));
+  const conjugated = seg.t !== seg.b ? el("p", { class: "muted word-form" },
+    el("span", { lang: "ja" }, seg.t), ` is a form of `, el("span", { lang: "ja" }, seg.b)) : "";
 
   let data;
   try {
-    const params = new URLSearchParams({ q: seg.b, k: seg.k || "", next });
+    const params = new URLSearchParams({ q: seg.b, k: seg.k || "", next, p: seg.p || "" });
     data = await api.get(`/api/dict/lookup?${params}`);
   } catch (err) {
     body.replaceChildren(el("p", { class: "feedback bad" }, err.message));
@@ -1154,8 +1154,10 @@ async function openWordPopup(span, seg, next) {
   body.replaceChildren(
     conjugated,
     ...data.entries.map(entry => {
-      const main = entry.kanji.find(k => k === data.matched) || entry.kanji[0] || entry.readings[0];
-      const reading = entry.kanji.length ? entry.readings[0] : null;
+      // Show the spelling that was clicked: ます stays ます, not its rare kanji form 〼.
+      const clicked = [...entry.kanji, ...entry.readings].includes(data.matched) ? data.matched : null;
+      const main = clicked || entry.kanji[0] || entry.readings[0];
+      const reading = entry.readings.includes(main) ? null : entry.readings[0];
       const save = el("button", { class: "btn btn-primary", type: "button", disabled: entry.saved }, entry.saved ? "Saved ✓" : "+ Save word");
       save.addEventListener("click", async () => {
         save.disabled = true;
