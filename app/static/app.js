@@ -19,21 +19,21 @@ function el(tag, attrs = {}, ...children) {
   return node;
 }
 
+async function request(method, path, body) {
+  const r = await fetch(path, body === undefined ? { method } : {
+    method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
+  return r.json();
+}
+
 const api = {
-  async get(path) {
-    const r = await fetch(path);
-    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
-    return r.json();
-  },
-  async post(path, body) {
-    const r = await fetch(path, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
-    return r.json();
-  },
+  get: path => request("GET", path),
+  post: (path, body) => request("POST", path, body),
+  put: (path, body) => request("PUT", path, body),
+  delete: path => request("DELETE", path),
 };
 
 // Per-browser conveniences only (chosen tab, toggles). Real progress lives in SQLite.
@@ -124,6 +124,7 @@ function later(fn, ms) {
 
 const views = {
   home: renderHome,
+  tutor: renderTutor,
   learn: renderLearn,
   review: renderReview,
   practice: renderPractice,
@@ -713,6 +714,345 @@ function runPractice(body, pool, mode) {
   }
 
   nextQuestion();
+}
+
+/* ================= tutor chat ================= */
+
+const STARTERS = [
+  ["Office greetings", "おはようございます and friends",
+    "Teach me the basic greetings I'd use at the office, one at a time."],
+  ["My self-introduction", "自己紹介 for a new job",
+    "Help me build a simple self-introduction (jikoshoukai) for my first day at a Japanese company."],
+  ["です and ます", "The polite form, simply explained",
+    "Explain です and ます simply, with a couple of work examples."],
+  ["Quiz me", "Using the kana I've learned",
+    "Give me a short quiz using only the kana I've learned so far."],
+];
+
+const tutor = { chatId: prefs.get("chat.current", null), busy: false, bound: false };
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+// Segments come from the server: [{t: "会社", r: "かいしゃ"}, {t: "です"}].
+// Everything is escaped first; the light Markdown pass only ever adds tags.
+function renderRich(segments) {
+  const html = segments.map(s => s.r
+    ? `<ruby>${escapeHtml(s.t)}<rt>${escapeHtml(s.r)}</rt></ruby>`
+    : escapeHtml(s.t)).join("");
+  return markdown(html);
+}
+
+function markdown(html) {
+  const inline = s => s
+    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+  return html.trim().split(/\n{2,}/).map(block => {
+    const lines = block.split("\n");
+    if (lines.every(l => /^\s*[-*•]\s+/.test(l))) {
+      return `<ul>${lines.map(l => `<li>${inline(l.replace(/^\s*[-*•]\s+/, ""))}</li>`).join("")}</ul>`;
+    }
+    // A paragraph that ends in a list: split it so the bullets still render.
+    const firstBullet = lines.findIndex(l => /^\s*[-*•]\s+/.test(l));
+    if (firstBullet > 0 && lines.slice(firstBullet).every(l => /^\s*[-*•]\s+/.test(l))) {
+      return `<p>${inline(lines.slice(0, firstBullet).join("<br>"))}</p>` +
+        `<ul>${lines.slice(firstBullet).map(l => `<li>${inline(l.replace(/^\s*[-*•]\s+/, ""))}</li>`).join("")}</ul>`;
+    }
+    return `<p>${inline(lines.join("<br>"))}</p>`;
+  }).join("");
+}
+
+function japaneseOnly(text) {
+  const runs = text.match(/[぀-ヿ㐀-鿿々ー、。！？「」]+/g) || [];
+  return runs.filter(r => /[぀-ヿ㐀-鿿]/.test(r)).join("、");
+}
+
+function messageEl(msg) {
+  const bubble = el("div", { class: "bubble" });
+  bubble.innerHTML = renderRich(msg.segments || [{ t: msg.content }]);
+  const isAssistant = msg.role === "assistant";
+  const jp = isAssistant ? japaneseOnly(msg.content) : "";
+  return el("div", { class: `msg msg-${msg.role}`, "data-id": msg.id ?? "" },
+    isAssistant && el("div", { class: "avatar", lang: "ja", title: msg.model || "" }, "先"),
+    el("div", {},
+      bubble,
+      (msg.warnings || []).map(warningEl),
+      jp && el("div", { class: "msg-actions" },
+        el("button", { type: "button", onclick: () => speak(jp), title: "Read the Japanese aloud" }, "🔊 Listen")),
+    ),
+  );
+}
+
+// The app checked the tutor's kana against its romaji and they disagree.
+function warningEl(w) {
+  return el("div", { class: "check-warning" },
+    el("strong", {}, "⚠ Kana and romaji don't match. "),
+    el("span", { lang: "ja" }, w.kana), " reads as “", w.expected, "”, but Sensei wrote “", w.written, "”. ",
+    el("button", {
+      type: "button",
+      onclick: () => sendMessage(
+        `In your last message you wrote ${w.kana} (${w.written}), but the kana reads "${w.expected}". ` +
+        "Which one is correct? Please give me the corrected version."),
+    }, "Ask Sensei to fix it"),
+  );
+}
+
+function scrollMessages(force = false) {
+  const box = $("#messages");
+  if (force || box.scrollHeight - box.scrollTop - box.clientHeight < 120) box.scrollTop = box.scrollHeight;
+}
+
+async function renderTutor() {
+  bindTutorOnce();
+  const furigana = $("#opt-furigana");
+  furigana.checked = prefs.get("furigana", true);
+  $("#messages").classList.toggle("no-furigana", !furigana.checked);
+
+  await Promise.all([loadChatList(), refreshLlmLabel()]);
+  if (tutor.chatId) await openChat(tutor.chatId);
+  else showChatEmpty();
+  $("#composer-input").focus();
+}
+
+function bindTutorOnce() {
+  if (tutor.bound) return;
+  tutor.bound = true;
+
+  const input = $("#composer-input");
+  const autosize = () => { input.style.height = "auto"; input.style.height = `${input.scrollHeight}px`; };
+  input.addEventListener("input", autosize);
+  input.addEventListener("keydown", e => {
+    // isComposing: Enter is confirming a Japanese IME conversion, not sending.
+    if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
+      e.preventDefault();
+      $("#composer").requestSubmit();
+    }
+  });
+  $("#composer").addEventListener("submit", e => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text || tutor.busy) return;
+    input.value = "";
+    autosize();
+    sendMessage(text);
+  });
+
+  $("#opt-furigana").addEventListener("change", e => {
+    prefs.set("furigana", e.target.checked);
+    $("#messages").classList.toggle("no-furigana", !e.target.checked);
+  });
+  $("#chat-new").addEventListener("click", () => {
+    tutor.chatId = null;
+    prefs.set("chat.current", null);
+    showChatEmpty();
+    loadChatList();
+    $("#chat-list").classList.remove("open");
+    input.focus();
+  });
+  $("#chat-list-toggle").addEventListener("click", () => $("#chat-list").classList.toggle("open"));
+  $("#llm-settings-btn").addEventListener("click", toggleLlmSettings);
+}
+
+async function loadChatList() {
+  const { chats } = await api.get("/api/chats");
+  $("#chat-items").replaceChildren(...chats.map(c =>
+    el("div", {
+      class: `chat-item${c.id === tutor.chatId ? " active" : ""}`,
+      onclick: () => { openChat(c.id); $("#chat-list").classList.remove("open"); },
+    },
+      el("span", { title: c.title }, c.title),
+      el("button", {
+        type: "button", title: "Delete chat", "aria-label": "Delete chat",
+        onclick: async e => {
+          e.stopPropagation();
+          if (!confirm(`Delete “${c.title}”? This can't be undone.`)) return;
+          await api.delete(`/api/chats/${c.id}`);
+          if (c.id === tutor.chatId) { tutor.chatId = null; prefs.set("chat.current", null); showChatEmpty(); }
+          loadChatList();
+        },
+      }, "×"),
+    )));
+}
+
+async function openChat(id) {
+  let chat;
+  try { chat = await api.get(`/api/chats/${id}`); }
+  catch { tutor.chatId = null; prefs.set("chat.current", null); return showChatEmpty(); }
+  tutor.chatId = id;
+  prefs.set("chat.current", id);
+  $("#chat-title").textContent = chat.title;
+  for (const item of document.querySelectorAll(".chat-item")) item.classList.remove("active");
+  loadChatList();
+  if (!chat.messages.length) return showChatEmpty();
+  $("#messages").replaceChildren(...chat.messages.map(messageEl));
+  const last = chat.messages[chat.messages.length - 1];
+  if (last.role === "user") $("#messages").append(errorEl("This message has no reply yet."));
+  scrollMessages(true);
+}
+
+function showChatEmpty() {
+  $("#chat-title").textContent = "Sensei";
+  $("#messages").replaceChildren(el("div", { class: "chat-empty" },
+    el("div", { class: "avatar", lang: "ja" }, "先"),
+    el("h2", {}, "こんにちは! I'm your Japanese tutor."),
+    el("p", {}, "Ask me anything about Japanese, or try writing a sentence and I'll correct it. " +
+      "I know which kana you've learned, so I'll keep things at your level."),
+    el("div", { class: "starters" }, STARTERS.map(([title, sub, prompt]) =>
+      el("button", { class: "starter", type: "button", onclick: () => sendMessage(prompt) },
+        title, el("small", { lang: "ja" }, sub)))),
+  ));
+}
+
+function errorEl(message) {
+  return el("div", { class: "msg msg-assistant msg-error" },
+    el("div", { class: "avatar", lang: "ja" }, "先"),
+    el("div", {},
+      el("div", { class: "bubble" }, message),
+      el("div", { class: "msg-actions" },
+        el("button", { type: "button", onclick: e => { e.target.closest(".msg").remove(); sendMessage(null); } },
+          "↻ Try again"))));
+}
+
+async function sendMessage(text) {
+  if (tutor.busy) return;
+  tutor.busy = true;
+  $("#composer-send").disabled = true;
+  const box = $("#messages");
+
+  try {
+    if (!tutor.chatId) {
+      const chat = await api.post("/api/chats", {});
+      tutor.chatId = chat.id;
+      prefs.set("chat.current", chat.id);
+      box.replaceChildren();
+    }
+
+    let userEl = null;
+    if (text) {
+      userEl = messageEl({ role: "user", content: text });
+      box.append(userEl);
+    }
+    const bubble = el("div", { class: "bubble" }, el("span", { class: "typing" }, el("i"), el("i"), el("i")));
+    const pending = el("div", { class: "msg msg-assistant" },
+      el("div", { class: "avatar", lang: "ja" }, "先"), el("div", {}, bubble));
+    box.append(pending);
+    scrollMessages(true);
+
+    const res = await fetch(`/api/chats/${tutor.chatId}/messages`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content: text }),
+    });
+    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || res.statusText);
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let reply = "";
+
+    const handle = event => {
+      if (event.type === "user" && userEl) {
+        const fresh = messageEl(event.message);
+        userEl.replaceWith(fresh);
+        userEl = fresh;
+      } else if (event.type === "notice") {
+        pending.before(el("div", { class: "notice" }, event.message));
+      } else if (event.type === "delta") {
+        reply += event.text;
+        bubble.innerHTML = renderRich([{ t: reply }]);
+        scrollMessages();
+      } else if (event.type === "done") {
+        pending.replaceWith(messageEl(event.message));
+        scrollMessages();
+      } else if (event.type === "error") {
+        pending.replaceWith(errorEl(event.message));
+        scrollMessages();
+      }
+    };
+
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      let cut;
+      while ((cut = buffer.indexOf("\n\n")) !== -1) {
+        const chunk = buffer.slice(0, cut);
+        buffer = buffer.slice(cut + 2);
+        if (chunk.startsWith("data: ")) handle(JSON.parse(chunk.slice(6)));
+      }
+    }
+  } catch (err) {
+    box.querySelector(".msg-assistant:last-child .typing")?.closest(".msg")?.remove();
+    box.append(errorEl(`Couldn't reach the tutor: ${err.message}`));
+  } finally {
+    tutor.busy = false;
+    $("#composer-send").disabled = false;
+    loadChatList().then(() => {
+      const active = $(".chat-item.active span");
+      if (active) $("#chat-title").textContent = active.textContent;
+    });
+  }
+}
+
+/* AI provider settings */
+
+async function refreshLlmLabel() {
+  const status = await api.get("/api/llm/status");
+  const provider = status.providers.find(p => p.id === status.current.provider);
+  $("#llm-label").textContent = provider
+    ? `${provider.label}${status.current.model ? ` · ${status.current.model}` : ""}`
+    : "";
+  return status;
+}
+
+async function toggleLlmSettings() {
+  const panel = $("#llm-settings");
+  if (!panel.hidden) { panel.hidden = true; return; }
+  panel.hidden = false;
+
+  const status = await refreshLlmLabel();
+  const providerSel = el("select", {}, status.providers.map(p =>
+    el("option", { value: p.id, selected: p.id === status.current.provider },
+      p.configured ? p.label : `${p.label} — no API key`)));
+  const modelSel = el("select", {});
+  const info = el("div", { class: "status muted" });
+  const save = el("button", { class: "btn btn-primary", type: "button" }, "Save");
+
+  async function loadModels() {
+    modelSel.replaceChildren(el("option", {}, "Loading…"));
+    save.disabled = true;
+    info.textContent = "";
+    try {
+      const { models } = await api.get(`/api/llm/models?provider=${providerSel.value}`);
+      if (!models.length) throw new Error("No models found.");
+      const current = providerSel.value === status.current.provider ? status.current.model : null;
+      modelSel.replaceChildren(...models.map(m => el("option", { value: m, selected: m === current }, m)));
+      save.disabled = false;
+      info.textContent = providerSel.value === "ollama"
+        ? "Small models (3–4B) fit your GPU best. Their Japanese is weaker than Gemini's."
+        : "Flash models are fast and have the most generous free limits.";
+    } catch (err) {
+      modelSel.replaceChildren();
+      info.textContent = err.message;
+      info.className = "status feedback bad";
+    }
+  }
+
+  providerSel.addEventListener("change", loadModels);
+  save.addEventListener("click", async () => {
+    await api.put("/api/llm/settings", { provider: providerSel.value, model: modelSel.value });
+    await refreshLlmLabel();
+    panel.hidden = true;
+  });
+
+  panel.replaceChildren(
+    el("label", {}, "Provider", providerSel),
+    el("label", {}, "Model", modelSel),
+    save,
+    info,
+  );
+  loadModels();
 }
 
 /* ================= boot ================= */
