@@ -128,6 +128,7 @@ const views = {
   learn: renderLearn,
   review: renderReview,
   practice: renderPractice,
+  notebook: renderNotebook,
 };
 
 function route() {
@@ -137,9 +138,11 @@ function route() {
   for (const section of document.querySelectorAll(".view")) {
     section.hidden = section.id !== `view-${name}`;
   }
+  const navName = name === "practice" ? "learn" : name; // Practice lives under Kana
   for (const link of document.querySelectorAll(".nav a")) {
-    link.classList.toggle("active", link.dataset.view === name);
+    link.classList.toggle("active", link.dataset.view === navName);
   }
+  closeWordPopup();
   views[name]().catch(showError);
   if (name !== "home") refreshBadge();
 }
@@ -416,11 +419,132 @@ async function renderReview() {
   const session = { reviewed: 0, correct: 0 };
   await loadBatch();
 
+  // Kana first (quick, typed), then saved words and mistakes (self-graded).
   async function loadBatch() {
-    const data = await api.get("/api/kana/review");
-    updateBadge(data.due_count);
-    if (!data.cards.length) return finished(data.next_due);
-    showCard(data.cards, 0, data.due_count);
+    const [kanaData, deckData] = await Promise.all([api.get("/api/kana/review"), api.get("/api/deck/review")]);
+    const total = kanaData.due_count + deckData.due_count;
+    updateBadge(total);
+    if (kanaData.cards.length) return showCard(kanaData.cards, 0, total);
+    if (deckData.cards.length) return showDeckCard(deckData.cards, 0, deckData.due_count);
+    const upcoming = [kanaData.next_due, deckData.next_due].filter(Boolean);
+    finished(upcoming.length ? Math.min(...upcoming) : null);
+  }
+
+  function sessionBar(remaining) {
+    return el("div", { class: "session-bar" },
+      el("span", {}, `${remaining} left`),
+      el("div", { class: "progress" },
+        el("div", { class: "progress-fill",
+          style: `width:${(session.reviewed / (session.reviewed + remaining)) * 100}%` })),
+      el("span", {}, `${session.reviewed} done`));
+  }
+
+  function showDeckCard(cards, idx, dueCount) {
+    if (idx >= cards.length) return loadBatch();
+    const card = cards[idx];
+    const remaining = dueCount - idx;
+    const shownAt = performance.now();
+    const stage = el("div", { class: "card-stage" });
+    let keyHandler = null;
+    const setKeys = fn => {
+      if (keyHandler) document.removeEventListener("keydown", keyHandler);
+      keyHandler = fn;
+      if (fn) document.addEventListener("keydown", fn);
+    };
+    onCleanup(() => setKeys(null));
+
+    async function grade(rating) {
+      setKeys(null);
+      stage.querySelectorAll("button").forEach(b => { b.disabled = true; });
+      await api.post("/api/deck/review", {
+        card_id: card.id, rating, elapsed_ms: Math.round(performance.now() - shownAt),
+      });
+      session.reviewed++;
+      if (rating !== "again") session.correct++;
+      updateBadge(Math.max(0, remaining - 1));
+      showDeckCard(cards, idx + 1, dueCount);
+    }
+
+    const gradeButtons = () => el("div", { class: "grade-row" },
+      [["again", "Again", "forgot"], ["hard", "Hard", "barely"], ["good", "Good", "knew it"], ["easy", "Easy", "instant"]]
+        .map(([r, label, hint], n) => el("button", { class: `btn grade-${r}`, type: "button", onclick: () => grade(r) },
+          label, el("small", {}, `${n + 1} · ${hint}`))));
+    const gradeKeys = e => {
+      const r = ["again", "hard", "good", "easy"][Number(e.key) - 1];
+      if (r && e.target.tagName !== "TEXTAREA") grade(r);
+    };
+
+    if (card.kind === "vocab") {
+      const reveal = el("div", { class: "reveal" });
+      const showAnswer = (readingOk = null) => {
+        reveal.replaceChildren(
+          el("div", { class: "word-head" },
+            el("span", { class: "word-reading", lang: "ja", style: "font-size:1.3rem" }, card.reading),
+            speakButton(card.reading)),
+          el("div", { class: "meaning" }, card.meaning),
+          readingOk === false
+            ? el("div", { class: "btn-row" }, el("button", { class: "btn btn-primary", type: "button",
+                onclick: () => grade("again") }, "Continue"))
+            : gradeButtons());
+        speak(card.reading);
+        setKeys(readingOk === false
+          ? e => { if (e.key === "Enter") { e.preventDefault(); grade("again"); } }
+          : gradeKeys);
+      };
+
+      stage.append(
+        el("div", { class: "prompt-label" }, card.ask_reading ? "How do you read this word, and what does it mean?" : "What does this word mean?"),
+        el("div", { class: "big-word", lang: "ja" }, card.word));
+
+      if (card.ask_reading) {
+        const input = el("input", { class: "answer", autocomplete: "off", autocapitalize: "off",
+          spellcheck: "false", placeholder: "reading in romaji", "aria-label": "Reading in romaji" });
+        const feedback = el("div", { class: "feedback" });
+        input.addEventListener("keydown", async e => {
+          if (e.key !== "Enter" || input.readOnly || !input.value.trim()) return;
+          e.preventDefault();
+          e.stopPropagation(); // don't let this Enter also press "Continue"
+          input.readOnly = true;
+          const { correct } = await api.post("/api/deck/check-reading", { reading: card.reading, answer: input.value });
+          input.classList.add(correct ? "ok" : "bad");
+          feedback.className = `feedback ${correct ? "ok" : "bad"}`;
+          feedback.textContent = correct ? "✓ Reading correct. Did you know the meaning?" : "✗ Not quite. It comes back soon.";
+          showAnswer(correct);
+        });
+        stage.append(input, feedback, reveal);
+        later(() => input.focus(), 0);
+      } else {
+        const show = el("button", { class: "btn btn-primary", type: "button", onclick: () => showAnswer() }, "Show answer");
+        reveal.append(show);
+        stage.append(reveal);
+        setKeys(e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showAnswer(); } });
+      }
+    } else {
+      const attempt = el("textarea", { class: "answer", rows: 2, lang: "ja",
+        placeholder: "Your corrected version (optional)", style: "font-size:1.1rem" });
+      const reveal = el("div", { class: "reveal" });
+      const showAnswer = () => {
+        attempt.readOnly = true;
+        attempt.blur(); // so the 1–4 grading keys work
+        reveal.replaceChildren(
+          el("div", { class: "fix", style: "font-size:1.3rem" }, el("span", { class: "new" }, card.correct)),
+          card.note && el("div", { class: "note" }, card.note),
+          gradeButtons());
+        speak(card.correct);
+        setKeys(gradeKeys);
+      };
+      reveal.append(el("button", { class: "btn btn-primary", type: "button", onclick: showAnswer }, "Show correction"));
+      attempt.addEventListener("keydown", e => {
+        if (e.key === "Enter" && !e.shiftKey && !e.isComposing && !attempt.readOnly) { e.preventDefault(); showAnswer(); }
+      });
+      stage.append(
+        el("div", { class: "prompt-label" }, "You wrote this earlier. How should it be?"),
+        el("div", { class: "fix", style: "font-size:1.4rem;margin:.5rem 0 .75rem" }, el("span", { class: "old" }, card.wrong)),
+        attempt, reveal);
+      later(() => attempt.focus(), 0);
+    }
+
+    body.replaceChildren(sessionBar(remaining), stage);
   }
 
   function showCard(cards, idx, dueCount) {
@@ -716,6 +840,66 @@ function runPractice(body, pool, mode) {
   nextQuestion();
 }
 
+/* ================= notebook ================= */
+
+async function renderNotebook() {
+  const tabs = $("#notebook-tabs");
+  const tab = prefs.get("notebook.tab", "words");
+  tabs.querySelectorAll("button").forEach(b => {
+    b.classList.toggle("active", b.dataset.tab === tab);
+    b.onclick = () => { prefs.set("notebook.tab", b.dataset.tab); renderNotebook(); };
+  });
+  const body = $("#notebook-body");
+  const statusDot = status => el("i", { class: `dot ${status}`, title: status });
+
+  if (tab === "words") {
+    const { words } = await api.get("/api/vocab");
+    $("#notebook-hint").textContent = `${words.length} saved · click words in the Tutor chat to add more`;
+    if (!words.length) {
+      body.replaceChildren(el("div", { class: "empty" },
+        el("div", { class: "big" }, "📖"),
+        el("p", {}, "No saved words yet. In the Tutor chat, click any Japanese word to look it up and save it."),
+        el("div", { class: "btn-row" }, el("a", { class: "btn btn-primary", href: "#tutor" }, "Open the tutor"))));
+      return;
+    }
+    body.replaceChildren(el("div", { class: "list" }, words.map(w =>
+      el("div", { class: "list-row" },
+        statusDot(w.status),
+        el("div", { class: "list-main" },
+          el("div", { class: "list-title", lang: "ja" }, w.word, w.reading !== w.word && el("small", {}, w.reading)),
+          el("div", { class: "list-sub" }, w.meaning)),
+        el("div", {},
+          speakButton(w.reading),
+          el("button", { class: "icon-btn", type: "button", title: "Remove word", "aria-label": "Remove word",
+            onclick: async () => {
+              if (!confirm(`Remove ${w.word} from your words? Its review history is deleted too.`)) return;
+              await api.delete(`/api/vocab/${w.id}`);
+              renderNotebook();
+            } }, "🗑"))))));
+  } else {
+    const { mistakes } = await api.get("/api/mistakes");
+    $("#notebook-hint").textContent = `${mistakes.length} logged · Sensei saves them when correcting you`;
+    if (!mistakes.length) {
+      body.replaceChildren(el("div", { class: "empty" },
+        el("div", { class: "big" }, "✍️"),
+        el("p", {}, "No mistakes logged yet. Try writing Japanese to Sensei; corrections land here and in your reviews.")));
+      return;
+    }
+    body.replaceChildren(el("div", { class: "list" }, mistakes.map(m =>
+      el("div", { class: "list-row" },
+        statusDot(m.status),
+        el("div", { class: "list-main" },
+          el("div", { class: "fix" }, el("span", { class: "old" }, m.wrong), " → ", el("span", { class: "new" }, m.correct)),
+          m.note && el("div", { class: "list-sub" }, m.note)),
+        el("button", { class: "icon-btn", type: "button", title: "Remove", "aria-label": "Remove mistake",
+          onclick: async () => {
+            if (!confirm("Remove this mistake? Its review history is deleted too.")) return;
+            await api.delete(`/api/mistakes/${m.id}`);
+            renderNotebook();
+          } }, "🗑")))));
+  }
+}
+
 /* ================= tutor chat ================= */
 
 const STARTERS = [
@@ -735,11 +919,16 @@ function escapeHtml(s) {
   return s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-// Segments come from the server: [{t: "会社", r: "かいしゃ"}, {t: "です"}].
-// Everything is escaped first; the light Markdown pass only ever adds tags.
+// Segments come from the server: plain text {t} or words {t, b, k, p, parts}
+// (see app/furigana.py). Words become clickable spans; data-i points back into
+// the segment list. Everything is escaped first; the light Markdown pass only
+// ever adds tags.
 function renderRich(segments) {
-  const html = segments.map(s => s.r
-    ? `<ruby>${escapeHtml(s.t)}<rt>${escapeHtml(s.r)}</rt></ruby>`
+  const ruby = parts => parts.map(p => p.r
+    ? `<ruby>${escapeHtml(p.t)}<rt>${escapeHtml(p.r)}</rt></ruby>`
+    : escapeHtml(p.t)).join("");
+  const html = segments.map((s, i) => s.b
+    ? `<span class="w" data-i="${i}">${s.parts ? ruby(s.parts) : escapeHtml(s.t)}</span>`
     : escapeHtml(s.t)).join("");
   return markdown(html);
 }
@@ -770,7 +959,8 @@ function japaneseOnly(text) {
 
 function messageEl(msg) {
   const bubble = el("div", { class: "bubble" });
-  bubble.innerHTML = renderRich(msg.segments || [{ t: msg.content }]);
+  bubble.segments = msg.segments || [{ t: msg.content }];
+  bubble.innerHTML = renderRich(bubble.segments);
   const isAssistant = msg.role === "assistant";
   const jp = isAssistant ? japaneseOnly(msg.content) : "";
   return el("div", { class: `msg msg-${msg.role}`, "data-id": msg.id ?? "" },
@@ -796,6 +986,116 @@ function warningEl(w) {
         "Which one is correct? Please give me the corrected version."),
     }, "Ask Sensei to fix it"),
   );
+}
+
+/* word lookup popup */
+
+let wordPopup = null;
+
+function closeWordPopup() {
+  wordPopup?.remove();
+  wordPopup = null;
+  document.querySelector(".w.selected")?.classList.remove("selected");
+}
+
+document.addEventListener("click", e => {
+  const span = e.target.closest(".bubble .w");
+  if (span) {
+    const bubble = span.closest(".bubble");
+    const i = Number(span.dataset.i);
+    // The next couple of words let the server find compounds (会社 + 員 = 会社員).
+    const next = bubble.segments.slice(i + 1, i + 3).filter(s => s.b).map(s => s.t).join("");
+    openWordPopup(span, bubble.segments[i], next);
+  } else if (wordPopup && !e.target.closest(".word-popup")) {
+    closeWordPopup();
+  }
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeWordPopup(); });
+
+async function openWordPopup(span, seg, next) {
+  closeWordPopup();
+  span.classList.add("selected");
+  const body = el("div", { class: "word-popup-body" }, el("p", { class: "muted" }, "Looking up…"));
+  wordPopup = el("div", { class: "word-popup", role: "dialog", "aria-label": `Dictionary: ${seg.b}` },
+    el("button", { class: "word-popup-close", type: "button", "aria-label": "Close", onclick: closeWordPopup }, "×"),
+    body);
+  document.body.append(wordPopup);
+  placePopup(span);
+
+  const conjugated = seg.t !== seg.b && el("p", { class: "muted word-form" },
+    el("span", { lang: "ja" }, seg.t), ` is a form of `, el("span", { lang: "ja" }, seg.b));
+
+  let data;
+  try {
+    const params = new URLSearchParams({ q: seg.b, k: seg.k || "", next });
+    data = await api.get(`/api/dict/lookup?${params}`);
+  } catch (err) {
+    body.replaceChildren(el("p", { class: "feedback bad" }, err.message));
+    return;
+  }
+  if (!wordPopup) return; // closed while loading
+
+  if (!data.available || !data.entries.length) {
+    body.replaceChildren(
+      el("div", { class: "word-head" },
+        el("span", { class: "word-main", lang: "ja" }, seg.b),
+        seg.k && seg.k !== seg.b && el("span", { class: "word-reading", lang: "ja" }, seg.k),
+        speakButton(seg.b)),
+      el("p", { class: "muted" }, seg.p),
+      conjugated,
+      el("p", { class: "muted" }, data.available
+        ? "No dictionary entry found for this word."
+        : "The dictionary isn't installed yet."));
+    placePopup(span);
+    return;
+  }
+
+  body.replaceChildren(
+    conjugated,
+    ...data.entries.map(entry => {
+      const main = entry.kanji.find(k => k === data.matched) || entry.kanji[0] || entry.readings[0];
+      const reading = entry.kanji.length ? entry.readings[0] : null;
+      const save = el("button", { class: "btn btn-primary", type: "button", disabled: entry.saved }, entry.saved ? "Saved ✓" : "+ Save word");
+      save.addEventListener("click", async () => {
+        save.disabled = true;
+        try {
+          await api.post("/api/vocab", { entry_id: entry.id, word: main });
+          save.textContent = "Saved ✓";
+          refreshBadge();
+        } catch (err) {
+          save.disabled = false;
+          save.textContent = "Couldn't save";
+        }
+      });
+      return el("div", { class: "word-entry" },
+        el("div", { class: "word-head" },
+          el("span", { class: "word-main", lang: "ja" }, main),
+          reading && el("span", { class: "word-reading", lang: "ja" }, reading),
+          entry.common && el("span", { class: "tag" }, "common"),
+          speakButton(reading || main)),
+        el("ol", { class: "senses" }, entry.senses.slice(0, 4).map(s =>
+          el("li", {},
+            s.pos.length ? el("span", { class: "pos" }, s.pos[0].replace(/\s*\(.*\)$/, "")) : null,
+            s.gloss.slice(0, 4).join("; ")))),
+        save);
+    }),
+    el("p", { class: "credit" }, "Dictionary: JMdict (EDRDG, CC BY-SA 4.0)"));
+  placePopup(span);
+}
+
+function placePopup(anchor) {
+  if (!wordPopup) return;
+  if (window.innerWidth <= 640) {  // bottom sheet on phones
+    wordPopup.classList.add("sheet");
+    return;
+  }
+  const r = anchor.getBoundingClientRect();
+  const w = wordPopup.offsetWidth;
+  const h = wordPopup.offsetHeight;
+  const left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + r.width / 2 - w / 2));
+  const below = r.bottom + 8 + h < window.innerHeight;
+  wordPopup.style.left = `${left}px`;
+  wordPopup.style.top = `${below ? r.bottom + 8 : Math.max(8, r.top - h - 8)}px`;
 }
 
 function scrollMessages(force = false) {
@@ -851,6 +1151,7 @@ function bindTutorOnce() {
     input.focus();
   });
   $("#chat-list-toggle").addEventListener("click", () => $("#chat-list").classList.toggle("open"));
+  $("#messages").addEventListener("scroll", () => { if (!wordPopup?.classList.contains("sheet")) closeWordPopup(); });
   $("#llm-settings-btn").addEventListener("click", toggleLlmSettings);
 }
 
@@ -963,7 +1264,13 @@ async function sendMessage(text) {
         bubble.innerHTML = renderRich([{ t: reply }]);
         scrollMessages();
       } else if (event.type === "done") {
-        pending.replaceWith(messageEl(event.message));
+        const done = messageEl(event.message);
+        if (event.mistakes_saved) {
+          done.lastChild.append(el("a", { class: "mistake-chip", href: "#notebook" },
+            `📝 ${event.mistakes_saved} mistake${event.mistakes_saved > 1 ? "s" : ""} saved to your reviews`));
+          refreshBadge();
+        }
+        pending.replaceWith(done);
         scrollMessages();
       } else if (event.type === "error") {
         pending.replaceWith(errorEl(event.message));

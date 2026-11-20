@@ -1,6 +1,9 @@
 """The tutor's instructions, built fresh for every message from the learner's
 actual progress in the database."""
 
+import json
+import re
+
 from . import kana
 
 _BASIC_GROUPS = ["a", "ka", "sa", "ta", "na", "ha", "ma", "ya", "ra", "wa"]
@@ -44,7 +47,47 @@ sentence in Japanese script too.
 ## Formatting
 - Plain text with light Markdown only: **bold** for key words, "- " bullet lists, \
 short paragraphs. No tables, no headings, no code blocks.
+
+## Mistake log (read by the app, hidden from the learner)
+When you corrected mistakes in Japanese the learner wrote in their latest message, \
+end your reply with one line in exactly this format:
+<corrections>[{{"wrong": "their phrase", "correct": "corrected phrase", "note": "short reason"}}]</corrections>
+- Write "wrong" and "correct" in Japanese script, converting romaji to kana.
+- One item per distinct mistake, at most 3. Keep each phrase short (the part that changed plus a little context).
+- Leave the line out entirely when there were no mistakes or the learner wrote no Japanese.
+- Never mention this line in your reply.
 """
+
+_CORRECTIONS = re.compile(r"(?:```\w*\s*)?<corrections>(.*?)</corrections>(?:\s*```)?", re.S)
+_OPEN_TAG = "<corrections>"
+
+
+def visible_part(text: str) -> str:
+    """What the learner may see so far while the reply streams in."""
+    cut = text.find("<corrections")
+    if cut != -1:
+        return text[:cut].rstrip("` \n")
+    for n in range(len(_OPEN_TAG) - 1, 0, -1):  # hold back a half-written tag
+        if text.endswith(_OPEN_TAG[:n]):
+            return text[:-n]
+    return text
+
+
+def split_corrections(text: str) -> tuple[str, list[dict]]:
+    """Separate the reply from its hidden mistake log."""
+    found: list[dict] = []
+    for block in _CORRECTIONS.findall(text):
+        try:
+            items = json.loads(block)
+        except ValueError:
+            continue
+        if isinstance(items, dict):
+            items = [items]
+        if isinstance(items, list):
+            found += [i for i in items if isinstance(i, dict)]
+    clean = _CORRECTIONS.sub("", text)
+    clean = visible_part(clean)  # drop an unterminated block, if the model was cut off
+    return clean.strip(), found[:3]
 
 
 def _progress(conn) -> tuple[str, str]:
@@ -73,6 +116,21 @@ def _progress(conn) -> tuple[str, str]:
     else:
         rule = "- The learner reads both kana: don't add romaji unless asked."
     return "\n".join(lines), rule
+
+
+_REMINDER = (
+    "\n\n[Note from the app, not the learner: if you correct any Japanese in the message above, "
+    "end your reply with the <corrections>[...]</corrections> line described in your instructions.]"
+)
+
+
+def with_reminder(history: list[dict]) -> list[dict]:
+    """Small models follow an instruction far more reliably when it sits right
+    next to the latest message instead of at the top of a long system prompt.
+    Only the copy sent to the model gets it; the saved message is untouched."""
+    if not history or history[-1]["role"] != "user":
+        return history
+    return [*history[:-1], {**history[-1], "content": history[-1]["content"] + _REMINDER}]
 
 
 def system_prompt(conn) -> str:

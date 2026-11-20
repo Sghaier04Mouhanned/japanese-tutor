@@ -157,8 +157,17 @@ def _visible(text: str) -> str:
     return text
 
 
+def _tune_for_model(model: str, messages: list[dict]) -> list[dict]:
+    # Qwen3 reasons step by step before answering unless told not to; on a
+    # small local GPU that makes every reply slow for little gain in a chat.
+    if "qwen3" in model and messages and messages[0]["role"] == "system":
+        return [{**messages[0], "content": messages[0]["content"] + "\n/no_think"}, *messages[1:]]
+    return messages
+
+
 async def stream_chat(provider: Provider, model: str, messages: list[dict]) -> AsyncIterator[str]:
     """Yield the reply text piece by piece."""
+    messages = _tune_for_model(model, messages)
     payload = {"model": model, "messages": messages, "stream": True, "temperature": 0.6}
     timeout = httpx.Timeout(connect=10, read=provider.first_byte_timeout, write=10, pool=10)
     raw, sent = "", 0

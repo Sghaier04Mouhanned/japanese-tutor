@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from . import checks, furigana, llm, tutor
+from . import checks, deck_api, furigana, llm, tutor
 from .db import connect, get_setting, set_setting
 
 router = APIRouter(prefix="/api", tags=["chat"])
@@ -163,7 +163,7 @@ async def post_message(chat_id: int, body: NewMessage):
         if not history or history[-1]["role"] != "user":
             raise HTTPException(400, "nothing to answer")
         messages = [{"role": "system", "content": tutor.system_prompt(conn)}]
-        messages += [{"role": r["role"], "content": r["content"]} for r in history]
+        messages += tutor.with_reminder([{"role": r["role"], "content": r["content"]} for r in history])
 
     async def events():
         if user_message:
@@ -172,12 +172,23 @@ async def post_message(chat_id: int, body: NewMessage):
         try:
             provider, model = await _current_llm()
             skip_main = _busy_until.get((provider.id, model), 0) > time.time()
+            shown = 0
+
+            async def visible_deltas(model_id: str):
+                # The reply may end with a hidden mistake log; never stream that part.
+                nonlocal shown
+                async for piece in llm.stream_chat(provider, model_id, messages):
+                    parts.append(piece)
+                    visible = tutor.visible_part("".join(parts))
+                    if len(visible) > shown:
+                        yield visible[shown:]
+                        shown = len(visible)
+
             try:
                 if skip_main:
                     raise llm.LLMError("recently overloaded", retryable=True)
-                async for piece in llm.stream_chat(provider, model, messages):
-                    parts.append(piece)
-                    yield _sse({"type": "delta", "text": piece})
+                async for text in visible_deltas(model):
+                    yield _sse({"type": "delta", "text": text})
             except llm.LLMError as err:
                 # Free-tier models get overloaded; if nothing was shown yet,
                 # quietly let the lighter fallback model answer instead.
@@ -187,10 +198,9 @@ async def post_message(chat_id: int, body: NewMessage):
                     _busy_until[(provider.id, model)] = time.time() + BUSY_COOLDOWN
                 model = provider.fallback
                 yield _sse({"type": "notice", "message": f"Main model busy, answering with {model}."})
-                async for piece in llm.stream_chat(provider, model, messages):
-                    parts.append(piece)
-                    yield _sse({"type": "delta", "text": piece})
-            reply = "".join(parts).strip()
+                async for text in visible_deltas(model):
+                    yield _sse({"type": "delta", "text": text})
+            reply, corrections = tutor.split_corrections("".join(parts))
             if not reply:
                 raise llm.LLMError(f"{provider.label} returned an empty reply. Try again.")
         except llm.LLMError as err:
@@ -204,8 +214,9 @@ async def post_message(chat_id: int, body: NewMessage):
                 (chat_id, reply, provider.id, model, time.time()),
             )
             conn.execute("UPDATE chats SET updated_at = ? WHERE id = ?", (time.time(), chat_id))
+            mistakes_saved = deck_api.save_mistakes(conn, chat_id, corrections)
             row = conn.execute("SELECT * FROM chat_messages WHERE id = ?", (cur.lastrowid,)).fetchone()
-        yield _sse({"type": "done", "message": _message_out(row)})
+        yield _sse({"type": "done", "message": _message_out(row), "mistakes_saved": mistakes_saved})
 
     return StreamingResponse(events(), media_type="text/event-stream",
                              headers={"Cache-Control": "no-cache"})

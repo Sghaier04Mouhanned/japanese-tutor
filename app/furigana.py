@@ -1,8 +1,8 @@
 """Readings for kanji come from a morphological analyzer (MeCab + UniDic via
 fugashi), never from the language model, which can confidently get them wrong.
 
-`annotate(text)` returns segments the UI renders as plain text or <ruby>:
-    [{"t": "私"}, ...]  ->  [{"t": "私", "r": "わたし"}, {"t": "は"}, ...]
+`annotate(text)` splits text into words the UI renders with <ruby> furigana and
+makes clickable for dictionary lookups (see the function for the format).
 """
 
 from __future__ import annotations
@@ -72,31 +72,62 @@ def _reading(word) -> str | None:
     return _to_hiragana(kana)
 
 
+_JAPANESE = re.compile(r"[぀-ヿ㐀-䶿一-鿿々]")
+
+_POS = {
+    "名詞": "noun", "代名詞": "pronoun", "動詞": "verb", "形容詞": "i-adjective",
+    "形状詞": "na-adjective", "副詞": "adverb", "助詞": "particle", "助動詞": "auxiliary",
+    "接尾辞": "suffix", "接頭辞": "prefix", "感動詞": "interjection", "連体詞": "pre-noun",
+    "接続詞": "conjunction",
+}
+
+
+def _base(word) -> tuple[str, str | None]:
+    """Dictionary form and its reading: 飲み -> (飲む, のむ)."""
+    base = getattr(word.feature, "orthBase", None) or word.surface
+    if base == "*":
+        base = word.surface
+    if base in _EVERYDAY_READINGS:
+        return base, _EVERYDAY_READINGS[base]
+    kana = getattr(word.feature, "kanaBase", None)
+    return base, (_to_hiragana(kana) if kana and kana != "*" else None)
+
+
 def annotate(text: str) -> list[dict]:
+    """Split text into plain runs and Japanese words.
+
+    Plain:  {"t": "Hello "}
+    Word:   {"t": "飲み", "b": "飲む", "k": "のむ", "p": "verb",
+             "parts": [{"t": "飲", "r": "の"}, {"t": "み"}]}   # parts only when it has kanji
+    """
     segments: list[dict] = []
 
-    def push(seg: dict) -> None:
+    def push_plain(text_: str) -> None:
         # Merge neighbouring plain text so the payload stays small.
-        if "r" not in seg and segments and "r" not in segments[-1]:
-            segments[-1]["t"] += seg["t"]
+        if segments and set(segments[-1]) == {"t"}:
+            segments[-1]["t"] += text_
         else:
-            segments.append(seg)
+            segments.append({"t": text_})
 
     lines = text.split("\n")
     for n, line in enumerate(lines):
-        if _KANJI.search(line):
+        if _JAPANESE.search(line):
             for word in _tagger()(line):
                 if word.white_space:
-                    push({"t": word.white_space})
+                    push_plain(word.white_space)
                 surface = word.surface
+                pos = _POS.get(word.feature.pos1)
+                if not pos or not _JAPANESE.search(surface):
+                    push_plain(surface)
+                    continue
+                base, base_kana = _base(word)
+                seg = {"t": surface, "b": base, "k": base_kana, "p": pos}
                 reading = _reading(word) if _KANJI.search(surface) else None
                 if reading:
-                    for part in _split_okurigana(surface, reading):
-                        push(part)
-                else:
-                    push({"t": surface})
+                    seg["parts"] = _split_okurigana(surface, reading)
+                segments.append(seg)
         elif line:
-            push({"t": line})
+            push_plain(line)
         if n < len(lines) - 1:
-            push({"t": "\n"})
+            push_plain("\n")
     return segments

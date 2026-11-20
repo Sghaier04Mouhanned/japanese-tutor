@@ -164,11 +164,15 @@ def get_stats():
             total = sum(len(g["items"]) for g in kana.groups(script))
             per_script[script] = {**counts, "unlocked": len(rows), "total": total}
 
+        # Due counts cover everything in the Review tab: kana, words and mistakes.
         due_count = conn.execute(
-            "SELECT COUNT(*) FROM kana_cards WHERE due_ts <= ?", (now,)
+            """SELECT (SELECT COUNT(*) FROM kana_cards WHERE due_ts <= :now)
+                    + (SELECT COUNT(*) FROM deck_cards WHERE due_ts <= :now)""", {"now": now}
         ).fetchone()[0]
         next_due = conn.execute(
-            "SELECT MIN(due_ts) FROM kana_cards WHERE due_ts > ?", (now,)
+            """SELECT MIN(t) FROM (SELECT MIN(due_ts) AS t FROM kana_cards WHERE due_ts > :now
+                                  UNION ALL SELECT MIN(due_ts) FROM deck_cards WHERE due_ts > :now)""",
+            {"now": now},
         ).fetchone()[0]
         reviews_today, correct_today = conn.execute(
             "SELECT COUNT(*), COALESCE(SUM(correct), 0) FROM kana_reviews WHERE reviewed_at >= ?",
@@ -176,10 +180,13 @@ def get_stats():
         ).fetchone()
         review_days = [
             r[0] for r in conn.execute(
-                """SELECT DISTINCT date(reviewed_at, 'unixepoch', 'localtime') AS d
-                   FROM kana_reviews ORDER BY d DESC"""
+                """SELECT DISTINCT date(reviewed_at, 'unixepoch', 'localtime') AS d FROM (
+                       SELECT reviewed_at FROM kana_reviews
+                       UNION ALL SELECT reviewed_at FROM deck_reviews)
+                   ORDER BY d DESC"""
             ).fetchall()
         ]
+        words = conn.execute("SELECT COUNT(*) FROM vocab").fetchone()[0]
 
     return {
         "scripts": per_script,
@@ -188,6 +195,7 @@ def get_stats():
         "reviews_today": reviews_today,
         "accuracy_today": round(correct_today / reviews_today, 3) if reviews_today else None,
         "streak_days": _streak(review_days),
+        "words": words,
     }
 
 

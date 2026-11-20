@@ -74,8 +74,12 @@ def kana_to_romaji(text: str) -> str | None:
     return "".join(out)
 
 
-def _canonical(romaji: str) -> str:
-    """Erase spelling differences that don't change the word (ou/ō/oo, shi/si, wa/ha…)."""
+def _canonical(romaji: str, strict: bool = False) -> str:
+    """Erase spelling differences that don't change the word (ou/ō/oo, shi/si, wa/ha…).
+
+    strict=True keeps long vowels and particles meaningful, for grading a typed
+    reading (おばさん "obasan" is not おばあさん "obaasan").
+    """
     s = romaji.lower()
     for macron, plain in {"ā": "aa", "ī": "ii", "ū": "uu", "ē": "ee", "ō": "ou", "â": "aa", "ô": "ou"}.items():
         s = s.replace(macron, plain)
@@ -85,11 +89,20 @@ def _canonical(romaji: str) -> str:
     for a, b in (("shi", "si"), ("sh", "sy"), ("chi", "ti"), ("ch", "ty"),
                  ("tsu", "tu"), ("fu", "hu"), ("ji", "zi"), ("j", "zy")):
         s = s.replace(a, b)
+    if strict:
+        return s.replace("oo", "ou")  # おお and おう are both written "ō"
     s = s.replace("ou", "o").replace("ei", "e")
     s = re.sub(r"([aeiou])\1+", r"\1", s)       # long vowels
     # particles: は is "wa", へ is "e", を is "o"
     s = s.replace("wa", "ha").replace("he", "e").replace("wo", "o")
     return s
+
+
+def same_reading(kana_text: str, romaji: str) -> bool:
+    """Does typed romaji spell this kana? Accepts ō/ou/oo, shi/si and friends,
+    but a missing long vowel or small っ is a real mistake."""
+    expected = kana_to_romaji(kana_text)
+    return expected is not None and _canonical(expected, strict=True) == _canonical(romaji, strict=True)
 
 
 def _spaced_like(expected: str, written: str) -> str:

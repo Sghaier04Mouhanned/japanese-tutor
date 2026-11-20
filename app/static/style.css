@@ -117,11 +117,11 @@ a { color: inherit; }
 .btn-row { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
 
 .segmented { display: inline-flex; background: var(--surface-2); border-radius: 10px; padding: 3px; }
-.segmented button {
+.segmented button, .segmented a {
   border: 0; background: transparent; color: var(--muted); font: inherit; font-weight: 500;
-  padding: .35rem .8rem; border-radius: 8px; cursor: pointer;
+  padding: .35rem .8rem; border-radius: 8px; cursor: pointer; text-decoration: none;
 }
-.segmented button.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+.segmented button.active, .segmented a.active { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
 
 .toggle { display: inline-flex; align-items: center; gap: .4rem; color: var(--muted); font-size: .9rem; cursor: pointer; }
 
@@ -323,6 +323,66 @@ kbd {
   font: inherit; font-weight: 600; cursor: pointer; padding: 0; text-decoration: underline;
 }
 .notice { align-self: center; font-size: .8rem; color: var(--muted); }
+.mistake-chip {
+  display: inline-block; margin-top: .35rem; font-size: .8rem; text-decoration: none;
+  background: var(--accent-soft); color: var(--accent); border-radius: 999px; padding: .15rem .6rem;
+}
+
+/* clickable words + dictionary popup */
+.bubble .w { cursor: pointer; border-radius: 4px; transition: background .1s; }
+.bubble .w:hover { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.bubble .w.selected { background: color-mix(in srgb, var(--accent) 24%, transparent); }
+
+.word-popup {
+  position: fixed; z-index: 50; width: min(22rem, calc(100vw - 16px)); max-height: 70vh; overflow-y: auto;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .18); padding: .9rem 1rem;
+}
+.word-popup.sheet { left: 0; right: 0; bottom: 0; top: auto; width: auto; border-radius: var(--radius) var(--radius) 0 0; max-height: 60vh; }
+.word-popup-close {
+  position: absolute; top: .4rem; right: .5rem; border: 0; background: transparent;
+  color: var(--muted); font-size: 1.3rem; cursor: pointer; line-height: 1;
+}
+.word-entry + .word-entry { border-top: 1px solid var(--border); margin-top: .75rem; padding-top: .75rem; }
+.word-head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; padding-right: 1.5rem; }
+.word-main { font-family: var(--jp); font-size: 1.6rem; font-weight: 500; }
+.word-reading { font-family: var(--jp); color: var(--muted); }
+.word-head .speak { width: 2rem; height: 2rem; font-size: .9rem; }
+.word-form { margin: 0 0 .5rem; font-size: .85rem; }
+.tag { font-size: .7rem; font-weight: 600; color: var(--ok); background: var(--ok-soft); border-radius: 999px; padding: .05rem .5rem; }
+.senses { margin: .4rem 0 .6rem; padding-left: 1.3rem; font-size: .9rem; }
+.senses li { margin-bottom: .2rem; }
+.pos { font-size: .72rem; color: var(--muted); margin-right: .35rem; font-style: italic; }
+.word-entry .btn { padding: .35rem .8rem; font-size: .85rem; }
+.credit { font-size: .7rem; color: var(--muted); margin: .75rem 0 0; }
+
+/* notebook */
+.list { display: flex; flex-direction: column; }
+.list-row {
+  display: grid; grid-template-columns: auto 1fr auto; gap: .75rem; align-items: center;
+  padding: .65rem .25rem; border-bottom: 1px solid var(--border);
+}
+.list-row:last-child { border-bottom: 0; }
+.list-main { min-width: 0; }
+.list-title { font-family: var(--jp); font-size: 1.15rem; }
+.list-title small { color: var(--muted); font-size: .85rem; margin-left: .4rem; }
+.list-sub { color: var(--muted); font-size: .88rem; overflow-wrap: anywhere; }
+.list-row .icon-btn { border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 1.1rem; padding: .2rem .4rem; }
+.list-row .icon-btn:hover { color: var(--bad); }
+.fix { font-family: var(--jp); }
+.fix .old { color: var(--bad); text-decoration: line-through; text-decoration-thickness: 1px; }
+.fix .new { color: var(--ok); }
+
+/* self-graded review buttons */
+.grade-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; width: min(26rem, 100%); margin-top: 1rem; }
+.grade-row .btn { flex-direction: column; gap: 0; padding: .5rem .25rem; font-size: .9rem; }
+.grade-row .btn small { font-weight: 400; color: var(--muted); font-size: .72rem; }
+.grade-again { border-color: var(--bad); color: var(--bad); }
+.grade-good { border-color: var(--ok); color: var(--ok); }
+.reveal { margin-top: .75rem; display: flex; flex-direction: column; align-items: center; gap: .25rem; }
+.reveal .meaning { font-size: 1.05rem; max-width: 30rem; }
+.big-word { font-family: var(--jp); font-size: clamp(2.6rem, 10vw, 4rem); line-height: 1.3; margin: .25rem 0 .75rem; }
+.prompt-label { color: var(--muted); font-size: .85rem; }
 
 .typing { display: inline-flex; gap: 4px; padding: .4rem 0; }
 .typing i { width: 6px; height: 6px; border-radius: 99px; background: var(--muted); animation: blink 1.2s infinite; }

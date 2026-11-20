@@ -51,6 +51,50 @@ CREATE TABLE IF NOT EXISTS chat_messages (
     created_at  REAL    NOT NULL
 );
 CREATE INDEX IF NOT EXISTS idx_chat_messages_chat ON chat_messages (chat_id, id);
+
+-- Words the learner saved (from chat lookups or lessons).
+CREATE TABLE IF NOT EXISTS vocab (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    entry_id    INTEGER,            -- JMdict entry, when known
+    word        TEXT    NOT NULL,
+    reading     TEXT    NOT NULL,   -- hiragana/katakana
+    meaning     TEXT    NOT NULL,
+    source      TEXT    NOT NULL,   -- 'chat' | 'lesson'
+    created_at  REAL    NOT NULL,
+    UNIQUE (word, reading)
+);
+
+-- Corrections Sensei made to the learner's Japanese.
+CREATE TABLE IF NOT EXISTS mistakes (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    chat_id     INTEGER REFERENCES chats (id) ON DELETE SET NULL,
+    wrong       TEXT    NOT NULL,
+    correct     TEXT    NOT NULL,
+    note        TEXT    NOT NULL DEFAULT '',
+    created_at  REAL    NOT NULL
+);
+
+-- Spaced-repetition cards for vocab and mistakes (kana have their own table).
+CREATE TABLE IF NOT EXISTS deck_cards (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    kind        TEXT    NOT NULL CHECK (kind IN ('vocab', 'mistake')),
+    ref_id      INTEGER NOT NULL,
+    state       INTEGER NOT NULL,
+    stability   REAL,
+    due_ts      REAL    NOT NULL,
+    fsrs        TEXT    NOT NULL,
+    created_at  REAL    NOT NULL,
+    UNIQUE (kind, ref_id)
+);
+CREATE INDEX IF NOT EXISTS idx_deck_cards_due ON deck_cards (due_ts);
+
+CREATE TABLE IF NOT EXISTS deck_reviews (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    card_id     INTEGER NOT NULL REFERENCES deck_cards (id) ON DELETE CASCADE,
+    rating      INTEGER NOT NULL,
+    elapsed_ms  INTEGER,
+    reviewed_at REAL    NOT NULL
+);
 """
 
 
