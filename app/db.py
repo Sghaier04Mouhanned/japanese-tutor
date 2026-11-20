@@ -88,6 +88,14 @@ CREATE TABLE IF NOT EXISTS deck_cards (
 );
 CREATE INDEX IF NOT EXISTS idx_deck_cards_due ON deck_cards (due_ts);
 
+CREATE TABLE IF NOT EXISTS quiz_sessions (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    created_at  REAL    NOT NULL,
+    total       INTEGER NOT NULL,
+    correct     INTEGER NOT NULL,
+    by_type     TEXT    NOT NULL    -- JSON: {"reading": [correct, total], ...}
+);
+
 CREATE TABLE IF NOT EXISTS lesson_progress (
     lesson_id   TEXT    PRIMARY KEY,
     status      TEXT    NOT NULL CHECK (status IN ('started', 'done')),

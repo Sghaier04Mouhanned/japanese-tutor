@@ -131,6 +131,7 @@ const views = {
   practice: renderPractice,
   notebook: renderNotebook,
   lessons: renderLessons,
+  quiz: renderQuiz,
 };
 
 function route() {
@@ -933,6 +934,200 @@ async function renderLesson(body, id) {
     el("p", { class: "hint" }, "Tip: click any Japanese word to look it up."),
   );
   window.scrollTo(0, 0);
+}
+
+/* ================= quiz ================= */
+
+const QUIZ_TYPES = {
+  reading: ["漢字読み", "Kanji reading"],
+  writing: ["表記", "Spelling"],
+  meaning: ["語彙", "Vocabulary"],
+  particle: ["文法", "Particles"],
+  listening: ["聴解", "Listening"],
+};
+
+async function renderQuiz() {
+  const body = $("#quiz-body");
+  const opts = await api.get("/api/quiz/options");
+  const saved = prefs.get("quiz", null);
+  const studied = opts.lessons.filter(l => l.status !== "new").map(l => l.id);
+  const settings = saved || {
+    lessons: studied.length ? studied : opts.lessons.slice(0, 2).map(l => l.id),
+    include_saved: true, count: 10, types: Object.keys(QUIZ_TYPES),
+  };
+
+  const chip = (value, label, checked) =>
+    el("label", { class: "chip" }, el("input", { type: "checkbox", value, checked }), label);
+  const lessonChips = opts.lessons.map((l, i) =>
+    chip(l.id, `${i + 1}. ${l.title}${l.status === "done" ? " ✓" : ""}`, settings.lessons.includes(l.id)));
+  const typeChips = Object.entries(QUIZ_TYPES).map(([t, [jp, en]]) =>
+    chip(t, el("span", {}, el("span", { lang: "ja" }, jp), ` ${en}`), settings.types.includes(t)));
+  const savedBox = el("input", { type: "checkbox", checked: settings.include_saved && opts.saved_words > 0,
+    disabled: !opts.saved_words });
+  const count = el("div", { class: "segmented" }, [10, 20].map(n =>
+    el("button", { type: "button", "data-n": n, class: n === settings.count ? "active" : "",
+      onclick: e => { settings.count = n; count.querySelectorAll("button").forEach(b => b.classList.toggle("active", b === e.currentTarget)); } },
+      `${n} questions`)));
+  const checked = chips => chips.map(c => c.querySelector("input")).filter(i => i.checked).map(i => i.value);
+  const error = el("p", { class: "feedback bad" });
+
+  body.replaceChildren(
+    el("div", { class: "panel-head" },
+      el("h2", {}, "JLPT N5 practice quiz"),
+      el("span", { class: "muted" }, "Questions come from verified lesson content, never from the AI")),
+    el("div", { class: "field" },
+      el("div", { class: "field-label" }, "Lessons",
+        el("span", {},
+          el("button", { class: "btn btn-ghost", type: "button", onclick: () => lessonChips.forEach(c => { c.querySelector("input").checked = true; }) }, "All"),
+          el("button", { class: "btn btn-ghost", type: "button", onclick: () => lessonChips.forEach(c => { c.querySelector("input").checked = false; }) }, "None"))),
+      el("div", { class: "chips" }, lessonChips)),
+    el("div", { class: "field" },
+      el("label", { class: "toggle" }, savedBox, `Include my saved words (${opts.saved_words})`)),
+    el("div", { class: "field" },
+      el("div", { class: "field-label" }, "Question types"),
+      el("div", { class: "chips" }, typeChips)),
+    el("div", { class: "field" }, count),
+    error,
+    el("div", { class: "btn-row" },
+      el("button", { class: "btn btn-primary", type: "button", onclick: start }, "Start quiz")),
+    opts.recent.length ? el("div", { class: "lesson-section" },
+      el("h3", {}, "Recent results"),
+      el("div", { class: "list" }, opts.recent.map(r =>
+        el("div", { class: "list-sub" },
+          `${new Date(r.created_at * 1000).toLocaleString()} · ${r.correct} / ${r.total} (${Math.round(r.correct / r.total * 100)}%)`)))) : "",
+  );
+
+  async function start() {
+    settings.lessons = checked(lessonChips);
+    settings.types = checked(typeChips);
+    settings.include_saved = savedBox.checked;
+    if (!settings.types.length) { error.textContent = "Pick at least one question type."; return; }
+    if (!settings.lessons.length && !settings.include_saved) { error.textContent = "Pick at least one lesson."; return; }
+    prefs.set("quiz", settings);
+    try {
+      const { questions } = await api.post("/api/quiz/new", settings);
+      runQuiz(body, questions);
+    } catch (err) {
+      error.textContent = err.message;
+    }
+  }
+}
+
+function runQuiz(body, questions) {
+  const results = [];
+  let index = 0;
+
+  function show() {
+    cleanups.forEach(fn => fn());
+    cleanups = [];
+    if (index >= questions.length) return finish();
+    const q = questions[index];
+    const [jp, en] = QUIZ_TYPES[q.type];
+    const jpChoices = q.type === "reading" || q.type === "writing" || q.type === "particle";
+    let answered = false;
+
+    const prompt = [];
+    if (q.type === "reading") prompt.push(el("div", { class: "quiz-word", lang: "ja" }, q.prompt.word));
+    if (q.type === "writing") prompt.push(el("div", { class: "quiz-word", lang: "ja" }, q.prompt.reading));
+    if (q.type === "meaning") prompt.push(richEl("div", { class: "quiz-word", lang: "ja" }, q.prompt.segments));
+    if (q.type === "particle") {
+      prompt.push(richEl("div", { class: "quiz-sentence", lang: "ja" }, q.prompt.segments));
+      prompt.push(el("div", { class: "quiz-hint" }, `“${q.prompt.hint}”`));
+    }
+    const reveal = el("div");
+    if (q.type === "listening") {
+      if (jaVoice) {
+        prompt.push(el("button", { class: "play-big", type: "button", "aria-label": "Play the sentence",
+          onclick: () => speak(q.prompt.audio) }, "🔊"));
+        prompt.push(el("div", { class: "quiz-hint" }, "Press the button or Space to listen again"));
+        later(() => speak(q.prompt.audio), 300);
+      } else {
+        prompt.push(el("p", { class: "feedback bad" }, "No Japanese voice found in this browser, so here's the text instead:"));
+        prompt.push(richEl("div", { class: "quiz-sentence", lang: "ja" }, q.item.segments));
+      }
+    }
+
+    const feedback = el("div");
+    const next = el("button", { class: "btn btn-primary", type: "button", hidden: true, onclick: () => { index++; show(); } },
+      index + 1 < questions.length ? "Next →" : "See results");
+    const buttons = q.choices.map((c, n) =>
+      el("button", { class: `quiz-choice${jpChoices ? " jp" : ""}`, type: "button", lang: jpChoices ? "ja" : null,
+        onclick: () => choose(n) }, el("span", { class: "key" }, n + 1), c));
+
+    function choose(n) {
+      if (answered) return;
+      answered = true;
+      const ok = n === q.answer;
+      results.push({ q, ok, picked: q.choices[n] });
+      buttons.forEach((b, i) => {
+        b.disabled = true;
+        if (i === q.answer) b.classList.add("ok");
+        else if (i === n) b.classList.add("bad");
+      });
+      feedback.replaceChildren(
+        el("p", { class: `feedback ${ok ? "ok" : "bad"}` }, ok ? "✓ Correct" : `✗ The answer is ${q.choices[q.answer]}`),
+        el("div", { class: "quiz-explain" }, q.explain));
+      if (q.type === "listening" && jaVoice) reveal.replaceChildren(richEl("div", { class: "quiz-sentence", lang: "ja" }, q.item.segments));
+      if (q.type !== "listening") speak(q.item.example || q.item.reading || q.item.word || "");
+      next.hidden = false;
+      next.focus();
+    }
+
+    addKeyHandler(e => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+      const n = Number(e.key) - 1;
+      if (!answered && n >= 0 && n < buttons.length) choose(n);
+      else if (e.key === " " && q.type === "listening") { e.preventDefault(); speak(q.prompt.audio); }
+    });
+
+    body.replaceChildren(
+      el("div", { class: "session-bar" },
+        el("span", {}, `Question ${index + 1} / ${questions.length}`),
+        el("div", { class: "progress" }, el("div", { class: "progress-fill", style: `width:${index / questions.length * 100}%` })),
+        el("button", { class: "btn btn-ghost", type: "button", onclick: () => { if (confirm("Stop this quiz? Your answers so far won't be saved.")) route(); } }, "Quit")),
+      el("div", { class: "quiz-card" },
+        el("div", { class: "quiz-type" }, el("span", { class: "jp", lang: "ja" }, jp), en),
+        el("div", { class: "quiz-instruction" }, q.prompt.instruction),
+        ...prompt,
+        reveal,
+        el("div", { class: "quiz-choices" }, buttons),
+        feedback,
+        next));
+  }
+
+  async function finish() {
+    const summary = await api.post("/api/quiz/results", { results: results.map(r => ({ type: r.q.type, correct: r.ok })) });
+    const pct = Math.round(summary.correct / summary.total * 100);
+    const missedWords = results.filter(r => !r.ok && r.q.item.word).map(r => r.q.item);
+    const uniqueMissed = [...new Map(missedWords.map(w => [w.word, w])).values()];
+    const addBtn = uniqueMissed.length ? el("button", { class: "btn btn-primary", type: "button" },
+      `Add ${uniqueMissed.length} missed word${uniqueMissed.length > 1 ? "s" : ""} to reviews`) : null;
+    addBtn?.addEventListener("click", async () => {
+      addBtn.disabled = true;
+      const res = await api.post("/api/quiz/add-missed", { words: uniqueMissed.map(w => ({ word: w.word, reading: w.reading, meaning: w.meaning })) });
+      addBtn.textContent = res.added ? `Added ${res.added} ✓` : "Already in your reviews ✓";
+      refreshBadge();
+    });
+
+    body.replaceChildren(el("div", { class: "empty" },
+      el("div", { class: "big" }, pct >= 80 ? "🎉" : pct >= 50 ? "👍" : "💪"),
+      el("div", { class: "score-big" }, `${summary.correct} / ${summary.total}`),
+      el("p", {}, pct >= 80 ? "Excellent! You're on track for N5." : pct >= 50 ? "Good work. Review the misses below." : "Keep going. Every quiz makes the next one easier."),
+      el("div", { class: "type-bars" }, Object.entries(summary.by_type).map(([t, [c, n]]) =>
+        el("div", { class: "type-bar" },
+          el("span", {}, el("span", { lang: "ja" }, QUIZ_TYPES[t][0]), ` ${QUIZ_TYPES[t][1]}`),
+          el("div", { class: "progress" }, el("div", { class: "progress-fill", style: `width:${c / n * 100}%` })),
+          el("span", {}, `${c}/${n}`)))),
+      results.some(r => !r.ok) && el("div", { class: "lesson-section" },
+        el("h3", {}, "Your misses"),
+        el("ul", { class: "missed" }, results.filter(r => !r.ok).map(r =>
+          el("li", {}, el("strong", {}, `${QUIZ_TYPES[r.q.type][1]}: `), r.q.explain, el("span", { class: "muted" }, ` (you picked ${r.picked})`))))),
+      el("div", { class: "btn-row" },
+        addBtn,
+        el("button", { class: "btn", type: "button", onclick: () => route() }, "New quiz"))));
+  }
+
+  show();
 }
 
 /* ================= notebook ================= */
