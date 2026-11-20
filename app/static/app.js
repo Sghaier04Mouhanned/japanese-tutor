@@ -856,7 +856,7 @@ async function renderLessons() {
   const done = lessons.filter(l => l.status === "done").length;
   body.replaceChildren(
     el("div", { class: "panel-head" },
-      el("h2", {}, "N5 lessons · Japanese for work"),
+      el("h2", {}, "JLPT N5 lessons"),
       el("span", { class: "muted" }, `${done} / ${lessons.length} complete`)),
     el("p", { class: "muted", style: "margin-top:-.5rem" },
       "Read a lesson, practice it with Sensei, then mark it complete to add its words to your reviews."),
@@ -998,12 +998,12 @@ async function renderNotebook() {
 /* ================= tutor chat ================= */
 
 const STARTERS = [
-  ["Office greetings", "おはようございます and friends",
-    "Teach me the basic greetings I'd use at the office, one at a time."],
-  ["My self-introduction", "自己紹介 for a new job",
-    "Help me build a simple self-introduction (jikoshoukai) for my first day at a Japanese company."],
+  ["Basic greetings", "おはようございます and friends",
+    "Teach me the basic everyday greetings, one at a time."],
+  ["What's on the JLPT N5?", "Sections and how to prepare",
+    "Explain what the JLPT N5 tests and how I should study for it as a near-beginner."],
   ["です and ます", "The polite form, simply explained",
-    "Explain です and ます simply, with a couple of work examples."],
+    "Explain です and ます simply, with a couple of everyday examples."],
   ["Quiz me", "Using the kana I've learned",
     "Give me a short quiz using only the kana I've learned so far."],
 ];
@@ -1104,7 +1104,7 @@ document.addEventListener("click", e => {
   if (span) {
     const bubble = span.closest(".rich");
     const i = Number(span.dataset.i);
-    // The next couple of words let the server find compounds (会社 + 員 = 会社員).
+    // The next couple of words let the server find compounds (日本 + 人 = 日本人).
     const next = bubble.segments.slice(i + 1, i + 3).filter(s => s.b).map(s => s.t).join("");
     openWordPopup(span, bubble.segments[i], next);
   } else if (wordPopup && !e.target.closest(".word-popup")) {

@@ -86,6 +86,20 @@ _DIGIT_READINGS = {"一": ("いち",), "二": ("に",), "三": ("さん",), "四
                    "六": ("ろく",), "七": ("なな", "しち"), "八": ("はち",), "九": ("きゅう", "く"), "十": ("じゅう",)}
 
 
+def _context_reading(prev, word) -> str | None:
+    """Readings that depend on the previous word, where the analyzer guesses wrong."""
+    if prev is None:
+        return None
+    # Nationality: アメリカ人, 日本人, 外国人 -> じん (not にん)
+    if word.surface == "人" and word.feature.pos1 == "接尾辞" and (
+            word.feature.pos3 == "一般" and prev.feature.pos3 == "地名" or prev.surface == "外国"):
+        return "じん"
+    # Days: 土曜日, 何曜日 -> び; 誕生日 -> たんじょうび
+    if word.surface == "日" and (prev.surface.endswith("曜") or prev.surface == "誕生"):
+        return "び"
+    return None
+
+
 def _counter_word(num: str, counter: str, num_reading: str | None = None) -> dict | None:
     if counter not in _COUNTERS:
         return None
@@ -179,8 +193,11 @@ def annotate(text: str) -> list[dict]:
                     push_plain(surface)
                     continue
                 base, base_kana = _base(word)
-                seg = {"t": surface, "b": base, "k": base_kana, "p": pos}
                 reading = _reading(word) if _KANJI.search(surface) else None
+                fixed = _context_reading(words[n_word - 1] if n_word else None, word)
+                if fixed:
+                    reading = base_kana = fixed
+                seg = {"t": surface, "b": base, "k": base_kana, "p": pos}
                 if reading:
                     seg["parts"] = _split_okurigana(surface, reading)
                 segments.append(seg)

@@ -23,7 +23,7 @@ def _has_kanji(text: str) -> bool:
 @router.get("/dict/lookup")
 def dict_lookup(q: str, k: str | None = None, next: str = ""):
     """Look up a clicked word. `next` holds the following words' text so that
-    会社 + 員 can be found as 会社員; the longest match wins."""
+    図書 + 館 can be found as 図書館; the longest match wins."""
     if not dictionary.available():
         return {"available": False, "entries": []}
     q, nxt = q[:30], next[:30]
@@ -50,7 +50,7 @@ def dict_lookup(q: str, k: str | None = None, next: str = ""):
 
 class SaveWord(BaseModel):
     entry_id: int
-    word: str = Field(max_length=50)       # the form the learner clicked, e.g. 会社員
+    word: str = Field(max_length=50)       # the form the learner clicked, e.g. 日本人
     source: str = "chat"
 
 
