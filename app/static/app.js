@@ -109,6 +109,7 @@ function speakButton(text) {
 /* ================= routing ================= */
 
 let cleanups = [];
+let routeArg = null;
 
 function onCleanup(fn) { cleanups.push(fn); }
 
@@ -129,12 +130,16 @@ const views = {
   review: renderReview,
   practice: renderPractice,
   notebook: renderNotebook,
+  lessons: renderLessons,
 };
 
 function route() {
   cleanups.forEach(fn => fn());
   cleanups = [];
-  const name = views[location.hash.slice(1)] ? location.hash.slice(1) : "home";
+  // "#lessons/n5-03" -> view "lessons", argument "n5-03"
+  const [hashName, ...rest] = location.hash.slice(1).split("/");
+  const name = views[hashName] ? hashName : "home";
+  routeArg = rest.join("/") || null;
   for (const section of document.querySelectorAll(".view")) {
     section.hidden = section.id !== `view-${name}`;
   }
@@ -840,6 +845,96 @@ function runPractice(body, pool, mode) {
   nextQuestion();
 }
 
+/* ================= lessons ================= */
+
+async function renderLessons() {
+  const body = $("#lessons-body");
+  if (routeArg) return renderLesson(body, routeArg);
+
+  const { lessons } = await api.get("/api/lessons");
+  const next = lessons.find(l => l.status !== "done");
+  const done = lessons.filter(l => l.status === "done").length;
+  body.replaceChildren(
+    el("div", { class: "panel-head" },
+      el("h2", {}, "N5 lessons · Japanese for work"),
+      el("span", { class: "muted" }, `${done} / ${lessons.length} complete`)),
+    el("p", { class: "muted", style: "margin-top:-.5rem" },
+      "Read a lesson, practice it with Sensei, then mark it complete to add its words to your reviews."),
+    el("div", { class: "lesson-grid" }, lessons.map((l, i) =>
+      el("a", { class: `lesson-card${l === next ? " next" : ""}`, href: `#lessons/${l.id}` },
+        el("div", { class: "num" }, `Lesson ${i + 1}`,
+          l.status !== "new" && el("span", { class: `status-pill ${l.status}` }, l.status === "done" ? "Done ✓" : "In progress")),
+        el("div", { class: "jp", lang: "ja" }, l.jp_title),
+        el("div", { class: "title" }, l.title),
+        el("div", { class: "goal" }, l.goal)))));
+}
+
+async function renderLesson(body, id) {
+  const lesson = await api.get(`/api/lessons/${id}`);
+  const showRomaji = prefs.get("lesson.romaji", true);
+  const romajiToggle = el("label", { class: "toggle" },
+    el("input", { type: "checkbox", checked: showRomaji, onchange: e => {
+      prefs.set("lesson.romaji", e.target.checked);
+      examples.classList.toggle("hide-romaji", !e.target.checked);
+    } }), "Romaji");
+
+  const examples = el("div", { class: showRomaji ? "" : "hide-romaji" }, lesson.examples.map(ex =>
+    el("div", { class: "example" },
+      richEl("div", { class: "jp-line", lang: "ja" }, ex.segments),
+      el("div", { class: "romaji" }, ex.romaji),
+      el("div", { class: "en" }, ex.en),
+      speakButton(ex.jp))));
+
+  const unsaved = lesson.vocab.filter(v => !v.saved).length;
+  const complete = el("button", { class: "btn", type: "button", disabled: lesson.status === "done" && !unsaved },
+    lesson.status === "done" ? (unsaved ? `Add ${unsaved} words to reviews` : "Completed ✓")
+      : `✓ Mark complete${unsaved ? ` · add ${unsaved} words to reviews` : ""}`);
+  complete.addEventListener("click", async () => {
+    complete.disabled = true;
+    const res = await api.post(`/api/lessons/${id}/complete`, {});
+    complete.textContent = res.words_added ? `Completed ✓ · ${res.words_added} words added` : "Completed ✓";
+    refreshBadge();
+  });
+
+  const practice = el("button", { class: "btn btn-primary", type: "button" }, "💬 Practice with Sensei");
+  practice.addEventListener("click", async () => {
+    practice.disabled = true;
+    const { chat_id } = await api.post(`/api/lessons/${id}/practice`, {});
+    tutor.chatId = chat_id;
+    prefs.set("chat.current", chat_id);
+    tutor.autoStart = "I've read the lesson. Let's practice!";
+    location.hash = "#tutor";
+  });
+
+  body.replaceChildren(
+    el("div", { class: "lesson-head" },
+      el("a", { class: "back", href: "#lessons" }, "← All lessons"),
+      el("h2", {}, `${lesson.number}. ${lesson.title}`),
+      el("div", { class: "jp", lang: "ja" }, lesson.jp_title),
+      el("p", { class: "goal" }, `Goal: ${lesson.goal}`)),
+    el("div", { class: "lesson-section" },
+      el("h3", {}, "Key points"),
+      el("ul", { class: "lesson-points" }, lesson.points.map(segs => richEl("li", {}, segs)))),
+    el("div", { class: "lesson-section" },
+      el("h3", {}, "Examples", romajiToggle),
+      examples),
+    el("div", { class: "lesson-section" },
+      el("h3", {}, "Vocabulary"),
+      el("table", { class: "vocab-table" }, el("tbody", {}, lesson.vocab.map(v =>
+        el("tr", {},
+          el("td", {}, richEl("div", { class: "vw", lang: "ja" }, v.segments)),
+          el("td", { class: "vr", lang: "ja" }, v.reading !== v.word ? v.reading : ""),
+          el("td", { class: "vm" }, v.meaning),
+          el("td", {}, speakButton(v.reading))))))),
+    el("div", { class: "lesson-actions" },
+      practice,
+      complete,
+      lesson.next_id && el("a", { class: "btn btn-ghost", href: `#lessons/${lesson.next_id}` }, "Next lesson →")),
+    el("p", { class: "hint" }, "Tip: click any Japanese word to look it up."),
+  );
+  window.scrollTo(0, 0);
+}
+
 /* ================= notebook ================= */
 
 async function renderNotebook() {
@@ -913,7 +1008,7 @@ const STARTERS = [
     "Give me a short quiz using only the kana I've learned so far."],
 ];
 
-const tutor = { chatId: prefs.get("chat.current", null), busy: false, bound: false };
+const tutor = { chatId: prefs.get("chat.current", null), busy: false, bound: false, autoStart: null };
 
 function escapeHtml(s) {
   return s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -957,10 +1052,16 @@ function japaneseOnly(text) {
   return runs.filter(r => /[぀-ヿ㐀-鿿]/.test(r)).join("、");
 }
 
+// An element showing Japanese with furigana whose words can be clicked.
+function richEl(tag, attrs, segments) {
+  const node = el(tag, { ...attrs, class: `rich ${attrs.class || ""}`.trim() });
+  node.segments = segments;
+  node.innerHTML = renderRich(segments);
+  return node;
+}
+
 function messageEl(msg) {
-  const bubble = el("div", { class: "bubble" });
-  bubble.segments = msg.segments || [{ t: msg.content }];
-  bubble.innerHTML = renderRich(bubble.segments);
+  const bubble = richEl("div", { class: "bubble" }, msg.segments || [{ t: msg.content }]);
   const isAssistant = msg.role === "assistant";
   const jp = isAssistant ? japaneseOnly(msg.content) : "";
   return el("div", { class: `msg msg-${msg.role}`, "data-id": msg.id ?? "" },
@@ -999,9 +1100,9 @@ function closeWordPopup() {
 }
 
 document.addEventListener("click", e => {
-  const span = e.target.closest(".bubble .w");
+  const span = e.target.closest(".rich .w");
   if (span) {
-    const bubble = span.closest(".bubble");
+    const bubble = span.closest(".rich");
     const i = Number(span.dataset.i);
     // The next couple of words let the server find compounds (会社 + 員 = 会社員).
     const next = bubble.segments.slice(i + 1, i + 3).filter(s => s.b).map(s => s.t).join("");
@@ -1112,6 +1213,11 @@ async function renderTutor() {
   await Promise.all([loadChatList(), refreshLlmLabel()]);
   if (tutor.chatId) await openChat(tutor.chatId);
   else showChatEmpty();
+  if (tutor.autoStart) {  // a lesson practice chat that was just created
+    const text = tutor.autoStart;
+    tutor.autoStart = null;
+    sendMessage(text);
+  }
   $("#composer-input").focus();
 }
 
@@ -1183,9 +1289,15 @@ async function openChat(id) {
   tutor.chatId = id;
   prefs.set("chat.current", id);
   $("#chat-title").textContent = chat.title;
+  const lessonLink = $("#chat-lesson-link");
+  lessonLink.hidden = !chat.lesson_id;
+  if (chat.lesson_id) lessonLink.href = `#lessons/${chat.lesson_id}`;
   for (const item of document.querySelectorAll(".chat-item")) item.classList.remove("active");
   loadChatList();
-  if (!chat.messages.length) return showChatEmpty();
+  if (!chat.messages.length) {
+    if (chat.lesson_id) return $("#messages").replaceChildren(); // practice is about to start
+    return showChatEmpty();
+  }
   $("#messages").replaceChildren(...chat.messages.map(messageEl));
   const last = chat.messages[chat.messages.length - 1];
   if (last.role === "user") $("#messages").append(errorEl("This message has no reply yet."));
@@ -1194,6 +1306,7 @@ async function openChat(id) {
 
 function showChatEmpty() {
   $("#chat-title").textContent = "Sensei";
+  $("#chat-lesson-link").hidden = true;
   $("#messages").replaceChildren(el("div", { class: "chat-empty" },
     el("div", { class: "avatar", lang: "ja" }, "先"),
     el("h2", {}, "こんにちは! I'm your Japanese tutor."),

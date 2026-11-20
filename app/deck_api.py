@@ -54,7 +54,7 @@ class SaveWord(BaseModel):
     source: str = "chat"
 
 
-def _add_card(conn, kind: str, ref_id: int) -> None:
+def add_card(conn, kind: str, ref_id: int) -> None:
     row = srs.to_row(srs.new_card())
     conn.execute(
         """INSERT OR IGNORE INTO deck_cards (kind, ref_id, state, stability, due_ts, fsrs, created_at)
@@ -80,7 +80,7 @@ def save_word(body: SaveWord):
         )
         vocab_id = conn.execute("SELECT id FROM vocab WHERE word = ? AND reading = ?",
                                 (word, reading)).fetchone()["id"]
-        _add_card(conn, "vocab", vocab_id)
+        add_card(conn, "vocab", vocab_id)
     return {"id": vocab_id, "word": word, "reading": reading}
 
 
@@ -116,7 +116,7 @@ def save_mistakes(conn, chat_id: int, mistakes: list[dict]) -> int:
             "INSERT INTO mistakes (chat_id, wrong, correct, note, created_at) VALUES (?, ?, ?, ?, ?)",
             (chat_id, wrong[:300], correct[:300], str(m.get("note", "")).strip()[:300], time.time()),
         )
-        _add_card(conn, "mistake", cur.lastrowid)
+        add_card(conn, "mistake", cur.lastrowid)
         saved += 1
     return saved
 

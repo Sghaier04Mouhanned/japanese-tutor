@@ -15,6 +15,7 @@
     <nav class="nav">
       <a href="#home" data-view="home">Home</a>
       <a href="#tutor" data-view="tutor">Tutor</a>
+      <a href="#lessons" data-view="lessons">Lessons</a>
       <a href="#learn" data-view="learn">Kana</a>
       <a href="#review" data-view="review">Review <span class="badge" id="due-badge" hidden></span></a>
       <a href="#notebook" data-view="notebook">Notebook</a>
@@ -77,6 +78,7 @@
         <div class="chat-head">
           <button class="btn btn-ghost chat-list-toggle" id="chat-list-toggle" type="button" aria-label="Show chats">☰</button>
           <h2 id="chat-title">Sensei</h2>
+          <a class="btn btn-ghost" id="chat-lesson-link" href="#lessons" hidden>📘 Lesson</a>
           <label class="toggle"><input type="checkbox" id="opt-furigana" checked> Furigana</label>
           <button class="btn btn-ghost" id="llm-settings-btn" type="button" title="AI model settings">⚙</button>
         </div>
@@ -131,6 +133,11 @@
         </div>
         <div id="practice-body"></div>
       </div>
+    </section>
+
+    <!-- LESSONS -->
+    <section class="view" id="view-lessons" hidden>
+      <div class="panel" id="lessons-body"></div>
     </section>
 
     <!-- NOTEBOOK -->

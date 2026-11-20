@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from . import checks, deck_api, furigana, llm, tutor
+from . import checks, deck_api, furigana, lessons, llm, tutor
 from .db import connect, get_setting, set_setting
 
 router = APIRouter(prefix="/api", tags=["chat"])
@@ -109,13 +109,14 @@ def create_chat():
 @router.get("/chats/{chat_id}")
 def get_chat(chat_id: int):
     with connect() as conn:
-        chat = conn.execute("SELECT id, title FROM chats WHERE id = ?", (chat_id,)).fetchone()
+        chat = conn.execute("SELECT id, title, lesson_id FROM chats WHERE id = ?", (chat_id,)).fetchone()
         if chat is None:
             raise HTTPException(404, "chat not found")
         rows = conn.execute(
             "SELECT * FROM chat_messages WHERE chat_id = ? ORDER BY id", (chat_id,)
         ).fetchall()
-    return {"id": chat["id"], "title": chat["title"], "messages": [_message_out(r) for r in rows]}
+    return {"id": chat["id"], "title": chat["title"], "lesson_id": chat["lesson_id"],
+            "messages": [_message_out(r) for r in rows]}
 
 
 @router.delete("/chats/{chat_id}")
@@ -141,7 +142,7 @@ async def post_message(chat_id: int, body: NewMessage):
     user_message = None
 
     with connect() as conn:
-        chat = conn.execute("SELECT id, title FROM chats WHERE id = ?", (chat_id,)).fetchone()
+        chat = conn.execute("SELECT id, title, lesson_id FROM chats WHERE id = ?", (chat_id,)).fetchone()
         if chat is None:
             raise HTTPException(404, "chat not found")
         if content:
@@ -162,7 +163,11 @@ async def post_message(chat_id: int, body: NewMessage):
         ).fetchall()[::-1]
         if not history or history[-1]["role"] != "user":
             raise HTTPException(400, "nothing to answer")
-        messages = [{"role": "system", "content": tutor.system_prompt(conn)}]
+        system = tutor.system_prompt(conn)
+        lesson = lessons.get(chat["lesson_id"]) if chat["lesson_id"] else None
+        if lesson:
+            system += lessons.tutor_brief(lesson)
+        messages = [{"role": "system", "content": system}]
         messages += tutor.with_reminder([{"role": r["role"], "content": r["content"]} for r in history])
 
     async def events():

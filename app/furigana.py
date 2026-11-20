@@ -60,7 +60,53 @@ _EVERYDAY_READINGS = {
     "二人": "ふたり",
     "上手": "じょうず",
     "下手": "へた",
+    "何時": "なんじ",  # なんどき is literary
 }
+
+# The analyzer reads number + counter one character at a time (四時 as
+# よんじ, 九時 as きゅうじ). These are the readings learners actually need.
+# Each value is the ruby for (number, counter); a single string means the
+# reading only works over the whole word (一人 = ひとり).
+_NUM = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "何"]
+_COUNTERS: dict[str, list] = {
+    "時": [("いち", "じ"), ("に", "じ"), ("さん", "じ"), ("よ", "じ"), ("ご", "じ"), ("ろく", "じ"),
+          ("しち", "じ"), ("はち", "じ"), ("く", "じ"), ("じゅう", "じ"), ("なん", "じ")],
+    "分": [("いっ", "ぷん"), ("に", "ふん"), ("さん", "ぷん"), ("よん", "ぷん"), ("ご", "ふん"), ("ろっ", "ぷん"),
+          ("なな", "ふん"), ("はっ", "ぷん"), ("きゅう", "ふん"), ("じゅっ", "ぷん"), ("なん", "ぷん")],
+    "人": ["ひとり", "ふたり", ("さん", "にん"), ("よ", "にん"), ("ご", "にん"), ("ろく", "にん"),
+          ("なな", "にん"), ("はち", "にん"), ("きゅう", "にん"), ("じゅう", "にん"), ("なん", "にん")],
+    # 一日 is ついたち (the 1st) or いちにち (one day) depending on meaning, so it's left alone.
+    "日": [None, "ふつか", "みっか", "よっか", "いつか", "むいか",
+          "なのか", "ようか", "ここのか", "とおか", ("なん", "にち")],
+}
+
+
+# How the analyzer may read each digit at the end of a longer number.
+_DIGIT_READINGS = {"一": ("いち",), "二": ("に",), "三": ("さん",), "四": ("よん", "し"), "五": ("ご",),
+                   "六": ("ろく",), "七": ("なな", "しち"), "八": ("はち",), "九": ("きゅう", "く"), "十": ("じゅう",)}
+
+
+def _counter_word(num: str, counter: str, num_reading: str | None = None) -> dict | None:
+    if counter not in _COUNTERS:
+        return None
+    if num in _NUM:
+        ruby = _COUNTERS[counter][_NUM.index(num)]
+    elif len(num) > 1 and all(c in "一二三四五六七八九十百" for c in num) and num_reading:
+        # 三十分: the last digit decides the sound change (さんじゅう + ぷん -> さんじゅっぷん).
+        last = _COUNTERS[counter][_NUM.index(num[-1])]
+        plain = next((p for p in _DIGIT_READINGS[num[-1]] if num_reading.endswith(p)), None)
+        if not isinstance(last, tuple) or plain is None:
+            return None
+        ruby = (num_reading[: -len(plain)] + last[0], last[1])
+    else:
+        return None
+    if ruby is None:
+        return None
+    surface = num + counter
+    if isinstance(ruby, str):
+        return {"t": surface, "b": surface, "k": ruby, "p": "noun", "parts": [{"t": surface, "r": ruby}]}
+    return {"t": surface, "b": surface, "k": ruby[0] + ruby[1], "p": "noun",
+            "parts": [{"t": num, "r": ruby[0]}, {"t": counter, "r": ruby[1]}]}
 
 
 def _reading(word) -> str | None:
@@ -112,10 +158,22 @@ def annotate(text: str) -> list[dict]:
     lines = text.split("\n")
     for n, line in enumerate(lines):
         if _JAPANESE.search(line):
-            for word in _tagger()(line):
+            words = list(_tagger()(line))
+            skip = False
+            for n_word, word in enumerate(words):
+                if skip:
+                    skip = False
+                    continue
                 if word.white_space:
                     push_plain(word.white_space)
                 surface = word.surface
+                following = words[n_word + 1] if n_word + 1 < len(words) else None
+                if following is not None and not following.white_space:
+                    counted = _counter_word(surface, following.surface, _reading(word))
+                    if counted:
+                        segments.append(counted)
+                        skip = True
+                        continue
                 pos = _POS.get(word.feature.pos1)
                 if not pos or not _JAPANESE.search(surface):
                     push_plain(surface)

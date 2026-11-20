@@ -5,6 +5,20 @@ work-ready Japanese (and JLPT N5 → N4), powered by a free AI API or a local mo
 
 ## Features
 
+**N5 lessons for work Japanese**
+- 10 hand-written lessons: office greetings, self-introduction, です, questions, これ/それ/あれ,
+  の, polite verbs, past tense, particles, telling the time
+- Key points, example sentences with furigana and romaji, and vocabulary in each lesson
+- "Practice with Sensei" runs exercises grounded in the lesson's own content
+- Completing a lesson adds its vocabulary to your reviews
+- `python -m app.lessons` cross-checks every example's kana, romaji and furigana
+
+**Dictionary, notebook and reviews**
+- Click any Japanese word (chat or lessons) to look it up in JMdict and save it
+- Sensei logs the mistakes it corrects; they come back as review cards
+- The Review tab covers kana, saved words (typed readings checked strictly) and mistakes
+- Notebook lists your saved words and mistakes
+
 **AI tutor chat**
 - "Sensei" teaches in English, brings in Japanese gradually, and uses polite です/ます form for work
 - Knows which kana you've learned and adds romaji until you can read them
@@ -21,14 +35,23 @@ work-ready Japanese (and JLPT N5 → N4), powered by a free AI API or a local mo
 - Progress chart, daily streak and accuracy
 - Accepts common alternative spellings (si/shi, tu/tsu, zya/ja…)
 
-**Coming next:** N5 lessons in polite form, word lookup (JMdict), mistake tracking,
-work role-plays, voice practice, JLPT quizzes.
+**Coming next:** work role-plays, voice practice, JLPT N5 quizzes, progress stats.
 
 ## Setup
 
 Copy `.env.example` to `.env` and add a free Gemini key from
 https://aistudio.google.com. For local models, install [Ollama](https://ollama.com)
 and pull a small model that fits your GPU (e.g. `ollama pull qwen3:4b`).
+
+For word lookups, download the dictionary once and build its index:
+
+```bash
+curl -o data/dict/JMdict_e.gz http://ftp.edrdg.org/pub/Nihongo/JMdict_e.gz
+python -m app.dictionary
+```
+
+JMdict is © the Electronic Dictionary Research and Development Group, used under
+[CC BY-SA 4.0](https://www.edrdg.org/edrdg/licence.html).
 
 ## Run it
 
@@ -56,6 +79,9 @@ app/
   llm.py        OpenAI-compatible client for Gemini and Ollama
   furigana.py   kanji readings via MeCab/UniDic
   checks.py     kana vs romaji consistency check
+  lessons.py    the hand-written N5 lessons (+ lessons_api.py)
+  dictionary.py JMdict import and lookup
+  deck_api.py   saved words, mistakes and their reviews
   kana_api.py   kana endpoints (groups, unlock, review, stats)
   kana.py       kana tables and answer checking
   srs.py        FSRS spaced-repetition wrapper

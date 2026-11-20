@@ -88,6 +88,12 @@ CREATE TABLE IF NOT EXISTS deck_cards (
 );
 CREATE INDEX IF NOT EXISTS idx_deck_cards_due ON deck_cards (due_ts);
 
+CREATE TABLE IF NOT EXISTS lesson_progress (
+    lesson_id   TEXT    PRIMARY KEY,
+    status      TEXT    NOT NULL CHECK (status IN ('started', 'done')),
+    updated_at  REAL    NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS deck_reviews (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     card_id     INTEGER NOT NULL REFERENCES deck_cards (id) ON DELETE CASCADE,
@@ -98,10 +104,20 @@ CREATE TABLE IF NOT EXISTS deck_reviews (
 """
 
 
+# Columns added after a table first shipped: (table, column, definition).
+MIGRATIONS = [
+    ("chats", "lesson_id", "TEXT"),  # practice chats belong to a lesson
+]
+
+
 def init_db() -> None:
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     with connect() as conn:
         conn.executescript(SCHEMA)
+        for table, column, definition in MIGRATIONS:
+            existing = {r["name"] for r in conn.execute(f"PRAGMA table_info({table})")}
+            if column not in existing:
+                conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
 
 
 def get_setting(conn, key: str, default: str | None = None) -> str | None:
