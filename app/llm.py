@@ -71,6 +71,11 @@ def is_configured(provider: Provider) -> bool:
     return provider.key_env is None or bool(os.getenv(provider.key_env))
 
 
+def _url(provider: Provider, path: str) -> str:
+    # Base URLs may or may not end in "/" (Gemini's does, Ollama's doesn't).
+    return provider.base_url.rstrip("/") + "/" + path
+
+
 def _headers(provider: Provider) -> dict[str, str]:
     if not is_configured(provider):
         raise LLMError(f"{provider.label}: add {provider.key_env} to your .env file and restart the app.")
@@ -116,7 +121,7 @@ def _connection_error(provider: Provider, err: Exception) -> LLMError:
 async def list_models(provider: Provider) -> list[str]:
     try:
         async with httpx.AsyncClient(timeout=20) as client:
-            r = await client.get(provider.base_url + "models", headers=_headers(provider))
+            r = await client.get(_url(provider, "models"), headers=_headers(provider))
     except httpx.HTTPError as err:
         raise _connection_error(provider, err) from err
     if r.status_code >= 400:
@@ -157,6 +162,28 @@ def _visible(text: str) -> str:
     return text
 
 
+_forced_thinking: dict[str, bool] = {}
+
+
+async def _forces_thinking(provider: Provider, model: str) -> bool:
+    """Some Ollama models (e.g. Qwen3 "Thinking" builds) open a <think> block in
+    their prompt template, so the reply starts mid-reasoning and only contains
+    the closing </think>. Ask Ollama once per model."""
+    if provider.id != "ollama":
+        return False
+    if model not in _forced_thinking:
+        root = provider.base_url.rstrip("/").removesuffix("/v1")
+        try:
+            async with httpx.AsyncClient(timeout=10) as client:
+                r = await client.post(f"{root}/api/show", json={"model": model})
+            template = r.json().get("template", "") if r.status_code == 200 else ""
+        except (httpx.HTTPError, ValueError):
+            template = ""
+        # e.g. "<|im_start|>assistant\n<think>\n{{ end }}": the reply is opened mid-thought.
+        _forced_thinking[model] = bool(re.search(r"assistant\s*<think>\s*(\{\{|$)", template))
+    return _forced_thinking[model]
+
+
 def _tune_for_model(model: str, messages: list[dict]) -> list[dict]:
     # Qwen3 reasons step by step before answering unless told not to; on a
     # small local GPU that makes every reply slow for little gain in a chat.
@@ -170,10 +197,11 @@ async def stream_chat(provider: Provider, model: str, messages: list[dict]) -> A
     messages = _tune_for_model(model, messages)
     payload = {"model": model, "messages": messages, "stream": True, "temperature": 0.6}
     timeout = httpx.Timeout(connect=10, read=provider.first_byte_timeout, write=10, pool=10)
+    thinking_first = await _forces_thinking(provider, model)
     raw, sent = "", 0
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
-            async with client.stream("POST", provider.base_url + "chat/completions",
+            async with client.stream("POST", _url(provider, "chat/completions"),
                                      json=payload, headers=_headers(provider)) as r:
                 if r.status_code >= 400:
                     raise _status_error(provider, r.status_code, await r.aread())
@@ -191,7 +219,13 @@ async def stream_chat(provider: Provider, model: str, messages: list[dict]) -> A
                     if not piece:
                         continue
                     raw += piece
-                    visible = _visible(raw).lstrip()
+                    if thinking_first:
+                        # Everything before </think> is reasoning the learner shouldn't see.
+                        if "</think>" not in raw:
+                            continue
+                        visible = _visible(raw.split("</think>", 1)[1]).lstrip()
+                    else:
+                        visible = _visible(raw).lstrip()
                     if len(visible) > sent:
                         yield visible[sent:]
                         sent = len(visible)
