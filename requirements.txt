@@ -5,3 +5,7 @@ python-dotenv==1.2.4
 httpx==0.28.1
 fugashi==1.5.2
 unidic-lite==1.0.8
+python-multipart==0.0.34
+# Speech recognition. Pinned: newer resolutions tried to build PyAV from source on Windows.
+faster-whisper==1.2.1
+av==19.0.2

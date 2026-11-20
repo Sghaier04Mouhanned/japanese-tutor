@@ -13,6 +13,17 @@ passing the JLPT (N5, then N4), powered by a free AI API or a local model.
 - Completing a lesson adds its vocabulary to your reviews
 - `python -m app.lessons` cross-checks every example's kana, romaji and furigana
 
+**JLPT-style quizzes**
+- Kanji reading (漢字読み), spelling (表記), vocabulary (語彙), particles (文法) and listening (聴解)
+- Generated from verified lesson content and your saved words, never by the AI
+- Reading distractors are near misses like on the real test (がっこう / がこう / かっこう)
+- Per-type scores, explanations, and one click to add missed words to your reviews
+
+**Speaking (local Whisper)**
+- 🎤 in the chat: speak Japanese, check the transcript, send it to Sensei
+- 🎤 on every lesson example: say the sentence and see which sounds were recognized
+- Runs on your own machine (faster-whisper, CPU); compares by sound, so 学校 = がっこう
+
 **Dictionary, notebook and reviews**
 - Click any Japanese word (chat or lessons) to look it up in JMdict and save it
 - Sensei logs the mistakes it corrects; they come back as review cards
@@ -35,7 +46,7 @@ passing the JLPT (N5, then N4), powered by a free AI API or a local model.
 - Progress chart, daily streak and accuracy
 - Accepts common alternative spellings (si/shi, tu/tsu, zya/ja…)
 
-**Coming next:** JLPT N5-style quizzes, voice practice, progress stats.
+**Coming next:** progress stats, N4 lessons.
 
 ## Setup
 
@@ -52,6 +63,9 @@ python -m app.dictionary
 
 JMdict is © the Electronic Dictionary Research and Development Group, used under
 [CC BY-SA 4.0](https://www.edrdg.org/edrdg/licence.html).
+
+Speech recognition downloads the Whisper "small" model (~480 MB) into `data/models/`
+the first time you press a 🎤 button.
 
 ## Run it
 
@@ -82,6 +96,8 @@ app/
   lessons.py    the hand-written N5 lessons (+ lessons_api.py)
   dictionary.py JMdict import and lookup
   deck_api.py   saved words, mistakes and their reviews
+  quiz.py       JLPT-style question generator (+ quiz_api.py)
+  speech.py     Whisper transcription and shadowing comparison (+ speech_api.py)
   kana_api.py   kana endpoints (groups, unlock, review, stats)
   kana.py       kana tables and answer checking
   srs.py        FSRS spaced-repetition wrapper

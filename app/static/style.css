@@ -367,7 +367,24 @@ kbd {
 .example .jp-line p { margin: 0; }
 .example .romaji { color: var(--accent); font-size: .9rem; }
 .example .en { color: var(--muted); font-size: .9rem; }
-.example .speak { grid-row: 1 / span 3; grid-column: 2; }
+.example-actions { grid-row: 1 / span 3; grid-column: 2; display: flex; gap: .35rem; }
+.shadow-result { grid-column: 1 / -1; }
+.shadow-result:empty { display: none; }
+.shadow-score { margin-top: .4rem; font-size: .9rem; }
+.shadow-runs { font-family: var(--jp); font-size: 1.1rem; letter-spacing: .02em; }
+.shadow-runs .ok { color: var(--ok); }
+.shadow-runs .miss { color: var(--bad); text-decoration: underline wavy; text-underline-offset: 4px; }
+.mic {
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  width: 2.4rem; height: 2.4rem; border-radius: 999px; cursor: pointer; font-size: 1rem; flex: none;
+}
+.mic:hover { background: var(--surface-2); }
+.mic.recording { background: var(--bad); border-color: var(--bad); color: #fff; animation: pulse 1.2s infinite; }
+.mic.busy { opacity: .6; cursor: progress; }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--bad) 50%, transparent); } 50% { box-shadow: 0 0 0 8px transparent; } }
+.composer .mic { align-self: center; }
+.voice-note { color: var(--accent); margin-right: .5rem; }
+.voice-note:empty { display: none; }
 .hide-romaji .romaji { display: none; }
 .vocab-table { width: 100%; border-collapse: collapse; }
 .vocab-table td { padding: .45rem .4rem; border-bottom: 1px solid var(--border); vertical-align: middle; }

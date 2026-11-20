@@ -106,6 +106,84 @@ function speakButton(text) {
   }, "🔊");
 }
 
+/* ================= microphone + speech recognition ================= */
+
+let speechStatus = null;
+
+async function refreshSpeechStatus() {
+  try { speechStatus = await api.get("/api/speech/status"); } catch { speechStatus = null; }
+  return speechStatus;
+}
+
+let activeRecording = null;
+
+async function startRecording() {
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+  const type = ["audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus", "audio/mp4"]
+    .find(t => window.MediaRecorder?.isTypeSupported(t)) || "";
+  const recorder = new MediaRecorder(stream, type ? { mimeType: type } : undefined);
+  const chunks = [];
+  recorder.addEventListener("dataavailable", e => { if (e.data.size) chunks.push(e.data); });
+  recorder.start();
+  const stopped = new Promise(resolve => recorder.addEventListener("stop", () => {
+    stream.getTracks().forEach(t => t.stop());
+    resolve(new Blob(chunks, { type: recorder.mimeType }));
+  }));
+  // Safety net: never record forever if the learner forgets to stop.
+  const timer = setTimeout(() => recorder.state === "recording" && recorder.stop(), 30000);
+  activeRecording = { stop: () => { clearTimeout(timer); if (recorder.state === "recording") recorder.stop(); return stopped; } };
+  return activeRecording;
+}
+
+async function transcribeBlob(blob) {
+  const form = new FormData();
+  form.append("audio", blob, "speech.webm");
+  const r = await fetch("/api/speech/transcribe", { method: "POST", body: form });
+  if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
+  return r.json();
+}
+
+// A mic button: click to record, click again to stop. `onText(result)` gets the transcript.
+function micButton({ onText, onError, label = "🎤", title = "Speak (click again to stop)" }) {
+  const button = el("button", { class: "mic", type: "button", title, "aria-label": title }, label);
+  let recording = null;
+  button.addEventListener("click", async () => {
+    if (button.classList.contains("busy")) return;
+    if (recording) {
+      const rec = recording;
+      recording = null;
+      button.classList.remove("recording");
+      button.classList.add("busy");
+      button.textContent = "…";
+      try {
+        onText(await transcribeBlob(await rec.stop()));
+      } catch (err) {
+        onError(err.message);
+      } finally {
+        button.classList.remove("busy");
+        button.textContent = label;
+      }
+      return;
+    }
+    const status = speechStatus?.model_ready ? speechStatus : await refreshSpeechStatus();
+    if (!status?.available) return onError("Speech recognition isn't installed on the server yet.");
+    if (!status.model_ready) {
+      api.post("/api/speech/prepare", {});
+      return onError("The speech model is downloading (about 480 MB, one time). Try again in a few minutes.");
+    }
+    try {
+      recording = await startRecording();
+      button.classList.add("recording");
+      button.textContent = "■";
+    } catch (err) {
+      recording = null;
+      onError(err.name === "NotAllowedError" ? "Microphone access was blocked. Allow it in the browser's address bar." : err.message);
+    }
+  });
+  onCleanup(() => { if (recording) recording.stop(); });
+  return button;
+}
+
 /* ================= routing ================= */
 
 let cleanups = [];
@@ -870,6 +948,17 @@ async function renderLessons() {
         el("div", { class: "goal" }, l.goal)))));
 }
 
+// Shows which sounds of the target sentence Whisper heard (green) or missed (red).
+function shadowFeedback(cmp, heardText) {
+  const verdict = cmp.perfect ? "Excellent! 🎉"
+    : cmp.score >= 70 ? "Close! Compare what Whisper heard with the red parts."
+    : "Keep practising. Listen again and repeat slowly.";
+  return el("div", {},
+    el("div", { class: "shadow-score" }, el("strong", {}, `${cmp.score}%`), ` ${verdict}`),
+    el("div", { class: "shadow-runs", lang: "ja" }, cmp.runs.map(r => el("span", { class: r.ok ? "ok" : "miss" }, r.t))),
+    el("div", { class: "muted", style: "font-size:.82rem" }, "Whisper heard: ", el("span", { lang: "ja" }, heardText)));
+}
+
 async function renderLesson(body, id) {
   const lesson = await api.get(`/api/lessons/${id}`);
   const showRomaji = prefs.get("lesson.romaji", true);
@@ -879,12 +968,25 @@ async function renderLesson(body, id) {
       examples.classList.toggle("hide-romaji", !e.target.checked);
     } }), "Romaji");
 
-  const examples = el("div", { class: showRomaji ? "" : "hide-romaji" }, lesson.examples.map(ex =>
-    el("div", { class: "example" },
+  const examples = el("div", { class: showRomaji ? "" : "hide-romaji" }, lesson.examples.map(ex => {
+    const result = el("div", { class: "shadow-result" });
+    return el("div", { class: "example" },
       richEl("div", { class: "jp-line", lang: "ja" }, ex.segments),
       el("div", { class: "romaji" }, ex.romaji),
       el("div", { class: "en" }, ex.en),
-      speakButton(ex.jp))));
+      el("div", { class: "example-actions" },
+        speakButton(ex.jp),
+        micButton({
+          title: "Say this sentence (click again to stop)",
+          onText: async ({ text }) => {
+            if (!text) { result.replaceChildren(el("span", { class: "muted" }, "Didn't catch anything. Try again.")); return; }
+            const cmp = await api.post("/api/speech/compare", { target: ex.jp, heard: text });
+            result.replaceChildren(shadowFeedback(cmp, text));
+          },
+          onError: message => result.replaceChildren(el("span", { class: "feedback bad" }, message)),
+        })),
+      result);
+  }));
 
   const unsaved = lesson.vocab.filter(v => !v.saved).length;
   const complete = el("button", { class: "btn", type: "button", disabled: lesson.status === "done" && !unsaved },
@@ -1424,6 +1526,18 @@ function bindTutorOnce() {
 
   const input = $("#composer-input");
   const autosize = () => { input.style.height = "auto"; input.style.height = `${input.scrollHeight}px`; };
+  const voiceNote = $("#composer-voice");
+  $("#composer").insertBefore(micButton({
+    title: "Speak Japanese (click again to stop). You can edit the text before sending.",
+    onText: ({ text }) => {
+      voiceNote.textContent = text ? "" : "Didn't catch anything. Try again, a little closer to the mic.";
+      if (!text) return;
+      input.value = input.value ? `${input.value} ${text}` : text;
+      autosize();
+      input.focus();
+    },
+    onError: message => { voiceNote.textContent = message; },
+  }), $("#composer-send"));
   input.addEventListener("input", autosize);
   input.addEventListener("keydown", e => {
     // isComposing: Enter is confirming a Japanese IME conversion, not sending.
