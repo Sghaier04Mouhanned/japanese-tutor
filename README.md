@@ -24,6 +24,11 @@ passing the JLPT (N5, then N4), powered by a free AI API or a local model.
 - 🎤 on every lesson example: say the sentence and see which sounds were recognized
 - Runs on your own machine (faster-whisper, CPU); compares by sound, so 学校 = がっこう
 
+**Progress dashboard (Home)**
+- JLPT N5 building blocks: kana, lessons, vocabulary toward ~800 words, quiz accuracy per section
+- Last 30 days of study (kana, words & mistakes, quizzes) with hover details and a table view
+- Quiz score trend; study days, total reviews and quizzes
+
 **Dictionary, notebook and reviews**
 - Click any Japanese word (chat or lessons) to look it up in JMdict and save it
 - Sensei logs the mistakes it corrects; they come back as review cards
@@ -46,7 +51,7 @@ passing the JLPT (N5, then N4), powered by a free AI API or a local model.
 - Progress chart, daily streak and accuracy
 - Accepts common alternative spellings (si/shi, tu/tsu, zya/ja…)
 
-**Coming next:** progress stats, N4 lessons.
+**Coming next:** more N5 lessons, then N4.
 
 ## Setup
 

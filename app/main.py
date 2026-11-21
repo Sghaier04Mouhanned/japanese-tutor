@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from . import chat_api, deck_api, furigana, kana_api, lessons_api, quiz_api, speech_api
+from . import chat_api, deck_api, furigana, kana_api, lessons_api, progress_api, quiz_api, speech_api
 from .config import STATIC_DIR
 from .db import init_db
 
@@ -34,6 +34,7 @@ app.include_router(deck_api.router)
 app.include_router(lessons_api.router)
 app.include_router(quiz_api.router)
 app.include_router(speech_api.router)
+app.include_router(progress_api.router)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 

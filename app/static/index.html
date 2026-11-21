@@ -46,6 +46,38 @@
         </div>
       </div>
 
+      <div class="panel" id="progress-panel">
+        <div class="panel-head">
+          <h2>Your progress</h2>
+          <span class="muted" id="progress-totals"></span>
+        </div>
+        <h3 class="sub-head">JLPT N5 building blocks</h3>
+        <div class="meters" id="progress-meters"></div>
+        <p class="hint">Rough guide, not an official score: the real N5 also needs more vocabulary, reading and listening than these lessons cover.</p>
+
+        <div class="chart-block">
+          <div class="chart-head">
+            <h3 class="sub-head">Last 30 days</h3>
+            <button class="btn btn-ghost" id="activity-table-btn" type="button">Show table</button>
+          </div>
+          <div class="legend" id="activity-legend">
+            <span><i class="dot s1"></i>Kana reviews</span>
+            <span><i class="dot s2"></i>Word &amp; mistake reviews</span>
+            <span><i class="dot s3"></i>Quiz questions</span>
+          </div>
+          <div class="chart-svg" id="activity-chart"></div>
+          <div id="activity-table" hidden></div>
+        </div>
+
+        <div class="chart-block">
+          <div class="chart-head">
+            <h3 class="sub-head">Quiz scores</h3>
+            <span class="muted" id="quiz-trend-note"></span>
+          </div>
+          <div class="chart-svg" id="quiz-chart"></div>
+        </div>
+      </div>
+
       <div class="panel">
         <div class="panel-head">
           <h2>Kana chart</h2>

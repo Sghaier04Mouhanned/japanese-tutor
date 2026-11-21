@@ -294,6 +294,8 @@ async function renderHome() {
   $("#chart-progress").style.width = `${(known / s.total) * 100}%`;
   $("#chart-progress-label").textContent = `${known} / ${s.total} known`;
 
+  renderProgress().catch(showError);
+
   const chart = $("#kana-chart");
   chart.replaceChildren(...data.groups.map(g => {
     const isNext = g.id === data.next_group;
@@ -316,6 +318,209 @@ async function renderHome() {
       )),
     );
   }));
+}
+
+/* ================= progress dashboard ================= */
+
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+function svg(tag, attrs = {}, ...children) {
+  const node = document.createElementNS(SVG_NS, tag);
+  for (const [k, v] of Object.entries(attrs)) if (v !== null && v !== undefined) node.setAttribute(k, v);
+  node.append(...children.flat().filter(c => c !== null && c !== undefined && c !== false));
+  return node;
+}
+
+// Round an axis maximum up to 1, 2 or 5 × a power of ten.
+function niceMax(value) {
+  if (value <= 0) return 1;
+  const p = 10 ** Math.floor(Math.log10(value));
+  return [1, 2, 5, 10].map(m => m * p).find(v => v >= value);
+}
+
+function shortDate(iso) {
+  return new Date(`${iso}T12:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
+
+function chartTip(container) {
+  const tip = el("div", { class: "chart-tip", hidden: true });
+  container.append(tip);
+  return {
+    show(x, y, ...content) { tip.replaceChildren(...content); tip.style.left = `${x}px`; tip.style.top = `${y}px`; tip.hidden = false; },
+    hide() { tip.hidden = true; },
+  };
+}
+
+const SERIES = [
+  ["kana", "Kana reviews", "var(--series-1)"],
+  ["deck", "Word & mistake reviews", "var(--series-2)"],
+  ["quiz", "Quiz questions", "var(--series-3)"],
+];
+
+function drawActivity(container, days) {
+  container.replaceChildren();
+  const totals = days.map(d => d.kana + d.deck + d.quiz);
+  if (!totals.some(Boolean)) {
+    container.append(el("div", { class: "chart-empty" }, "No study activity in the last 30 days yet."));
+    return;
+  }
+  const W = Math.max(300, container.clientWidth), H = 190;
+  const m = { l: 34, r: 8, t: 10, b: 24 };
+  const plotW = W - m.l - m.r, plotH = H - m.t - m.b;
+  const max = niceMax(Math.max(...totals));
+  const y = v => m.t + plotH - (v / max) * plotH;
+  const slot = plotW / days.length;
+  const barW = Math.min(24, slot * 0.7);
+  const root = svg("svg", { viewBox: `0 0 ${W} ${H}`, role: "img",
+    "aria-label": "Study activity per day for the last 30 days. Use Show table for the numbers." });
+
+  for (const v of [0, max / 2, max]) {
+    root.append(svg("line", { class: v ? "grid" : "baseline", x1: m.l, x2: W - m.r, y1: y(v), y2: y(v) }));
+    root.append(svg("text", { x: m.l - 6, y: y(v) + 4, "text-anchor": "end" }, String(Math.round(v))));
+  }
+
+  const tip = chartTip(container);
+  days.forEach((d, i) => {
+    const cx = m.l + slot * i + slot / 2;
+    const band = svg("rect", { class: "hover-band", x: m.l + slot * i, y: m.t, width: slot, height: plotH, rx: 4 });
+    root.append(band);
+    // Stack bottom-up with a 2px surface gap between segments; only the top one gets rounded ends.
+    const segs = SERIES.map(([key, , color]) => ({ v: d[key], color })).filter(s => s.v > 0);
+    let base = y(0);
+    segs.forEach((s, n) => {
+      const h = (s.v / max) * plotH - (n > 0 ? 2 : 0);
+      if (h <= 0) return;
+      const top = base - h - (n > 0 ? 2 : 0);
+      const x0 = cx - barW / 2;
+      if (n === segs.length - 1) {
+        const r = Math.min(4, h / 2, barW / 2);
+        root.append(svg("path", { fill: s.color, d:
+          `M${x0},${top + h} V${top + r} Q${x0},${top} ${x0 + r},${top} H${x0 + barW - r} ` +
+          `Q${x0 + barW},${top} ${x0 + barW},${top + r} V${top + h} Z` }));
+      } else {
+        root.append(svg("rect", { fill: s.color, x: x0, y: top, width: barW, height: h }));
+      }
+      base = top;
+    });
+    // Weekly ticks, plus "Today"; drop a weekly tick that would crowd the last label.
+    if (i === 0 || i === days.length - 1 || (i % 7 === 0 && days.length - 1 - i >= 4)) {
+      root.append(svg("text", { x: cx, y: H - 6, "text-anchor": i === 0 ? "start" : i === days.length - 1 ? "end" : "middle" },
+        i === days.length - 1 ? "Today" : shortDate(d.date)));
+    }
+    const hit = svg("rect", { class: "hit", x: m.l + slot * i, y: m.t, width: slot, height: plotH });
+    const showTip = () => {
+      band.classList.add("on");
+      const scale = container.clientWidth / W;
+      tip.show(cx * scale, (y(totals[i]) - 8) * scale,
+        el("strong", {}, `${shortDate(d.date)} · ${totals[i]} total`),
+        ...SERIES.map(([key, label, color]) => el("div", { class: "row" }, el("i", { style: `background:${color}` }), `${label}: ${d[key]}`)));
+    };
+    hit.addEventListener("mouseenter", showTip);
+    hit.addEventListener("mouseleave", () => { band.classList.remove("on"); tip.hide(); });
+    root.append(hit);
+  });
+  container.prepend(root);
+}
+
+function activityTable(days) {
+  const rows = days.filter(d => d.kana + d.deck + d.quiz).reverse();
+  return el("table", { class: "data-table" },
+    el("thead", {}, el("tr", {}, el("th", {}, "Day"), SERIES.map(([, label]) => el("th", {}, label)), el("th", {}, "Total"))),
+    el("tbody", {}, rows.map(d => el("tr", {},
+      el("td", {}, shortDate(d.date)), SERIES.map(([key]) => el("td", {}, d[key])), el("td", {}, d.kana + d.deck + d.quiz)))));
+}
+
+function drawQuizTrend(container, history) {
+  container.replaceChildren();
+  if (!history.length) {
+    container.append(el("div", { class: "chart-empty" }, "Take a quiz to start tracking your scores."));
+    return;
+  }
+  const W = Math.max(300, container.clientWidth), H = 170;
+  const m = { l: 40, r: 44, t: 12, b: 24 };
+  const plotW = W - m.l - m.r, plotH = H - m.t - m.b;
+  const pts = history.map((q, i) => ({
+    ...q, pct: Math.round(q.correct / q.total * 100),
+    x: m.l + (history.length === 1 ? plotW / 2 : (plotW * i) / (history.length - 1)),
+  }));
+  const y = v => m.t + plotH - (v / 100) * plotH;
+  const root = svg("svg", { viewBox: `0 0 ${W} ${H}`, role: "img",
+    "aria-label": `Quiz scores over your last ${pts.length} quizzes; latest ${pts.at(-1).pct}%.` });
+  for (const v of [0, 50, 100]) {
+    root.append(svg("line", { class: v ? "grid" : "baseline", x1: m.l, x2: W - m.r, y1: y(v), y2: y(v) }));
+    root.append(svg("text", { x: m.l - 6, y: y(v) + 4, "text-anchor": "end" }, `${v}%`));
+  }
+  if (pts.length > 1) {
+    root.append(svg("path", { fill: "var(--series-1)", opacity: 0.1,
+      d: `M${pts[0].x},${y(0)} ${pts.map(p => `L${p.x},${y(p.pct)}`).join(" ")} L${pts.at(-1).x},${y(0)} Z` }));
+    root.append(svg("path", { fill: "none", stroke: "var(--series-1)", "stroke-width": 2, "stroke-linejoin": "round",
+      "stroke-linecap": "round", d: pts.map((p, i) => `${i ? "L" : "M"}${p.x},${y(p.pct)}`).join(" ") }));
+  }
+  const tip = chartTip(container);
+  pts.forEach((p, i) => {
+    root.append(svg("circle", { cx: p.x, cy: y(p.pct), r: 4, fill: "var(--series-1)", stroke: "var(--surface)", "stroke-width": 2 }));
+    const hit = svg("circle", { class: "hit", cx: p.x, cy: y(p.pct), r: 12 });
+    hit.addEventListener("mouseenter", () => {
+      const scale = container.clientWidth / W;
+      tip.show(p.x * scale, (y(p.pct) - 10) * scale,
+        el("strong", {}, new Date(p.date * 1000).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })),
+        `${p.correct} / ${p.total} correct (${p.pct}%)`);
+    });
+    hit.addEventListener("mouseleave", () => tip.hide());
+    root.append(hit);
+    if (i === pts.length - 1) {
+      root.append(svg("text", { class: "end-label", x: p.x + 8, y: y(p.pct) + 4 }, `${p.pct}%`));
+    }
+  });
+  container.prepend(root);
+}
+
+async function renderProgress() {
+  const data = await api.get("/api/progress");
+  const t = data.totals;
+  $("#progress-totals").textContent =
+    `${t.study_days} study day${t.study_days === 1 ? "" : "s"} · ${t.reviews} reviews · ${t.quizzes} quiz${t.quizzes === 1 ? "" : "zes"}`;
+
+  const meter = (label, value, total, text) => el("div", { class: `meter${total ? "" : " empty"}` },
+    el("div", { class: "meter-label" }, el("span", {}, label), el("span", { class: "value" }, text)),
+    el("div", { class: "meter-track", role: "progressbar", "aria-label": label,
+      "aria-valuenow": total ? Math.round(value / total * 100) : 0, "aria-valuemin": 0, "aria-valuemax": 100 },
+      el("div", { class: "meter-fill", style: `width:${total ? Math.min(100, value / total * 100) : 0}%` })));
+  const known = c => c.known + c.mastered;
+  const quizMeters = Object.entries(QUIZ_TYPES).map(([type, [jp, en]]) => {
+    const s = data.quiz_by_type[type];
+    return meter(`${jp} ${en}`, s?.correct || 0, s?.total || 0,
+      s ? `${Math.round(s.correct / s.total * 100)}% of last ${s.total}` : "no quizzes yet");
+  });
+  $("#progress-meters").replaceChildren(
+    meter("Hiragana", known(data.kana.hiragana), data.kana.hiragana.total, `${known(data.kana.hiragana)} / ${data.kana.hiragana.total}`),
+    meter("Katakana", known(data.kana.katakana), data.kana.katakana.total, `${known(data.kana.katakana)} / ${data.kana.katakana.total}`),
+    meter("Lessons", data.lessons.done, data.lessons.total, `${data.lessons.done} / ${data.lessons.total} complete`),
+    meter("Vocabulary (≈800 for N5)", known(data.vocab), data.vocab.target, `${known(data.vocab)} known · ${data.vocab.saved} saved`),
+    ...quizMeters);
+
+  const draw = () => {
+    drawActivity($("#activity-chart"), data.activity);
+    drawQuizTrend($("#quiz-chart"), data.quiz_history);
+  };
+  draw();
+  const last = data.quiz_history.at(-1);
+  $("#quiz-trend-note").textContent = last ? `Last ${data.quiz_history.length} quizzes` : "";
+
+  const tableBtn = $("#activity-table-btn");
+  const table = $("#activity-table");
+  table.hidden = true;
+  tableBtn.textContent = "Show table";
+  tableBtn.onclick = () => {
+    table.hidden = !table.hidden;
+    tableBtn.textContent = table.hidden ? "Show table" : "Hide table";
+    if (!table.hidden) table.replaceChildren(activityTable(data.activity));
+  };
+
+  let resizeTimer;
+  const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(draw, 150); };
+  window.addEventListener("resize", onResize);
+  onCleanup(() => window.removeEventListener("resize", onResize));
 }
 
 /* ================= learn ================= */
