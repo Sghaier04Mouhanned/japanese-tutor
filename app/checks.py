@@ -50,7 +50,7 @@ def kana_to_romaji(text: str) -> str | None:
     i = 0
     while i < len(hira):
         c = hira[i]
-        if c in " 　、。！？!?":
+        if c in " 　、。！？!?…":
             i += 1
             continue
         if c == "っ":
@@ -93,10 +93,11 @@ def _canonical(romaji: str, strict: bool = False) -> str:
         s = s.replace(a, b)
     if strict:
         return s.replace("oo", "ou")  # おお and おう are both written "ō"
+    # Particles first (は is "wa", へ is "e", を is "o"), so りんごを (ringo o)
+    # collapses the same way on both sides in the long-vowel step below.
+    s = s.replace("wa", "ha").replace("he", "e").replace("wo", "o")
     s = s.replace("ou", "o").replace("ei", "e")
     s = re.sub(r"([aeiou])\1+", r"\1", s)       # long vowels
-    # particles: は is "wa", へ is "e", を is "o"
-    s = s.replace("wa", "ha").replace("he", "e").replace("wo", "o")
     return s
 
 

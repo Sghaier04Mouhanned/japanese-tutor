@@ -266,6 +266,273 @@ LESSONS: list[dict] = [
             {"word": "午後", "reading": "ごご", "meaning": "p.m., afternoon"},
         ],
     },
+    {
+        "id": "n5-11",
+        "title": "い-adjectives",
+        "jp_title": "い形容詞",
+        "goal": "Describe things as big, cheap, delicious, cold...",
+        "points": [
+            "**い-adjectives** end in い: 高い (takai, expensive / tall), 安い (yasui, cheap), "
+            "大きい (ookii, big), 小さい (chiisai, small), おいしい (oishii, delicious).",
+            "Put them before a noun, 高い時計 \"an expensive watch\", or at the end with です: この時計は高いです。",
+            "Negative: drop the final い and add **くないです**: 高い → 高くないです \"not expensive\".",
+            "**いい** (good) is irregular: its negative is **よくないです**.",
+        ],
+        "examples": [
+            {"jp": "この本は高いです。", "kana": "このほんはたかいです", "romaji": "kono hon wa takai desu", "en": "This book is expensive."},
+            {"jp": "東京は大きいです。", "kana": "とうきょうはおおきいです", "romaji": "toukyou wa ookii desu", "en": "Tokyo is big."},
+            {"jp": "このカレーはおいしいです。", "kana": "このカレーはおいしいです", "romaji": "kono karee wa oishii desu", "en": "This curry is delicious."},
+            {"jp": "今日は寒くないです。", "kana": "きょうはさむくないです", "romaji": "kyou wa samuku nai desu", "en": "It isn't cold today."},
+        ],
+        "vocab": [
+            {"word": "高い", "reading": "たかい", "meaning": "expensive; tall, high"},
+            {"word": "安い", "reading": "やすい", "meaning": "cheap"},
+            {"word": "大きい", "reading": "おおきい", "meaning": "big"},
+            {"word": "小さい", "reading": "ちいさい", "meaning": "small"},
+            {"word": "おいしい", "reading": "おいしい", "meaning": "delicious"},
+            {"word": "寒い", "reading": "さむい", "meaning": "cold (weather)"},
+        ],
+    },
+    {
+        "id": "n5-12",
+        "title": "な-adjectives",
+        "jp_title": "な形容詞",
+        "goal": "Use adjectives like quiet, pretty and famous, and say what you like.",
+        "points": [
+            "Some adjectives need **な** before a noun: きれいな花 (kirei na hana, a pretty flower), "
+            "静かな部屋 (shizuka na heya, a quiet room).",
+            "At the end of a sentence there's no な: この部屋は静かです。",
+            "The negative works like a noun: **じゃありません**: 静かじゃありません \"not quiet\".",
+            "**きれい** ends in い but is a な-adjective, a classic JLPT trap.",
+            "**好き** (suki, liked) is a な-adjective too. The thing you like takes **が**: 私はコーヒーが好きです。",
+        ],
+        "examples": [
+            {"jp": "この部屋は静かです。", "kana": "このへやはしずかです", "romaji": "kono heya wa shizuka desu", "en": "This room is quiet."},
+            {"jp": "きれいな花です。", "kana": "きれいなはなです", "romaji": "kirei na hana desu", "en": "It's a pretty flower."},
+            {"jp": "私は日本の音楽が好きです。", "kana": "わたしはにほんのおんがくがすきです", "romaji": "watashi wa nihon no ongaku ga suki desu", "en": "I like Japanese music."},
+            {"jp": "この町は有名じゃありません。", "kana": "このまちはゆうめいじゃありません", "romaji": "kono machi wa yuumei ja arimasen", "en": "This town isn't famous."},
+        ],
+        "vocab": [
+            {"word": "静か", "reading": "しずか", "meaning": "quiet"},
+            {"word": "きれい", "reading": "きれい", "meaning": "pretty; clean"},
+            {"word": "好き", "reading": "すき", "meaning": "liked (to like)"},
+            {"word": "有名", "reading": "ゆうめい", "meaning": "famous"},
+            {"word": "元気", "reading": "げんき", "meaning": "healthy, energetic"},
+            {"word": "部屋", "reading": "へや", "meaning": "room"},
+        ],
+    },
+    {
+        "id": "n5-13",
+        "title": "There is: あります and います",
+        "jp_title": "あります・います",
+        "goal": "Say what is where, for things and for living beings.",
+        "points": [
+            "**あります** = there is (things and plants): 本があります。 **います** = there is (people and animals): 猫がいます。",
+            "What exists takes **が**, the place takes **に**: 机の上に本があります。 \"There is a book on the desk.\"",
+            "Position words: **上** (ue, on / above), **下** (shita, under), **中** (naka, inside), "
+            "**前** (mae, in front), **後ろ** (ushiro, behind). Join them with の: 机の下 \"under the desk\".",
+            "Negative: **ありません** / **いません**.",
+        ],
+        "examples": [
+            {"jp": "机の上に本があります。", "kana": "つくえのうえにほんがあります", "romaji": "tsukue no ue ni hon ga arimasu", "en": "There is a book on the desk."},
+            {"jp": "部屋に猫がいます。", "kana": "へやにねこがいます", "romaji": "heya ni neko ga imasu", "en": "There is a cat in the room."},
+            {"jp": "かばんの中に何がありますか。", "kana": "かばんのなかになにがありますか", "romaji": "kaban no naka ni nani ga arimasu ka", "en": "What is in the bag?"},
+            {"jp": "教室に先生がいません。", "kana": "きょうしつにせんせいがいません", "romaji": "kyoushitsu ni sensei ga imasen", "en": "The teacher isn't in the classroom."},
+        ],
+        "vocab": [
+            {"word": "机", "reading": "つくえ", "meaning": "desk"},
+            {"word": "猫", "reading": "ねこ", "meaning": "cat"},
+            {"word": "上", "reading": "うえ", "meaning": "on, above, top"},
+            {"word": "下", "reading": "した", "meaning": "under, below"},
+            {"word": "中", "reading": "なか", "meaning": "inside, in"},
+            {"word": "後ろ", "reading": "うしろ", "meaning": "behind, back"},
+        ],
+    },
+    {
+        "id": "n5-14",
+        "title": "Here, there, where",
+        "jp_title": "ここ・そこ・あそこ・どこ",
+        "goal": "Ask where places and people are, and point to them.",
+        "points": [
+            "**ここ** = here, **そこ** = there (near you), **あそこ** = over there, **どこ** = where? "
+            "Same pattern as これ・それ・あれ・どれ.",
+            "Ask where something is with **〜はどこですか**: トイレはどこですか。 Answer: あそこです。",
+            "For people you can also say **どこにいますか**: 田中さんはどこにいますか。",
+            "Shops and stations use the politer **こちら / そちら / あちら / どちら**.",
+        ],
+        "examples": [
+            {"jp": "すみません、トイレはどこですか。", "kana": "すみません トイレはどこですか", "romaji": "sumimasen, toire wa doko desu ka", "en": "Excuse me, where is the toilet?"},
+            {"jp": "駅はあそこです。", "kana": "えきはあそこです", "romaji": "eki wa asoko desu", "en": "The station is over there."},
+            {"jp": "田中さんはどこにいますか。", "kana": "たなかさんはどこにいますか", "romaji": "tanaka san wa doko ni imasu ka", "en": "Where is Mr. Tanaka?"},
+            {"jp": "ここは図書館です。", "kana": "ここはとしょかんです", "romaji": "koko wa toshokan desu", "en": "This is the library. (Here is the library.)"},
+        ],
+        "vocab": [
+            {"word": "ここ", "reading": "ここ", "meaning": "here"},
+            {"word": "そこ", "reading": "そこ", "meaning": "there (near you)"},
+            {"word": "あそこ", "reading": "あそこ", "meaning": "over there"},
+            {"word": "どこ", "reading": "どこ", "meaning": "where"},
+            {"word": "トイレ", "reading": "トイレ", "meaning": "toilet, restroom"},
+            {"word": "教室", "reading": "きょうしつ", "meaning": "classroom"},
+        ],
+    },
+    {
+        "id": "n5-15",
+        "title": "Wanting: たい and ほしい",
+        "jp_title": "〜たい・ほしい",
+        "goal": "Say what you want to do and what you want to have.",
+        "points": [
+            "To want to do something, replace ます with **たいです**: 飲みます → 飲みたいです \"I want to drink\".",
+            "Its negative is **たくないです**: 行きたくないです \"I don't want to go\". The object can take が or を.",
+            "To want a thing, use **ほしいです** with が: 新しいかばんがほしいです。",
+            "These describe your own wishes. Asking a teacher or a stranger 〜たいですか directly can sound pushy.",
+        ],
+        "examples": [
+            {"jp": "水が飲みたいです。", "kana": "みずがのみたいです", "romaji": "mizu ga nomitai desu", "en": "I want to drink some water."},
+            {"jp": "日本に行きたいです。", "kana": "にほんにいきたいです", "romaji": "nihon ni ikitai desu", "en": "I want to go to Japan."},
+            {"jp": "新しいかばんがほしいです。", "kana": "あたらしいかばんがほしいです", "romaji": "atarashii kaban ga hoshii desu", "en": "I want a new bag."},
+            {"jp": "今日は何もしたくないです。", "kana": "きょうはなにもしたくないです", "romaji": "kyou wa nani mo shitaku nai desu", "en": "I don't want to do anything today."},
+        ],
+        "vocab": [
+            {"word": "水", "reading": "みず", "meaning": "water"},
+            {"word": "かばん", "reading": "かばん", "meaning": "bag"},
+            {"word": "新しい", "reading": "あたらしい", "meaning": "new"},
+            {"word": "ほしい", "reading": "ほしい", "meaning": "wanted (I want)"},
+            {"word": "買います", "reading": "かいます", "meaning": "to buy"},
+            {"word": "旅行", "reading": "りょこう", "meaning": "travel, trip"},
+        ],
+    },
+    {
+        "id": "n5-16",
+        "title": "Requests: てください",
+        "jp_title": "〜てください",
+        "goal": "Ask someone politely to do something.",
+        "points": [
+            "**[verb て-form] + ください** = please do ...: 待ってください \"please wait\".",
+            "The て-form follows rules by verb group that take practice. Start with these: 待ちます → 待って, "
+            "見ます → 見て, 書きます → 書いて, 話します → 話して, 来ます → 来て, します → して.",
+            "**ちょっと** (chotto, a little) softens a request: ちょっと待ってください。",
+            "To ask for a thing, use **[noun]をください**: コーヒーをください。",
+        ],
+        "examples": [
+            {"jp": "ちょっと待ってください。", "kana": "ちょっとまってください", "romaji": "chotto matte kudasai", "en": "Please wait a moment."},
+            {"jp": "ここに名前を書いてください。", "kana": "ここになまえをかいてください", "romaji": "koko ni namae o kaite kudasai", "en": "Please write your name here."},
+            {"jp": "ゆっくり話してください。", "kana": "ゆっくりはなしてください", "romaji": "yukkuri hanashite kudasai", "en": "Please speak slowly."},
+            {"jp": "コーヒーをください。", "kana": "コーヒーをください", "romaji": "koohii o kudasai", "en": "A coffee, please."},
+        ],
+        "vocab": [
+            {"word": "待ちます", "reading": "まちます", "meaning": "to wait"},
+            {"word": "話します", "reading": "はなします", "meaning": "to speak, talk"},
+            {"word": "見ます", "reading": "みます", "meaning": "to see, watch, look"},
+            {"word": "ください", "reading": "ください", "meaning": "please (give / do)"},
+            {"word": "ちょっと", "reading": "ちょっと", "meaning": "a little; a moment"},
+            {"word": "ゆっくり", "reading": "ゆっくり", "meaning": "slowly"},
+        ],
+    },
+    {
+        "id": "n5-17",
+        "title": "Invitations: ませんか and ましょう",
+        "jp_title": "〜ませんか・〜ましょう",
+        "goal": "Invite someone, and accept or decline politely.",
+        "points": [
+            "**〜ませんか** (\"won't you ...?\") is the polite way to invite: 一緒に映画を見ませんか。",
+            "**〜ましょう** = \"let's ...\": 見ましょう。 It's also a common way to accept.",
+            "Accept with **いいですね** (that sounds good). Decline with **すみません、ちょっと…**: "
+            "trailing off is normal and polite.",
+            "**一緒に** (issho ni) = together.",
+        ],
+        "examples": [
+            {"jp": "一緒に映画を見ませんか。", "kana": "いっしょにえいがをみませんか", "romaji": "issho ni eiga o mimasen ka", "en": "Would you like to watch a movie together?"},
+            {"jp": "いいですね。見ましょう。", "kana": "いいですね みましょう", "romaji": "ii desu ne. mimashou", "en": "Sounds good. Let's watch it."},
+            {"jp": "土曜日にテニスをしませんか。", "kana": "どようびにテニスをしませんか", "romaji": "doyoubi ni tenisu o shimasen ka", "en": "Would you like to play tennis on Saturday?"},
+            {"jp": "すみません、土曜日はちょっと…。", "kana": "すみません どようびはちょっと", "romaji": "sumimasen, doyoubi wa chotto", "en": "Sorry, Saturday is a bit... (declining)"},
+        ],
+        "vocab": [
+            {"word": "一緒に", "reading": "いっしょに", "meaning": "together"},
+            {"word": "映画", "reading": "えいが", "meaning": "movie"},
+            {"word": "土曜日", "reading": "どようび", "meaning": "Saturday"},
+            {"word": "日曜日", "reading": "にちようび", "meaning": "Sunday"},
+            {"word": "テニス", "reading": "テニス", "meaning": "tennis"},
+        ],
+    },
+    {
+        "id": "n5-18",
+        "title": "Adjectives in the past",
+        "jp_title": "〜かったです・〜でした",
+        "goal": "Say how things were: it was cold, the trip was fun.",
+        "points": [
+            "い-adjectives: replace い with **かったです**: 寒い → 寒かったです \"it was cold\".",
+            "Negative past: **くなかったです**: 寒くなかったです \"it wasn't cold\".",
+            "な-adjectives and nouns use **でした** / **じゃありませんでした**: 静かでした, 雨でした.",
+            "**いい** becomes **よかったです** (it was good).",
+        ],
+        "examples": [
+            {"jp": "昨日は寒かったです。", "kana": "きのうはさむかったです", "romaji": "kinou wa samukatta desu", "en": "It was cold yesterday."},
+            {"jp": "旅行は楽しかったです。", "kana": "りょこうはたのしかったです", "romaji": "ryokou wa tanoshikatta desu", "en": "The trip was fun."},
+            {"jp": "テストは難しくなかったです。", "kana": "テストはむずかしくなかったです", "romaji": "tesuto wa muzukashiku nakatta desu", "en": "The test wasn't difficult."},
+            {"jp": "公園は静かでした。", "kana": "こうえんはしずかでした", "romaji": "kouen wa shizuka deshita", "en": "The park was quiet."},
+        ],
+        "vocab": [
+            {"word": "楽しい", "reading": "たのしい", "meaning": "fun, enjoyable"},
+            {"word": "難しい", "reading": "むずかしい", "meaning": "difficult"},
+            {"word": "暑い", "reading": "あつい", "meaning": "hot (weather)"},
+            {"word": "天気", "reading": "てんき", "meaning": "weather"},
+            {"word": "公園", "reading": "こうえん", "meaning": "park"},
+            {"word": "テスト", "reading": "テスト", "meaning": "test"},
+        ],
+    },
+    {
+        "id": "n5-19",
+        "title": "Counting things and prices",
+        "jp_title": "〜つ・〜円",
+        "goal": "Count objects, ask how many, and understand prices.",
+        "points": [
+            "Many objects are counted with **つ**: ひとつ, ふたつ, みっつ, よっつ, いつつ (1–5), "
+            "むっつ, ななつ, やっつ, ここのつ, とお (6–10). Ask with **いくつ** (how many).",
+            "Prices use **円** (en, yen): 百円 (hyaku en, 100 yen), 千円 (sen en, 1,000 yen). "
+            "Watch the sound changes: 三百 さんびゃく, 六百 ろっぴゃく, 八百 はっぴゃく, 三千 さんぜん, 八千 はっせん.",
+            "To order or buy: **[thing]を[number]ください**: りんごを三つください。",
+        ],
+        "examples": [
+            {"jp": "りんごを三つください。", "kana": "りんごをみっつください", "romaji": "ringo o mittsu kudasai", "en": "Three apples, please."},
+            {"jp": "このかばんは三千円です。", "kana": "このかばんはさんぜんえんです", "romaji": "kono kaban wa sanzen en desu", "en": "This bag is 3,000 yen."},
+            {"jp": "卵はいくつありますか。", "kana": "たまごはいくつありますか", "romaji": "tamago wa ikutsu arimasu ka", "en": "How many eggs are there?"},
+            {"jp": "全部で八百円です。", "kana": "ぜんぶではっぴゃくえんです", "romaji": "zenbu de happyaku en desu", "en": "That's 800 yen in total."},
+        ],
+        "vocab": [
+            {"word": "りんご", "reading": "りんご", "meaning": "apple"},
+            {"word": "卵", "reading": "たまご", "meaning": "egg"},
+            {"word": "円", "reading": "えん", "meaning": "yen"},
+            {"word": "いくつ", "reading": "いくつ", "meaning": "how many"},
+            {"word": "全部", "reading": "ぜんぶ", "meaning": "all; in total"},
+            {"word": "百", "reading": "ひゃく", "meaning": "hundred"},
+            {"word": "千", "reading": "せん", "meaning": "thousand"},
+        ],
+    },
+    {
+        "id": "n5-20",
+        "title": "Doing it now: ています",
+        "jp_title": "〜ています",
+        "goal": "Say what is happening right now, and describe ongoing states.",
+        "points": [
+            "**[verb て-form] + います** describes an action in progress: 今、本を読んでいます \"I'm reading a book now\".",
+            "It also describes a lasting state: 東京に住んでいます \"I live in Tokyo\".",
+            "て-forms in this lesson: 読みます → 読んで, 住みます → 住んで, 降ります → 降って, します → して.",
+            "Negative: **〜ていません**: 読んでいません \"I'm not reading\".",
+        ],
+        "examples": [
+            {"jp": "今、本を読んでいます。", "kana": "いま ほんをよんでいます", "romaji": "ima, hon o yonde imasu", "en": "I'm reading a book now."},
+            {"jp": "東京に住んでいます。", "kana": "とうきょうにすんでいます", "romaji": "toukyou ni sunde imasu", "en": "I live in Tokyo."},
+            {"jp": "雨が降っています。", "kana": "あめがふっています", "romaji": "ame ga futte imasu", "en": "It's raining."},
+            {"jp": "田中さんは今、電話をしています。", "kana": "たなかさんはいま でんわをしています", "romaji": "tanaka san wa ima, denwa o shite imasu", "en": "Mr. Tanaka is on the phone now."},
+        ],
+        "vocab": [
+            {"word": "住みます", "reading": "すみます", "meaning": "to live (somewhere)"},
+            {"word": "雨", "reading": "あめ", "meaning": "rain"},
+            {"word": "降ります", "reading": "ふります", "meaning": "to fall (rain, snow)"},
+            {"word": "知っています", "reading": "しっています", "meaning": "to know"},
+            {"word": "結婚します", "reading": "けっこんします", "meaning": "to get married"},
+        ],
+    },
 ]
 
 _BY_ID = {lesson["id"]: lesson for lesson in LESSONS}
@@ -317,7 +584,7 @@ if __name__ == "__main__":
                 "".join(p.get("r", p["t"]) for p in s["parts"]) if s.get("parts") else s["t"]
                 for s in furigana.annotate(ex["jp"])
             )
-            clean = lambda s: "".join(c for c in s if c not in " 、。！？")  # noqa: E731
+            clean = lambda s: "".join(c for c in s if c not in " 、。！？…")  # noqa: E731
             to_hira = lambda s: "".join(chr(ord(c) - 0x60) if "ァ" <= c <= "ヶ" else c for c in s)  # noqa: E731
             if to_hira(clean(reading)) != to_hira(clean(ex["kana"])):
                 print(f"{lesson['id']} furigana differs: {ex['jp']} -> {clean(reading)} vs {clean(ex['kana'])}")

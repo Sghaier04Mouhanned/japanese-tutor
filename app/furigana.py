@@ -86,8 +86,11 @@ _DIGIT_READINGS = {"一": ("いち",), "二": ("に",), "三": ("さん",), "四
                    "六": ("ろく",), "七": ("なな", "しち"), "八": ("はち",), "九": ("きゅう", "く"), "十": ("じゅう",)}
 
 
-def _context_reading(prev, word) -> str | None:
-    """Readings that depend on the previous word, where the analyzer guesses wrong."""
+def _context_reading(prev, word, nxt=None) -> str | None:
+    """Readings that depend on the neighbouring words, where the analyzer guesses wrong."""
+    # 何 is なに before most particles (何が, 何を, 何も) and なん before です/の/counters.
+    if word.surface == "何" and nxt is not None and nxt.surface in {"が", "を", "も", "か", "に", "へ"}:
+        return "なに"
     if prev is None:
         return None
     # Nationality: アメリカ人, 日本人, 外国人 -> じん (not にん)
@@ -194,7 +197,7 @@ def annotate(text: str) -> list[dict]:
                     continue
                 base, base_kana = _base(word)
                 reading = _reading(word) if _KANJI.search(surface) else None
-                fixed = _context_reading(words[n_word - 1] if n_word else None, word)
+                fixed = _context_reading(words[n_word - 1] if n_word else None, word, following)
                 if fixed:
                     reading = base_kana = fixed
                 seg = {"t": surface, "b": base, "k": base_kana, "p": pos}
