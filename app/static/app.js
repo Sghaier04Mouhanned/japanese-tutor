@@ -86,7 +86,29 @@ if ("speechSynthesis" in window) {
   speechSynthesis.addEventListener("voiceschanged", pickVoice);
 }
 
-function speak(text) {
+// VOICEVOX (natural voices, run locally by the server) when it's available,
+// otherwise the browser's built-in Japanese voice.
+let tts = { running: false, installed: false };
+let currentAudio = null;
+
+async function refreshTts() {
+  try { tts = await api.get("/api/tts/status"); } catch { tts = { running: false, installed: false }; }
+  return tts;
+}
+
+// Resolves once we know whether VOICEVOX is up. The engine needs a little
+// while to start with the app, so keep checking for a bit.
+const ttsChecked = (async () => {
+  for (let i = 0; i < 24; i++) {
+    const s = await refreshTts();
+    if (s.running || !s.installed) break;
+    await new Promise(r => setTimeout(r, 5000));
+  }
+})();
+
+const hasVoice = () => tts.running || !!jaVoice;
+
+function browserSpeak(text) {
   if (!jaVoice) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
@@ -96,11 +118,37 @@ function speak(text) {
   speechSynthesis.speak(u);
 }
 
+function speak(text) {
+  if (!text) return;
+  currentAudio?.pause();
+  if ("speechSynthesis" in window) speechSynthesis.cancel();
+  if (!tts.running || text.length > 300) return browserSpeak(text);
+  const audio = new Audio(`/api/tts?text=${encodeURIComponent(text)}`);
+  currentAudio = audio;
+  let fellBack = false;
+  const fallback = () => { if (!fellBack) { fellBack = true; browserSpeak(text); } };
+  audio.addEventListener("error", fallback);
+  audio.play().catch(fallback);
+}
+
+// Generate audio ahead of time (one sentence at a time, the engine is single-file),
+// so 🔊 plays instantly from the server's cache when pressed.
+let prefetchQueue = Promise.resolve();
+function prefetchSpeech(texts) {
+  for (const text of texts) {
+    if (!text || text.length > 300) continue;
+    prefetchQueue = prefetchQueue
+      .then(() => ttsChecked)  // pages can open before we know whether the engine is up
+      .then(() => tts.running && fetch(`/api/tts?text=${encodeURIComponent(text)}`))
+      .catch(() => {});
+  }
+}
+
 function speakButton(text) {
   return el("button", {
     class: "speak",
     type: "button",
-    title: jaVoice ? "Play sound" : "No Japanese voice found in this browser",
+    title: hasVoice() ? "Play sound" : "No Japanese voice available",
     "aria-label": "Play sound",
     onclick: e => { e.stopPropagation(); speak(text); },
   }, "🔊");
@@ -1166,6 +1214,7 @@ function shadowFeedback(cmp, heardText) {
 
 async function renderLesson(body, id) {
   const lesson = await api.get(`/api/lessons/${id}`);
+  prefetchSpeech(lesson.examples.map(e => e.jp));
   const showRomaji = prefs.get("lesson.romaji", true);
   const romajiToggle = el("label", { class: "toggle" },
     el("input", { type: "checkbox", checked: showRomaji, onchange: e => {
@@ -1323,6 +1372,7 @@ async function renderQuiz() {
 function runQuiz(body, questions) {
   const results = [];
   let index = 0;
+  prefetchSpeech(questions.filter(q => q.type === "listening").map(q => q.prompt.audio));
 
   function show() {
     cleanups.forEach(fn => fn());
@@ -1343,7 +1393,7 @@ function runQuiz(body, questions) {
     }
     const reveal = el("div");
     if (q.type === "listening") {
-      if (jaVoice) {
+      if (hasVoice()) {
         prompt.push(el("button", { class: "play-big", type: "button", "aria-label": "Play the sentence",
           onclick: () => speak(q.prompt.audio) }, "🔊"));
         prompt.push(el("div", { class: "quiz-hint" }, "Press the button or Space to listen again"));
@@ -1374,7 +1424,7 @@ function runQuiz(body, questions) {
       feedback.replaceChildren(
         el("p", { class: `feedback ${ok ? "ok" : "bad"}` }, ok ? "✓ Correct" : `✗ The answer is ${q.choices[q.answer]}`),
         el("div", { class: "quiz-explain" }, q.explain));
-      if (q.type === "listening" && jaVoice) reveal.replaceChildren(richEl("div", { class: "quiz-sentence", lang: "ja" }, q.item.segments));
+      if (q.type === "listening" && hasVoice()) reveal.replaceChildren(richEl("div", { class: "quiz-sentence", lang: "ja" }, q.item.segments));
       if (q.type !== "listening") speak(q.item.example || q.item.reading || q.item.word || "");
       next.hidden = false;
       next.focus();
@@ -1987,8 +2037,47 @@ async function toggleLlmSettings() {
     el("label", {}, "Model", modelSel),
     save,
     info,
+    voiceSettingsRow(),
   );
   loadModels();
+}
+
+function voiceSettingsRow() {
+  const row = el("div", { class: "voice-settings" }, el("span", { class: "muted" }, "Checking the voice engine…"));
+  (async () => {
+    const status = await refreshTts();
+    if (!status.running) {
+      row.replaceChildren(el("span", { class: "muted" }, status.installed
+        ? "VOICEVOX is starting up… natural voices will be ready in a moment. Using the browser voice for now."
+        : "Using the browser's voice. Install VOICEVOX for natural Japanese voices."));
+      return;
+    }
+    let voices = [];
+    try { ({ speakers: voices } = await api.get("/api/tts/speakers")); } catch { /* shown below */ }
+    const voiceSel = el("select", {}, voices.map(v =>
+      el("option", { value: v.id, selected: v.id === status.speaker }, `${v.name} (${v.style})`)));
+    const speedSel = el("select", {}, [[0.8, "Slow"], [0.9, "A bit slow"], [1.0, "Normal"]].map(([v, label]) =>
+      el("option", { value: v, selected: Math.abs(v - status.speed) < 0.01 }, label)));
+    const credit = el("div", { class: "status muted" });
+    const showCredit = () => {
+      const v = voices.find(x => String(x.id) === voiceSel.value);
+      credit.textContent = v ? `Voice: VOICEVOX:${v.name}` : "";
+    };
+    const saveVoice = async () => {
+      await api.put("/api/tts/settings", { speaker: Number(voiceSel.value), speed: Number(speedSel.value) });
+      await refreshTts();
+      showCredit();
+    };
+    voiceSel.addEventListener("change", saveVoice);
+    speedSel.addEventListener("change", saveVoice);
+    showCredit();
+    row.replaceChildren(
+      el("label", {}, "Voice", voiceSel),
+      el("label", {}, "Speed", speedSel),
+      el("button", { class: "btn", type: "button", onclick: () => speak("こんにちは。日本語を勉強しましょう。") }, "🔊 Try it"),
+      credit);
+  })();
+  return row;
 }
 
 /* ================= boot ================= */

@@ -76,6 +76,12 @@ JMdict is © the Electronic Dictionary Research and Development Group, used unde
 Speech recognition downloads the Whisper "small" model (~480 MB) into `data/models/`
 the first time you press a 🎤 button.
 
+For natural Japanese voices, download the VOICEVOX engine (Windows CPU `.vvpp` from
+https://github.com/VOICEVOX/voicevox_engine/releases, ~1.9 GB) and unzip it into
+`data/voicevox/engine/`. The app starts it automatically and falls back to the browser's
+voice without it. Pick a voice and speed in the Tutor tab's ⚙ settings. VOICEVOX voices
+are free to use with credit to "VOICEVOX:<character name>".
+
 ## Run it
 
 Requires Python 3.11+. On Windows, double-click `run.bat`, or:
@@ -107,6 +113,7 @@ app/
   deck_api.py   saved words, mistakes and their reviews
   quiz.py       JLPT-style question generator (+ quiz_api.py)
   speech.py     Whisper transcription and shadowing comparison (+ speech_api.py)
+  tts.py        VOICEVOX engine control and cached speech synthesis (+ tts_api.py)
   kana_api.py   kana endpoints (groups, unlock, review, stats)
   kana.py       kana tables and answer checking
   srs.py        FSRS spaced-repetition wrapper
