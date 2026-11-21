@@ -78,6 +78,31 @@ _COUNTERS: dict[str, list] = {
     # 一日 is ついたち (the 1st) or いちにち (one day) depending on meaning, so it's left alone.
     "日": [None, "ふつか", "みっか", "よっか", "いつか", "むいか",
           "なのか", "ようか", "ここのか", "とおか", ("なん", "にち")],
+    # Months: 四月 しがつ, 七月 しちがつ, 九月 くがつ.
+    "月": [("いち", "がつ"), ("に", "がつ"), ("さん", "がつ"), ("し", "がつ"), ("ご", "がつ"), ("ろく", "がつ"),
+          ("しち", "がつ"), ("はち", "がつ"), ("く", "がつ"), ("じゅう", "がつ"), ("なん", "がつ")],
+    # Long objects (pens, bottles): sound changes after 1, 3, 6, 8, 10 and 何.
+    "本": [("いっ", "ぽん"), ("に", "ほん"), ("さん", "ぼん"), ("よん", "ほん"), ("ご", "ほん"), ("ろっ", "ぽん"),
+          ("なな", "ほん"), ("はっ", "ぽん"), ("きゅう", "ほん"), ("じゅっ", "ぽん"), ("なん", "ぼん")],
+    # Small animals
+    "匹": [("いっ", "ぴき"), ("に", "ひき"), ("さん", "びき"), ("よん", "ひき"), ("ご", "ひき"), ("ろっ", "ぴき"),
+          ("なな", "ひき"), ("はっ", "ぴき"), ("きゅう", "ひき"), ("じゅっ", "ぴき"), ("なん", "びき")],
+    # Times (occurrences)
+    "回": [("いっ", "かい"), ("に", "かい"), ("さん", "かい"), ("よん", "かい"), ("ご", "かい"), ("ろっ", "かい"),
+          ("なな", "かい"), ("はっ", "かい"), ("きゅう", "かい"), ("じゅっ", "かい"), ("なん", "かい")],
+    # Floors: 三階 さんがい, 何階 なんがい
+    "階": [("いっ", "かい"), ("に", "かい"), ("さん", "がい"), ("よん", "かい"), ("ご", "かい"), ("ろっ", "かい"),
+          ("なな", "かい"), ("はっ", "かい"), ("きゅう", "かい"), ("じゅっ", "かい"), ("なん", "がい")],
+    # Weeks: 一週間 いっしゅうかん, 八週間 はっしゅうかん
+    "週間": [("いっ", "しゅうかん"), ("に", "しゅうかん"), ("さん", "しゅうかん"), ("よん", "しゅうかん"),
+           ("ご", "しゅうかん"), ("ろく", "しゅうかん"), ("なな", "しゅうかん"), ("はっ", "しゅうかん"),
+           ("きゅう", "しゅうかん"), ("じゅっ", "しゅうかん"), ("なん", "しゅうかん")],
+    # Flat things (paper, tickets)
+    "枚": [("いち", "まい"), ("に", "まい"), ("さん", "まい"), ("よん", "まい"), ("ご", "まい"), ("ろく", "まい"),
+          ("なな", "まい"), ("はち", "まい"), ("きゅう", "まい"), ("じゅう", "まい"), ("なん", "まい")],
+    # Age (二十歳 is はたち, handled by the analyzer as one word)
+    "歳": [("いっ", "さい"), ("に", "さい"), ("さん", "さい"), ("よん", "さい"), ("ご", "さい"), ("ろく", "さい"),
+          ("なな", "さい"), ("はっ", "さい"), ("きゅう", "さい"), ("じゅっ", "さい"), ("なん", "さい")],
 }
 
 
@@ -88,6 +113,12 @@ _DIGIT_READINGS = {"一": ("いち",), "二": ("に",), "三": ("さん",), "四
 
 def _context_reading(prev, word, nxt=None) -> str | None:
     """Readings that depend on the neighbouring words, where the analyzer guesses wrong."""
+    # 辛い is からい (spicy) or つらい (painful). Learners meet "spicy" first, and
+    # つらい is usually written in kana, so prefer から for this kanji.
+    if word.surface.startswith("辛") and getattr(word.feature, "orthBase", "") == "辛い":
+        kana = _reading(word) or ""
+        if kana.startswith("つら"):
+            return "から" + kana[2:]
     # 何 is なに before most particles (何が, 何を, 何も) and なん before です/の/counters.
     if word.surface == "何" and nxt is not None and nxt.surface in {"が", "を", "も", "か", "に", "へ"}:
         return "なに"
@@ -103,7 +134,13 @@ def _context_reading(prev, word, nxt=None) -> str | None:
     return None
 
 
+_SPECIAL_COUNTED = {"二十歳": "はたち"}  # age 20 has its own word
+
+
 def _counter_word(num: str, counter: str, num_reading: str | None = None) -> dict | None:
+    if num + counter in _SPECIAL_COUNTED:
+        word, reading = num + counter, _SPECIAL_COUNTED[num + counter]
+        return {"t": word, "b": word, "k": reading, "p": "noun", "parts": [{"t": word, "r": reading}]}
     if counter not in _COUNTERS:
         return None
     if num in _NUM:
@@ -190,6 +227,13 @@ def annotate(text: str) -> list[dict]:
                     if counted:
                         segments.append(counted)
                         skip = True
+                        continue
+                # A number + counter the analyzer kept as one word (三本 read as the
+                # surname みもと). 十分 is skipped: as one word it usually means "enough".
+                if len(surface) == 2 and surface[0] in _NUM and surface[1] in _COUNTERS and surface[1] != "分":
+                    counted = _counter_word(surface[0], surface[1])
+                    if counted:
+                        segments.append(counted)
                         continue
                 pos = _POS.get(word.feature.pos1)
                 if not pos or not _JAPANESE.search(surface):

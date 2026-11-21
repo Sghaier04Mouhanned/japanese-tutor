@@ -6,10 +6,12 @@ passing the JLPT (N5, then N4), powered by a free AI API or a local model.
 ## Features
 
 **JLPT N5 lessons**
-- 20 hand-written lessons: greetings, self-introduction, です, questions, これ/それ/あれ,
-  の, polite verbs, past tense, particles, telling the time, い- and な-adjectives,
+- 30 hand-written lessons covering the core N5 grammar: greetings, self-introduction, です,
+  questions, これ/それ/あれ, の, polite verbs, past tense, particles, time, い- and な-adjectives,
   あります/います, ここ/そこ/どこ, 〜たい/ほしい, 〜てください, 〜ませんか/〜ましょう,
-  adjectives in the past, counting and prices, 〜ています
+  adjective past, counting and prices, 〜ています, days and dates, から/が, て-form linking,
+  comparisons, もう/まだ and frequency, できます/上手/分かります, 〜てもいい/〜てはいけない,
+  〜ないでください, dictionary form, counters
 - Key points, example sentences with furigana and romaji, and vocabulary in each lesson
 - "Practice with Sensei" runs exercises grounded in the lesson's own content
 - Completing a lesson adds its vocabulary to your reviews
