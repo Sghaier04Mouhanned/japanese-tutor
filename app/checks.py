@@ -27,8 +27,10 @@ _EXTRA = {
 
 _KANA = r"ぁ-ゖァ-ヺー"
 # A kana-only phrase (spaces and punctuation allowed inside) followed by (romaji).
+# It must not continue a kanji word or a bracketed reading: in 何(なに)をしましたか
+# the kana after ")" belong to a longer phrase, so they can't be checked alone.
 _PAIR = re.compile(
-    rf"(?<![㐀-鿿々{_KANA}])([{_KANA}][{_KANA}\s、。！？!?]*?)\s*[（(]([A-Za-zāīūēōÂâÔô' \-.,!?]+)[)）]"
+    rf"(?<![㐀-鿿々{_KANA})）])([{_KANA}][{_KANA}\s、。！？!?]*?)\s*[（(]([A-Za-zāīūēōÂâÔô' \-.,!?]+)[)）]"
 )
 
 
