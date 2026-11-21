@@ -101,6 +101,26 @@ def _canonical(romaji: str, strict: bool = False) -> str:
     return s
 
 
+_NOISE = re.compile(r"[\s、。，,.！？!?「」『』()（）…~〜ー\-]")
+
+
+def appears_in(phrase: str, message: str) -> bool:
+    """Did the learner actually write this phrase? Used to reject "mistakes"
+    the model invents (small models sometimes log corrections for Japanese the
+    learner never wrote). Compares by sound, so a correction written in kana
+    still matches a message typed in romaji."""
+    p, m = _NOISE.sub("", phrase), _NOISE.sub("", message)
+    if len(p) < 2:
+        return False  # a lone particle like は matches almost any message
+    if p in m:
+        return True
+    p_romaji = kana_to_romaji(p)
+    if p_romaji is None:
+        return False
+    m_romaji = kana_to_romaji(m) if kana_to_romaji(m) is not None else m
+    return _canonical(p_romaji) in _canonical(m_romaji)
+
+
 def same_reading(kana_text: str, romaji: str) -> bool:
     """Does typed romaji spell this kana? Accepts ō/ou/oo, shi/si and friends,
     but a missing long vowel or small っ is a real mistake."""

@@ -219,6 +219,9 @@ async def post_message(chat_id: int, body: NewMessage):
                 (chat_id, reply, provider.id, model, time.time()),
             )
             conn.execute("UPDATE chats SET updated_at = ? WHERE id = ?", (time.time(), chat_id))
+            # Only keep corrections of things the learner really wrote.
+            learner_text = history[-1]["content"]
+            corrections = [c for c in corrections if checks.appears_in(str(c.get("wrong", "")), learner_text)]
             mistakes_saved = deck_api.save_mistakes(conn, chat_id, corrections)
             row = conn.execute("SELECT * FROM chat_messages WHERE id = ?", (cur.lastrowid,)).fetchone()
         yield _sse({"type": "done", "message": _message_out(row), "mistakes_saved": mistakes_saved})
