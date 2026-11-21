@@ -215,7 +215,12 @@ async def stream_chat(provider: Provider, model: str, messages: list[dict]) -> A
                     if "error" in chunk:
                         raise LLMError(f"{provider.label}: {_error_detail(data.encode())}")
                     choices = chunk.get("choices") or [{}]
-                    piece = (choices[0].get("delta") or {}).get("content")
+                    delta = choices[0].get("delta") or {}
+                    if "reasoning" in delta or "reasoning_content" in delta:
+                        # Newer servers send reasoning in its own field, so the
+                        # content is already just the answer: no </think> to wait for.
+                        thinking_first = False
+                    piece = delta.get("content")
                     if not piece:
                         continue
                     raw += piece
