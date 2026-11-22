@@ -1067,6 +1067,271 @@ LESSONS: list[dict] = [
             {"word": "暇", "reading": "ひま", "meaning": "free (time)"},
         ],
     },
+    {
+        "id": "n4-11",
+        "title": "Giving and receiving",
+        "jp_title": "あげる・くれる・もらう",
+        "goal": "Say who gave what to whom, with the right verb for each direction.",
+        "points": [
+            "**あげます** = give, from me (or my side) to someone else: 私は友達に本をあげました。",
+            "**くれます** = give **to me** (or my family): 友達が本をくれました。 Someone giving to you is never あげる.",
+            "**もらいます** = receive: 私は友達に本をもらいました。 The giver takes **に** (or から).",
+            "The same event can be said with くれる or もらう: 友達がくれました = 友達にもらいました.",
+        ],
+        "examples": [
+            {"jp": "私は妹に誕生日のプレゼントをあげました。", "kana": "わたしはいもうとにたんじょうびのプレゼントをあげました", "romaji": "watashi wa imouto ni tanjoubi no purezento o agemashita", "en": "I gave my little sister a birthday present."},
+            {"jp": "友達が花をくれました。", "kana": "ともだちがはなをくれました", "romaji": "tomodachi ga hana o kuremashita", "en": "A friend gave me flowers."},
+            {"jp": "先生に辞書をもらいました。", "kana": "せんせいにじしょをもらいました", "romaji": "sensei ni jisho o moraimashita", "en": "I got a dictionary from my teacher."},
+            {"jp": "これは母がくれた時計です。", "kana": "これはははがくれたとけいです", "romaji": "kore wa haha ga kureta tokei desu", "en": "This is a watch my mother gave me."},
+        ],
+        "vocab": [
+            {"word": "あげます", "reading": "あげます", "meaning": "to give (to someone else)"},
+            {"word": "くれます", "reading": "くれます", "meaning": "to give (to me)"},
+            {"word": "もらいます", "reading": "もらいます", "meaning": "to receive"},
+            {"word": "プレゼント", "reading": "プレゼント", "meaning": "present, gift"},
+            {"word": "妹", "reading": "いもうと", "meaning": "(my) younger sister"},
+            {"word": "母", "reading": "はは", "meaning": "(my) mother"},
+        ],
+    },
+    {
+        "id": "n4-12",
+        "title": "Doing favours",
+        "jp_title": "〜てあげる・〜てくれる・〜てもらう",
+        "goal": "Say who did something for whom, and ask for favours politely.",
+        "points": [
+            "Put あげる / くれる / もらう after a て-form to show a favour, with the same directions as lesson 11.",
+            "**〜てあげます** = do for someone: 友達に料理を作ってあげました。 Saying it to a superior can sound condescending.",
+            "**〜てくれます** = someone does it for me: 母がお弁当を作ってくれました。 "
+            "**〜てもらいます** = I have someone do it for me: 兄に宿題を手伝ってもらいました。",
+            "Polite requests: **〜てくれませんか** / **〜てもらえませんか** = could you (please) ...?",
+        ],
+        "examples": [
+            {"jp": "友達に料理を作ってあげました。", "kana": "ともだちにりょうりをつくってあげました", "romaji": "tomodachi ni ryouri o tsukutte agemashita", "en": "I cooked for my friend."},
+            {"jp": "母がお弁当を作ってくれました。", "kana": "ははがおべんとうをつくってくれました", "romaji": "haha ga obentou o tsukutte kuremashita", "en": "My mother made me a packed lunch."},
+            {"jp": "兄に宿題を手伝ってもらいました。", "kana": "あににしゅくだいをてつだってもらいました", "romaji": "ani ni shukudai o tetsudatte moraimashita", "en": "My older brother helped me with my homework."},
+            {"jp": "ちょっと手伝ってもらえませんか。", "kana": "ちょっとてつだってもらえませんか", "romaji": "chotto tetsudatte moraemasen ka", "en": "Could you help me for a moment?"},
+        ],
+        "vocab": [
+            {"word": "作ります", "reading": "つくります", "meaning": "to make"},
+            {"word": "手伝います", "reading": "てつだいます", "meaning": "to help"},
+            {"word": "お弁当", "reading": "おべんとう", "meaning": "packed lunch, bento"},
+            {"word": "兄", "reading": "あに", "meaning": "(my) older brother"},
+            {"word": "貸します", "reading": "かします", "meaning": "to lend"},
+        ],
+    },
+    {
+        "id": "n4-13",
+        "title": "The passive",
+        "jp_title": "受身形",
+        "goal": "Say what was done to you: praised, scolded, stepped on.",
+        "points": [
+            "The **passive** says something is done to someone: 先生に褒められました。 \"I was praised by the teacher.\"",
+            "Most verbs change the い-sound before ます to the あ-sound + **れます**: 叱ります → 叱られます, "
+            "踏みます → 踏まれます, 言います → 言われます (い → わ).",
+            "る-verbs: ます → **られます** (it looks like the potential form): 見ます → 見られます. "
+            "Irregular: します → されます, 来ます → 来られます.",
+            "The doer takes **に**. Japanese also uses the passive for annoying things that happen to you: "
+            "雨に降られました \"I got caught in the rain.\"",
+        ],
+        "examples": [
+            {"jp": "先生に褒められました。", "kana": "せんせいにほめられました", "romaji": "sensei ni homeraremashita", "en": "I was praised by my teacher."},
+            {"jp": "母に叱られました。", "kana": "ははにしかられました", "romaji": "haha ni shikararemashita", "en": "I was scolded by my mother."},
+            {"jp": "電車で足を踏まれました。", "kana": "でんしゃであしをふまれました", "romaji": "densha de ashi o fumaremashita", "en": "Someone stepped on my foot on the train."},
+            {"jp": "昨日、雨に降られました。", "kana": "きのう あめにふられました", "romaji": "kinou, ame ni furaremashita", "en": "I got caught in the rain yesterday."},
+        ],
+        "vocab": [
+            {"word": "褒めます", "reading": "ほめます", "meaning": "to praise"},
+            {"word": "叱ります", "reading": "しかります", "meaning": "to scold"},
+            {"word": "踏みます", "reading": "ふみます", "meaning": "to step on"},
+            {"word": "足", "reading": "あし", "meaning": "foot, leg"},
+            {"word": "盗みます", "reading": "ぬすみます", "meaning": "to steal"},
+        ],
+    },
+    {
+        "id": "n4-14",
+        "title": "The causative",
+        "jp_title": "使役形",
+        "goal": "Say who makes or lets someone do something.",
+        "points": [
+            "The **causative** means make or let someone do something: 子供に野菜を食べさせます。",
+            "Most verbs change the い-sound before ます to the あ-sound + **せます**: 行きます → 行かせます, "
+            "読みます → 読ませます, 買います → 買わせます (い → わ).",
+            "る-verbs: ます → **させます**: 食べます → 食べさせます. Irregular: します → させます, 来ます → 来させます (kosasemasu).",
+            "The person made to act usually takes **に**. **〜させてください** = please let me ...: 私に払わせてください。",
+        ],
+        "examples": [
+            {"jp": "母は子供に野菜を食べさせます。", "kana": "はははこどもにやさいをたべさせます", "romaji": "haha wa kodomo ni yasai o tabesasemasu", "en": "My mother makes the kids eat vegetables."},
+            {"jp": "先生は学生に作文を書かせました。", "kana": "せんせいはがくせいにさくぶんをかかせました", "romaji": "sensei wa gakusei ni sakubun o kakasemashita", "en": "The teacher had the students write an essay."},
+            {"jp": "父は私を一人で旅行に行かせてくれました。", "kana": "ちちはわたしをひとりでりょこうにいかせてくれました", "romaji": "chichi wa watashi o hitori de ryokou ni ikasete kuremashita", "en": "My father let me travel on my own."},
+            {"jp": "私に払わせてください。", "kana": "わたしにはらわせてください", "romaji": "watashi ni harawasete kudasai", "en": "Please let me pay."},
+        ],
+        "vocab": [
+            {"word": "子供", "reading": "こども", "meaning": "child"},
+            {"word": "野菜", "reading": "やさい", "meaning": "vegetables"},
+            {"word": "作文", "reading": "さくぶん", "meaning": "essay, composition"},
+            {"word": "父", "reading": "ちち", "meaning": "(my) father"},
+            {"word": "一人で", "reading": "ひとりで", "meaning": "alone, by oneself"},
+        ],
+    },
+    {
+        "id": "n4-15",
+        "title": "Looks like / I heard: そうです",
+        "jp_title": "〜そうです",
+        "goal": "Say how things look, and pass on what you've heard.",
+        "points": [
+            "**Looks like** (from what you see): adjective without い / な + **そうです**: おいしい → おいしそうです, "
+            "元気 → 元気そうです. いい becomes **よさそうです**.",
+            "With a verb's ます-stem it means \"looks like it will\": 雨が降りそうです。",
+            "**I heard** (hearsay): plain form + **そうです**: 明日は雨が降るそうです。 Often with **〜によると** (according to).",
+            "Don't mix them up: 降り**そう**です = looks like rain; 降る**そう**です = I heard it will rain.",
+        ],
+        "examples": [
+            {"jp": "このケーキはおいしそうです。", "kana": "このケーキはおいしそうです", "romaji": "kono keeki wa oishisou desu", "en": "This cake looks delicious."},
+            {"jp": "空が暗いですね。雨が降りそうです。", "kana": "そらがくらいですね あめがふりそうです", "romaji": "sora ga kurai desu ne. ame ga furisou desu", "en": "The sky is dark. It looks like it's going to rain."},
+            {"jp": "天気予報によると、明日は雪が降るそうです。", "kana": "てんきよほうによると あしたはゆきがふるそうです", "romaji": "tenki yohou ni yoru to, ashita wa yuki ga furu sou desu", "en": "According to the forecast, it will snow tomorrow."},
+            {"jp": "田中さんは来月結婚するそうです。", "kana": "たなかさんはらいげつけっこんするそうです", "romaji": "tanaka san wa raigetsu kekkon suru sou desu", "en": "I heard Ms. Tanaka is getting married next month."},
+        ],
+        "vocab": [
+            {"word": "空", "reading": "そら", "meaning": "sky"},
+            {"word": "暗い", "reading": "くらい", "meaning": "dark"},
+            {"word": "天気予報", "reading": "てんきよほう", "meaning": "weather forecast"},
+            {"word": "雪", "reading": "ゆき", "meaning": "snow"},
+            {"word": "によると", "reading": "によると", "meaning": "according to"},
+        ],
+    },
+    {
+        "id": "n4-16",
+        "title": "In advance, and by accident",
+        "jp_title": "〜ておく・〜てしまう",
+        "goal": "Say you'll do something in advance, or that something got done (often by mistake).",
+        "points": [
+            "**〜ておきます** = do in advance, or leave as it is: 旅行の前にホテルを予約しておきます。",
+            "**〜てしまいます** = do completely, or (very often) do by accident and regret it: 財布をなくしてしまいました。",
+            "Casual speech shortens them: ておく → **とく** (予約しとく); てしまう → **ちゃう**, でしまう → **じゃう** "
+            "(忘れちゃった, 飲んじゃった).",
+            "窓を開けておいてください = please open the window (and leave it open).",
+        ],
+        "examples": [
+            {"jp": "旅行の前にホテルを予約しておきます。", "kana": "りょこうのまえにホテルをよやくしておきます", "romaji": "ryokou no mae ni hoteru o yoyaku shite okimasu", "en": "I'll book a hotel before the trip."},
+            {"jp": "窓を開けておいてください。", "kana": "まどをあけておいてください", "romaji": "mado o akete oite kudasai", "en": "Please leave the window open."},
+            {"jp": "財布をなくしてしまいました。", "kana": "さいふをなくしてしまいました", "romaji": "saifu o nakushite shimaimashita", "en": "I've lost my wallet."},
+            {"jp": "宿題を忘れちゃった。", "kana": "しゅくだいをわすれちゃった", "romaji": "shukudai o wasurechatta", "en": "Oops, I forgot my homework."},
+        ],
+        "vocab": [
+            {"word": "予約", "reading": "よやく", "meaning": "reservation, booking"},
+            {"word": "窓", "reading": "まど", "meaning": "window"},
+            {"word": "財布", "reading": "さいふ", "meaning": "wallet"},
+            {"word": "なくします", "reading": "なくします", "meaning": "to lose"},
+            {"word": "ホテル", "reading": "ホテル", "meaning": "hotel"},
+        ],
+    },
+    {
+        "id": "n4-17",
+        "title": "While, after",
+        "jp_title": "〜ながら・〜てから・〜た後で",
+        "goal": "Describe two actions at the same time, or one after the other.",
+        "points": [
+            "**[ます-stem] + ながら** = while doing; one person, two actions, the main one last: 音楽を聞きながら勉強します。",
+            "**〜てから** = after doing, then: 手を洗ってから、ご飯を食べます。",
+            "**[plain past] + 後で** = after (focus on the order in time): 授業が終わった後で、図書館に行きます。 "
+            "With nouns: 食事の後で.",
+            "The opposite, **〜前に** (before), is in N5 lesson 29.",
+        ],
+        "examples": [
+            {"jp": "音楽を聞きながら勉強します。", "kana": "おんがくをききながらべんきょうします", "romaji": "ongaku o kikinagara benkyou shimasu", "en": "I study while listening to music."},
+            {"jp": "手を洗ってから、ご飯を食べます。", "kana": "てをあらってから ごはんをたべます", "romaji": "te o aratte kara, gohan o tabemasu", "en": "I wash my hands, then eat."},
+            {"jp": "授業が終わった後で、図書館に行きます。", "kana": "じゅぎょうがおわったあとで としょかんにいきます", "romaji": "jugyou ga owatta ato de, toshokan ni ikimasu", "en": "After class finishes, I'll go to the library."},
+            {"jp": "食事の後で、コーヒーを飲みましょう。", "kana": "しょくじのあとで コーヒーをのみましょう", "romaji": "shokuji no ato de, koohii o nomimashou", "en": "Let's have coffee after the meal."},
+        ],
+        "vocab": [
+            {"word": "ながら", "reading": "ながら", "meaning": "while (doing)"},
+            {"word": "授業", "reading": "じゅぎょう", "meaning": "class, lesson"},
+            {"word": "終わります", "reading": "おわります", "meaning": "to end, finish"},
+            {"word": "食事", "reading": "しょくじ", "meaning": "meal"},
+            {"word": "後で", "reading": "あとで", "meaning": "later; after"},
+            {"word": "ご飯", "reading": "ごはん", "meaning": "cooked rice; meal"},
+        ],
+    },
+    {
+        "id": "n4-18",
+        "title": "Changes and decisions",
+        "jp_title": "〜ようになる・〜ことにする",
+        "goal": "Talk about gradual changes and decisions.",
+        "points": [
+            "**[dictionary / potential form] + ようになりました** = came to (be able to) ...: 日本語が話せるようになりました。",
+            "A change to not doing: **〜なくなりました**: 肉を食べなくなりました \"I stopped eating meat.\"",
+            "**[dictionary form] + ことにしました** = I decided to: 毎朝走ることにしました。",
+            "**〜ことになりました** = it's been decided (by others or by circumstances): 来月、大阪に引っ越すことになりました。",
+        ],
+        "examples": [
+            {"jp": "日本語が少し話せるようになりました。", "kana": "にほんごがすこしはなせるようになりました", "romaji": "nihongo ga sukoshi hanaseru you ni narimashita", "en": "I've become able to speak a little Japanese."},
+            {"jp": "最近、肉を食べなくなりました。", "kana": "さいきん にくをたべなくなりました", "romaji": "saikin, niku o tabenaku narimashita", "en": "Recently I've stopped eating meat."},
+            {"jp": "毎朝走ることにしました。", "kana": "まいあさはしることにしました", "romaji": "maiasa hashiru koto ni shimashita", "en": "I've decided to run every morning."},
+            {"jp": "来月、大阪に引っ越すことになりました。", "kana": "らいげつ おおさかにひっこすことになりました", "romaji": "raigetsu, oosaka ni hikkosu koto ni narimashita", "en": "It's been decided that I'll move to Osaka next month."},
+        ],
+        "vocab": [
+            {"word": "最近", "reading": "さいきん", "meaning": "recently, lately"},
+            {"word": "肉", "reading": "にく", "meaning": "meat"},
+            {"word": "走ります", "reading": "はしります", "meaning": "to run"},
+            {"word": "毎朝", "reading": "まいあさ", "meaning": "every morning"},
+            {"word": "引っ越します", "reading": "ひっこします", "meaning": "to move (house)"},
+        ],
+    },
+    {
+        "id": "n4-19",
+        "title": "Maybe and probably",
+        "jp_title": "〜かもしれません・〜でしょう",
+        "goal": "Express how sure you are about something.",
+        "points": [
+            "**[plain form] + かもしれません** = might, maybe (roughly 50/50): 明日は雪が降るかもしれません。",
+            "**[plain form] + でしょう** = probably (more confident). Weather forecasts love it: 明日は晴れるでしょう。",
+            "Nouns and な-adjectives attach directly, without だ: 病気かもしれません, 静かでしょう.",
+            "**〜でしょう？** with a rising tone asks for agreement: 疲れたでしょう？ \"You must be tired, right?\"",
+        ],
+        "examples": [
+            {"jp": "明日は雪が降るかもしれません。", "kana": "あしたはゆきがふるかもしれません", "romaji": "ashita wa yuki ga furu kamo shiremasen", "en": "It might snow tomorrow."},
+            {"jp": "田中さんは今日来ないかもしれません。", "kana": "たなかさんはきょうこないかもしれません", "romaji": "tanaka san wa kyou konai kamo shiremasen", "en": "Mr. Tanaka might not come today."},
+            {"jp": "明日は晴れるでしょう。", "kana": "あしたははれるでしょう", "romaji": "ashita wa hareru deshou", "en": "It will probably be sunny tomorrow."},
+            {"jp": "長い旅行でしたね。疲れたでしょう？", "kana": "ながいりょこうでしたね つかれたでしょう", "romaji": "nagai ryokou deshita ne. tsukareta deshou?", "en": "That was a long trip. You must be tired, right?"},
+        ],
+        "vocab": [
+            {"word": "かもしれません", "reading": "かもしれません", "meaning": "might, maybe"},
+            {"word": "でしょう", "reading": "でしょう", "meaning": "probably; ..., right?"},
+            {"word": "晴れます", "reading": "はれます", "meaning": "to be sunny, clear up"},
+            {"word": "疲れます", "reading": "つかれます", "meaning": "to get tired"},
+            {"word": "病気", "reading": "びょうき", "meaning": "illness, sick"},
+            {"word": "長い", "reading": "ながい", "meaning": "long"},
+        ],
+    },
+    {
+        "id": "n4-20",
+        "title": "Keigo basics",
+        "jp_title": "敬語の基本",
+        "goal": "Recognize and use the most common respectful and humble expressions.",
+        "points": [
+            "**Respectful language** (尊敬語) raises the other person, with special verbs: **いらっしゃる** "
+            "(be / go / come), **召し上がる** (eat / drink), **おっしゃる** (say), **ご覧になる** (see).",
+            "**Humble language** (謙譲語) lowers yourself: **参る** (go / come), **申す** (say, give your name), "
+            "**いただく** (receive / eat), **拝見する** (see).",
+            "Regular verbs: respectful **お[ます-stem]になります** (お待ちになります); humble **お[ます-stem]します** (お持ちします).",
+            "Fixed phrases you'll hear in shops: **いらっしゃいませ** (welcome), **少々お待ちください** (one moment please).",
+        ],
+        "examples": [
+            {"jp": "先生はいらっしゃいますか。", "kana": "せんせいはいらっしゃいますか", "romaji": "sensei wa irasshaimasu ka", "en": "Is the teacher in?"},
+            {"jp": "何を召し上がりますか。", "kana": "なにをめしあがりますか", "romaji": "nani o meshiagarimasu ka", "en": "What would you like to eat?"},
+            {"jp": "私はスミスと申します。", "kana": "わたしはスミスともうします", "romaji": "watashi wa sumisu to moushimasu", "en": "My name is Smith. (humble)"},
+            {"jp": "荷物をお持ちします。", "kana": "にもつをおもちします", "romaji": "nimotsu o omochi shimasu", "en": "Let me carry your luggage."},
+            {"jp": "少々お待ちください。", "kana": "しょうしょうおまちください", "romaji": "shoushou omachi kudasai", "en": "One moment, please."},
+        ],
+        "vocab": [
+            {"word": "いらっしゃいます", "reading": "いらっしゃいます", "meaning": "to be / go / come (respectful)"},
+            {"word": "召し上がります", "reading": "めしあがります", "meaning": "to eat / drink (respectful)"},
+            {"word": "申します", "reading": "もうします", "meaning": "to be called; to say (humble)"},
+            {"word": "いただきます", "reading": "いただきます", "meaning": "to receive / eat (humble)"},
+            {"word": "荷物", "reading": "にもつ", "meaning": "luggage, baggage"},
+            {"word": "少々", "reading": "しょうしょう", "meaning": "a little, a moment (polite)"},
+        ],
+    },
 ]
 
 _BY_ID = {lesson["id"]: lesson for lesson in LESSONS}
