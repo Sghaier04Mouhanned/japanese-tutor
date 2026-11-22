@@ -271,7 +271,7 @@ function route() {
     section.hidden = section.id !== `view-${name}`;
   }
   const navName = name === "practice" ? "learn" : name; // Practice lives under Kana
-  for (const link of document.querySelectorAll(".nav a")) {
+  for (const link of document.querySelectorAll(".nav a, .topbar-end a")) {
     link.classList.toggle("active", link.dataset.view === navName);
   }
   closeWordPopup();
@@ -316,14 +316,110 @@ document.addEventListener("click", e => {
   route();
 });
 
+/* ================= night sky (decorative) ================= */
+
+// Small seeded random so the sky looks the same on every visit.
+function seeded(seed) {
+  return () => {
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// One cloud band as SVG: puffs repeated across two widths so the CSS drift can
+// loop seamlessly; a turbulence filter roughens the edges like brush strokes.
+function cloudBand(name, seed, { base, light, puffs, top }) {
+  const rnd = seeded(seed);
+  const shapes = [];
+  for (let i = 0; i < puffs; i++) {
+    const cx = rnd() * 1000, cy = top + rnd() * (300 - top) * 0.7;
+    const rx = 70 + rnd() * 170, ry = 28 + rnd() * 55;
+    for (const shift of [0, 1000]) {
+      shapes.push(`<ellipse cx="${(cx + shift).toFixed(1)}" cy="${cy.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${ry.toFixed(1)}" fill="${base}"/>`);
+      shapes.push(`<ellipse cx="${(cx + shift - rx * 0.15).toFixed(1)}" cy="${(cy - ry * 0.35).toFixed(1)}" rx="${(rx * 0.55).toFixed(1)}" ry="${(ry * 0.45).toFixed(1)}" fill="${light}" opacity=".55"/>`);
+    }
+  }
+  return `<svg viewBox="0 0 2000 300" preserveAspectRatio="none" focusable="false">
+    <defs><filter id="paint-${name}" x="-5%" y="-20%" width="110%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.009 0.035" numOctaves="3" seed="${seed}"/>
+      <feDisplacementMap in="SourceGraphic" scale="34"/>
+      <feGaussianBlur stdDeviation="2.2"/>
+    </filter></defs>
+    <g filter="url(#paint-${name})">${shapes.join("")}<rect x="0" y="${top + 120}" width="2000" height="${300 - top - 120}" fill="${base}"/></g>
+  </svg>`;
+}
+
+function paintSky() {
+  const stars = $("#sky-stars");
+  if (!stars || stars.childElementCount) return;
+  const rnd = seeded(7);
+  for (let i = 0; i < 110; i++) {
+    const size = rnd() < 0.85 ? 1 + rnd() * 1.2 : 2 + rnd() * 1.2;
+    stars.append(el("span", { class: "star", style:
+      `left:${(rnd() * 100).toFixed(2)}%;top:${(rnd() * 100).toFixed(2)}%;width:${size.toFixed(1)}px;height:${size.toFixed(1)}px;` +
+      `--o:${(0.35 + rnd() * 0.6).toFixed(2)};--t:${(3 + rnd() * 5).toFixed(1)}s;--d:${(-rnd() * 8).toFixed(1)}s` }));
+  }
+  const layers = {
+    back: { base: "#4e5d8c", light: "#6f7fb3", puffs: 16, top: 40 },   // slate blue
+    mid: { base: "#6b5a9e", light: "#9481c4", puffs: 14, top: 90 },    // muted violet
+    front: { base: "#b47f9f", light: "#dcaac3", puffs: 12, top: 150 }, // dusty pink
+  };
+  document.querySelectorAll(".cloud-layer").forEach((node, i) => {
+    const name = node.dataset.layer;
+    node.innerHTML = cloudBand(name, 11 + i * 17, layers[name]);
+  });
+}
+
+// Canvas tabs jump to sections of the home page (they're not routes).
+document.addEventListener("click", e => {
+  const tab = e.target.closest(".canvas-tabs button");
+  if (!tab) return;
+  document.querySelectorAll(".canvas-tabs button").forEach(b => b.classList.toggle("active", b === tab));
+  const target = tab.dataset.scroll === "top" ? null : document.getElementById(tab.dataset.scroll);
+  if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+  else window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+// Fade sections up as they scroll into view (skipped for reduced motion).
+const revealObserver = "IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches
+  ? new IntersectionObserver(entries => entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add("in"); revealObserver.unobserve(entry.target); }
+    }), { threshold: 0.08 })
+  : null;
+if (revealObserver) document.documentElement.classList.add("motion");
+function observeReveals() {
+  if (!revealObserver) return;
+  document.querySelectorAll(".fade-up:not(.in)").forEach(node => revealObserver.observe(node));
+}
+
+function setState(id, text, kind) {
+  const node = document.getElementById(id);
+  if (!node) return;
+  node.textContent = text;
+  node.className = `state ${kind}`;
+}
+
 /* ================= home ================= */
 
 async function renderHome() {
+  paintSky();
+  observeReveals();
+  for (const id of ["state-due", "state-streak", "state-today"]) setState(id, "syncing…", "syncing");
   const script = getScript("home");
   const [stats, data] = await Promise.all([
     api.get("/api/kana/stats"),
     api.get(`/api/kana/groups?script=${script}`),
   ]);
+
+  // Hero button leads to whatever is most useful right now.
+  const due = stats.due_count;
+  $("#hero-primary").href = due ? "#review" : "#lessons";
+  $("#hero-primary-label").textContent = due ? `Start review (${due})` : "Continue learning";
+  setState("state-due", due ? `${due} due` : "all clear", due ? "todo" : "ok");
+  setState("state-streak", stats.streak_days ? "on track" : "start today", stats.streak_days ? "ok" : "todo");
+  setState("state-today", stats.reviews_today ? "studied" : "not yet", stats.reviews_today ? "ok" : "todo");
 
   updateBadge(stats.due_count);
   $("#stat-due").textContent = stats.due_count;

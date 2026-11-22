@@ -6,19 +6,22 @@
   <title>Japanese Tutor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#13111c">
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="#home"><span class="brand-jp" lang="ja">日本語</span> Tutor</a>
-    <nav class="nav">
+    <nav class="nav" aria-label="Main">
       <a href="#home" data-view="home">Home</a>
       <a href="#tutor" data-view="tutor">Tutor</a>
       <a href="#lessons" data-view="lessons">Lessons</a>
       <a href="#quiz" data-view="quiz">Quiz</a>
-      <a href="#learn" data-view="learn">Kana</a>
       <a href="#review" data-view="review">Review <span class="badge" id="due-badge" hidden></span></a>
+    </nav>
+    <nav class="topbar-end" aria-label="More">
+      <a href="#learn" data-view="learn">Kana</a>
       <a href="#notebook" data-view="notebook">Notebook</a>
     </nav>
   </header>
@@ -27,26 +30,60 @@
 
     <!-- HOME -->
     <section class="view" id="view-home">
-      <div class="stats">
-        <div class="stat stat-primary">
-          <div class="stat-label">Due now</div>
-          <div class="stat-value" id="stat-due">–</div>
-          <a class="btn btn-primary" href="#review" id="stat-due-btn" hidden>Start review</a>
-          <div class="stat-sub" id="stat-next"></div>
+      <div class="hero">
+        <!-- Painted night sky: stars and cloud layers are added by app.js (decorative) -->
+        <div class="sky-box">
+          <div class="sky" aria-hidden="true">
+            <div class="stars" id="sky-stars"></div>
+            <div class="cloud-layer layer-back" data-layer="back"></div>
+            <div class="cloud-layer layer-mid" data-layer="mid"></div>
+            <div class="cloud-layer layer-front" data-layer="front"></div>
+          </div>
+          <div class="hero-copy">
+            <p class="hero-title">Your quiet path to JLPT&nbsp;N5</p>
+            <p class="hero-text">Lessons, reviews and a <span class="underline">patient</span> tutor, all running on your own computer.</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#review" id="hero-primary"><span class="arrow" id="hero-primary-label">Start review</span></a>
+              <a class="btn" href="#tutor">Ask Sensei</a>
+            </div>
+          </div>
         </div>
-        <div class="stat">
-          <div class="stat-label">Streak</div>
-          <div class="stat-value" id="stat-streak">–</div>
-          <div class="stat-sub">days in a row</div>
-        </div>
-        <div class="stat">
-          <div class="stat-label">Today</div>
-          <div class="stat-value" id="stat-today">–</div>
-          <div class="stat-sub" id="stat-accuracy">reviews</div>
+
+        <!-- The "product canvas": today's live study state -->
+        <div class="canvas" role="region" aria-label="Today's study">
+          <div class="canvas-bar">
+            <span class="canvas-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <div class="canvas-tabs">
+              <button type="button" class="active" data-scroll="top">Today</button>
+              <button type="button" data-scroll="progress-panel">Progress</button>
+              <button type="button" data-scroll="kana-panel">Kana chart</button>
+            </div>
+            <span class="canvas-label">study-session · today</span>
+          </div>
+          <div class="canvas-board">
+            <div class="stats">
+              <div class="stat stat-primary">
+                <div class="stat-head"><span class="stat-label">Due now</span><span class="state syncing" id="state-due">syncing…</span></div>
+                <div class="stat-value" id="stat-due">–</div>
+                <a class="btn btn-primary" href="#review" id="stat-due-btn" hidden><span class="arrow">Start review</span></a>
+                <div class="stat-sub" id="stat-next"></div>
+              </div>
+              <div class="stat">
+                <div class="stat-head"><span class="stat-label">Streak</span><span class="state syncing" id="state-streak">syncing…</span></div>
+                <div class="stat-value" id="stat-streak">–</div>
+                <div class="stat-sub">days in a row</div>
+              </div>
+              <div class="stat">
+                <div class="stat-head"><span class="stat-label">Today</span><span class="state syncing" id="state-today">syncing…</span></div>
+                <div class="stat-value" id="stat-today">–</div>
+                <div class="stat-sub" id="stat-accuracy">reviews</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="panel" id="progress-panel">
+      <div class="panel fade-up" id="progress-panel">
         <div class="panel-head">
           <h2>Your progress</h2>
           <span class="muted" id="progress-totals"></span>
@@ -78,7 +115,7 @@
         </div>
       </div>
 
-      <div class="panel">
+      <div class="panel fade-up" id="kana-panel">
         <div class="panel-head">
           <h2>Kana chart</h2>
           <div class="segmented" data-script-toggle="home">
