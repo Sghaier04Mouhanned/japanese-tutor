@@ -55,15 +55,15 @@ passing the JLPT (N5, then N4), powered by a free AI API or a local model.
 - Progress chart, daily streak and accuracy
 - Accepts common alternative spellings (si/shi, tu/tsu, zya/ja…)
 
-**JLPT N4 lessons (20)**
+**JLPT N4 lessons (30)**
 - Plain forms, 〜たことがある, 〜たり〜たり, potential form, 〜と思う/〜と言う, 〜つもり/〜予定,
   volitional form, 〜なければならない/〜なくてもいい, 〜ので/〜のに, 〜たら/〜と
 - Giving and receiving, 〜てあげる/くれる/もらう, passive, causative, 〜そうだ (looks / heard),
   〜ておく/〜てしまう, 〜ながら/〜てから/〜た後で, 〜ようになる/〜ことにする,
   〜かもしれない/〜でしょう, keigo basics
+- 〜ば, 〜ために/〜ように, 〜すぎる, 〜やすい/〜にくい, 〜し, 〜はず, 〜ようだ/〜みたい/〜らしい,
+  〜てみる, の/こと, transitive/intransitive pairs with 〜ている/〜てある
 - Once you start N4, Sensei may use N4 grammar too; progress and quizzes track N5 and N4 separately
-
-**Coming next:** remaining N4 topics (〜ば conditional, 〜ために/〜ように, 〜すぎる, 〜やすい/にくい...).
 
 ## Setup
 

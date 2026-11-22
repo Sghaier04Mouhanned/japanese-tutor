@@ -129,6 +129,11 @@ def _context_reading(prev, word, nxt=None) -> str | None:
     if word.surface == "人" and word.feature.pos1 == "接尾辞" and (
             word.feature.pos3 == "一般" and prev.feature.pos3 == "地名" or prev.surface == "外国"):
         return "じん"
+    # 開く: ドアが開く is あく (the textbook pair of 開ける); 本を開く keeps ひらく.
+    if getattr(word.feature, "orthBase", "") == "開く" and prev.surface == "が":
+        kana = _reading(word) or ""
+        if kana.startswith("ひら"):
+            return "あ" + kana[2:]
     # 富士山 is ふじさん (the analyzer splits it and reads 山 as やま). Many other
     # mountains really are 〜やま, so this stays specific.
     if word.surface == "山" and prev.surface == "富士":
