@@ -803,13 +803,293 @@ LESSONS: list[dict] = [
             {"word": "何回", "reading": "なんかい", "meaning": "how many times"},
         ],
     },
+    # ------------------------------------------------------------------ N4
+    {
+        "id": "n4-01",
+        "title": "Plain forms",
+        "jp_title": "普通形",
+        "goal": "Make the casual (plain) forms used with friends and inside N4 grammar.",
+        "points": [
+            "Polite forms have plain twins used with friends and family, and inside longer sentences: "
+            "行きます → **行く**, 行きません → **行かない**, 行きました → **行った**, 行きませんでした → **行かなかった**.",
+            "The plain past (た-form) is made like the て-form, with た instead of て: 書いて → 書いた, "
+            "飲んで → 飲んだ, 食べて → 食べた, して → した, 来て → 来た (きた).",
+            "Adjectives: 高い → 高かった / 高くない. な-adjectives and nouns use **だ**: 静かだ, 学生だ; "
+            "past **だった**, negative **じゃない**.",
+            "Most N4 patterns attach to plain forms: 行ったことがある, 行くつもり, 行くと思う.",
+        ],
+        "examples": [
+            {"jp": "明日、学校に行く？", "kana": "あした がっこうにいく", "romaji": "ashita, gakkou ni iku?", "en": "Are you going to school tomorrow?"},
+            {"jp": "うん、行く。", "kana": "うん いく", "romaji": "un, iku", "en": "Yeah, I'm going."},
+            {"jp": "昨日は何も食べなかった。", "kana": "きのうはなにもたべなかった", "romaji": "kinou wa nani mo tabenakatta", "en": "I didn't eat anything yesterday."},
+            {"jp": "このケーキ、おいしかった。", "kana": "このケーキ おいしかった", "romaji": "kono keeki, oishikatta", "en": "This cake was delicious."},
+        ],
+        "vocab": [
+            {"word": "うん", "reading": "うん", "meaning": "yeah (casual yes)"},
+            {"word": "ううん", "reading": "ううん", "meaning": "nope (casual no)"},
+            {"word": "普通", "reading": "ふつう", "meaning": "normal, ordinary"},
+            {"word": "ケーキ", "reading": "ケーキ", "meaning": "cake"},
+            {"word": "食べる", "reading": "たべる", "meaning": "to eat (plain form)"},
+            {"word": "飲む", "reading": "のむ", "meaning": "to drink (plain form)"},
+        ],
+    },
+    {
+        "id": "n4-02",
+        "title": "Have you ever...?",
+        "jp_title": "〜たことがあります",
+        "goal": "Talk about things you have (or have never) done.",
+        "points": [
+            "**[plain past] + ことがあります** = have done something at least once: 富士山に登ったことがあります。",
+            "Ask with 〜たことがありますか。 Answer はい、あります or いいえ、ありません.",
+            "**一度** (ichido) = once, **何度も** (nando mo) = many times. **一度もありません** = never, not even once.",
+            "Negative: **〜たことがありません** = have never ...",
+        ],
+        "examples": [
+            {"jp": "富士山に登ったことがあります。", "kana": "ふじさんにのぼったことがあります", "romaji": "fujisan ni nobotta koto ga arimasu", "en": "I have climbed Mt. Fuji."},
+            {"jp": "すしを食べたことがありますか。", "kana": "すしをたべたことがありますか", "romaji": "sushi o tabeta koto ga arimasu ka", "en": "Have you ever eaten sushi?"},
+            {"jp": "いいえ、一度もありません。", "kana": "いいえ いちどもありません", "romaji": "iie, ichido mo arimasen", "en": "No, never once."},
+            {"jp": "日本の映画を何度も見たことがあります。", "kana": "にほんのえいがをなんどもみたことがあります", "romaji": "nihon no eiga o nando mo mita koto ga arimasu", "en": "I have watched Japanese movies many times."},
+        ],
+        "vocab": [
+            {"word": "登ります", "reading": "のぼります", "meaning": "to climb"},
+            {"word": "一度", "reading": "いちど", "meaning": "once, one time"},
+            {"word": "何度も", "reading": "なんども", "meaning": "many times"},
+            {"word": "経験", "reading": "けいけん", "meaning": "experience"},
+            {"word": "富士山", "reading": "ふじさん", "meaning": "Mt. Fuji"},
+        ],
+    },
+    {
+        "id": "n4-03",
+        "title": "Doing things like...",
+        "jp_title": "〜たり〜たりします",
+        "goal": "Give a few examples of what you do, without listing everything.",
+        "points": [
+            "**[plain past]り、[plain past]りします** lists some example actions: "
+            "週末は映画を見たり、買い物をしたりします。 \"On weekends I do things like watch movies and go shopping.\"",
+            "Add り to the た-form: 見た → 見たり, 読んだ → 読んだり, 行った → 行ったり.",
+            "The tense goes on the final します: 〜たりしました = did things like ...",
+            "With only one action it means \"things like ...\": 本を読んだりします。",
+        ],
+        "examples": [
+            {"jp": "週末は映画を見たり、買い物をしたりします。", "kana": "しゅうまつはえいがをみたり かいものをしたりします", "romaji": "shuumatsu wa eiga o mitari, kaimono o shitari shimasu", "en": "On weekends I do things like watching movies and shopping."},
+            {"jp": "休みの日は、本を読んだり、音楽を聞いたりします。", "kana": "やすみのひは ほんをよんだり おんがくをきいたりします", "romaji": "yasumi no hi wa, hon o yondari, ongaku o kiitari shimasu", "en": "On my days off I read books, listen to music and so on."},
+            {"jp": "夏休みに泳いだり、山に登ったりしました。", "kana": "なつやすみにおよいだり やまにのぼったりしました", "romaji": "natsuyasumi ni oyoidari, yama ni nobottari shimashita", "en": "In the summer holidays I did things like swimming and climbing mountains."},
+        ],
+        "vocab": [
+            {"word": "買い物", "reading": "かいもの", "meaning": "shopping"},
+            {"word": "休み", "reading": "やすみ", "meaning": "day off, holiday"},
+            {"word": "聞きます", "reading": "ききます", "meaning": "to listen; to ask"},
+            {"word": "夏休み", "reading": "なつやすみ", "meaning": "summer vacation"},
+            {"word": "山", "reading": "やま", "meaning": "mountain"},
+            {"word": "音楽", "reading": "おんがく", "meaning": "music"},
+        ],
+    },
+    {
+        "id": "n4-04",
+        "title": "Can do: the potential form",
+        "jp_title": "可能形",
+        "goal": "Say what you can and can't do with the potential form.",
+        "points": [
+            "The **potential form** says what you can do: 話せます (can speak), 食べられます (can eat).",
+            "Most verbs change the い-sound before ます to the え-sound: 話します → **話せます**, 書きます → **書けます**, "
+            "読みます → **読めます**, 泳ぎます → **泳げます**.",
+            "る-verbs replace ます with **られます**: 食べます → 食べられます, 見ます → 見られます.",
+            "Irregular: します → **できます**, 来ます → **来られます** (koraremasu). The thing you can do usually takes **が**.",
+        ],
+        "examples": [
+            {"jp": "日本語が少し話せます。", "kana": "にほんごがすこしはなせます", "romaji": "nihongo ga sukoshi hanasemasu", "en": "I can speak a little Japanese."},
+            {"jp": "漢字が読めますか。", "kana": "かんじがよめますか", "romaji": "kanji ga yomemasu ka", "en": "Can you read kanji?"},
+            {"jp": "辛い料理は食べられません。", "kana": "からいりょうりはたべられません", "romaji": "karai ryouri wa taberaremasen", "en": "I can't eat spicy food."},
+            {"jp": "明日は来られますか。", "kana": "あしたはこられますか", "romaji": "ashita wa koraremasu ka", "en": "Can you come tomorrow?"},
+        ],
+        "vocab": [
+            {"word": "少し", "reading": "すこし", "meaning": "a little"},
+            {"word": "漢字", "reading": "かんじ", "meaning": "kanji, Chinese characters"},
+            {"word": "話せます", "reading": "はなせます", "meaning": "can speak"},
+            {"word": "読めます", "reading": "よめます", "meaning": "can read"},
+            {"word": "食べられます", "reading": "たべられます", "meaning": "can eat"},
+        ],
+    },
+    {
+        "id": "n4-05",
+        "title": "I think, they said",
+        "jp_title": "〜と思います・〜と言いました",
+        "goal": "Give your opinion and pass on what someone said.",
+        "points": [
+            "**[plain form] + と思います** = I think (that) ...: 明日は雨が降ると思います。",
+            "After nouns and な-adjectives add **だ**: あの人は先生だと思います。",
+            "**[plain form] + と言いました** reports what someone said: 先生は明日テストがあると言いました。",
+            "**〜と言っていました** (\"was saying\") is the natural way to pass on a message.",
+        ],
+        "examples": [
+            {"jp": "明日は雨が降ると思います。", "kana": "あしたはあめがふるとおもいます", "romaji": "ashita wa ame ga furu to omoimasu", "en": "I think it will rain tomorrow."},
+            {"jp": "この本はおもしろいと思います。", "kana": "このほんはおもしろいとおもいます", "romaji": "kono hon wa omoshiroi to omoimasu", "en": "I think this book is interesting."},
+            {"jp": "田中さんは来ないと言っていました。", "kana": "たなかさんはこないといっていました", "romaji": "tanaka san wa konai to itte imashita", "en": "Mr. Tanaka said he isn't coming."},
+            {"jp": "あの人は先生だと思います。", "kana": "あのひとはせんせいだとおもいます", "romaji": "ano hito wa sensei da to omoimasu", "en": "I think that person is a teacher."},
+        ],
+        "vocab": [
+            {"word": "思います", "reading": "おもいます", "meaning": "to think"},
+            {"word": "言います", "reading": "いいます", "meaning": "to say"},
+            {"word": "おもしろい", "reading": "おもしろい", "meaning": "interesting; funny"},
+            {"word": "多分", "reading": "たぶん", "meaning": "probably, maybe"},
+            {"word": "意見", "reading": "いけん", "meaning": "opinion"},
+        ],
+    },
+    {
+        "id": "n4-06",
+        "title": "Plans: つもり and 予定",
+        "jp_title": "〜つもりです・〜予定です",
+        "goal": "Talk about what you intend to do and what is scheduled.",
+        "points": [
+            "**[dictionary form] + つもりです** = I intend to: 来年日本に行くつもりです。 It's your own decision.",
+            "Intend not to: **〜ないつもりです**: お酒を飲まないつもりです。",
+            "**[dictionary form] + 予定です** = it's planned / scheduled: 電車は十時に着く予定です。",
+            "つもり is about your intention; 予定 is about an arranged plan or timetable.",
+        ],
+        "examples": [
+            {"jp": "来年、日本に行くつもりです。", "kana": "らいねん にほんにいくつもりです", "romaji": "rainen, nihon ni iku tsumori desu", "en": "I intend to go to Japan next year."},
+            {"jp": "今晩はお酒を飲まないつもりです。", "kana": "こんばんはおさけをのまないつもりです", "romaji": "konban wa osake o nomanai tsumori desu", "en": "I don't intend to drink tonight."},
+            {"jp": "電車は十時に着く予定です。", "kana": "でんしゃはじゅうじにつくよていです", "romaji": "densha wa juuji ni tsuku yotei desu", "en": "The train is scheduled to arrive at ten."},
+            {"jp": "来週、友達と旅行する予定です。", "kana": "らいしゅう ともだちとりょこうするよていです", "romaji": "raishuu, tomodachi to ryokou suru yotei desu", "en": "I'm planning a trip with friends next week."},
+        ],
+        "vocab": [
+            {"word": "つもり", "reading": "つもり", "meaning": "intention"},
+            {"word": "予定", "reading": "よてい", "meaning": "plan, schedule"},
+            {"word": "来年", "reading": "らいねん", "meaning": "next year"},
+            {"word": "今晩", "reading": "こんばん", "meaning": "tonight, this evening"},
+            {"word": "着きます", "reading": "つきます", "meaning": "to arrive"},
+            {"word": "お酒", "reading": "おさけ", "meaning": "alcohol; sake"},
+        ],
+    },
+    {
+        "id": "n4-07",
+        "title": "Let's / I'm thinking of: the volitional form",
+        "jp_title": "意向形",
+        "goal": "Suggest things casually and say what you're planning to do.",
+        "points": [
+            "The **volitional form** is the plain version of ましょう: 行きましょう → **行こう**, 食べましょう → **食べよう**.",
+            "Most verbs change the い-sound before ます to the お-sound + う: 飲みます → 飲もう, 帰ります → 帰ろう, "
+            "買います → 買おう. る-verbs drop ます and add よう: 見よう. Irregular: **しよう**, **来よう** (koyou).",
+            "Between friends it means \"let's\": 一緒に帰ろう。",
+            "**[volitional] + と思っています** = I'm thinking of doing: 新しいパソコンを買おうと思っています。",
+        ],
+        "examples": [
+            {"jp": "一緒に帰ろう。", "kana": "いっしょにかえろう", "romaji": "issho ni kaerou", "en": "Let's go home together."},
+            {"jp": "少し休もう。", "kana": "すこしやすもう", "romaji": "sukoshi yasumou", "en": "Let's take a short break."},
+            {"jp": "新しいパソコンを買おうと思っています。", "kana": "あたらしいパソコンをかおうとおもっています", "romaji": "atarashii pasokon o kaou to omotte imasu", "en": "I'm thinking of buying a new computer."},
+            {"jp": "来年から毎日運動しようと思っています。", "kana": "らいねんからまいにちうんどうしようとおもっています", "romaji": "rainen kara mainichi undou shiyou to omotte imasu", "en": "I'm thinking of exercising every day from next year."},
+        ],
+        "vocab": [
+            {"word": "休みます", "reading": "やすみます", "meaning": "to rest; to take a day off"},
+            {"word": "運動", "reading": "うんどう", "meaning": "exercise"},
+            {"word": "始めます", "reading": "はじめます", "meaning": "to begin, start"},
+            {"word": "やめます", "reading": "やめます", "meaning": "to quit, stop"},
+            {"word": "決めます", "reading": "きめます", "meaning": "to decide"},
+        ],
+    },
+    {
+        "id": "n4-08",
+        "title": "Must and don't have to",
+        "jp_title": "〜なければなりません・〜なくてもいいです",
+        "goal": "Say what you must do, and what you don't need to do.",
+        "points": [
+            "**[ない-form without い] + ければなりません** = must: 行かない → **行かなければなりません**.",
+            "**[ない-form without い] + くてもいいです** = don't have to: 行かない → **行かなくてもいいです**.",
+            "Compare lesson N5-27: 〜てもいいです = you may do; 〜なくてもいいです = you needn't do.",
+            "In casual speech you'll hear the short **〜なきゃ**: 行かなきゃ。 \"I've got to go.\"",
+        ],
+        "examples": [
+            {"jp": "明日は早く起きなければなりません。", "kana": "あしたははやくおきなければなりません", "romaji": "ashita wa hayaku okinakereba narimasen", "en": "I have to get up early tomorrow."},
+            {"jp": "薬を飲まなければなりません。", "kana": "くすりをのまなければなりません", "romaji": "kusuri o nomanakereba narimasen", "en": "I have to take my medicine."},
+            {"jp": "土曜日は学校に行かなくてもいいです。", "kana": "どようびはがっこうにいかなくてもいいです", "romaji": "doyoubi wa gakkou ni ikanakute mo ii desu", "en": "You don't have to go to school on Saturday."},
+            {"jp": "全部食べなくてもいいですよ。", "kana": "ぜんぶたべなくてもいいですよ", "romaji": "zenbu tabenakute mo ii desu yo", "en": "You don't have to eat it all."},
+        ],
+        "vocab": [
+            {"word": "早く", "reading": "はやく", "meaning": "early; quickly"},
+            {"word": "薬", "reading": "くすり", "meaning": "medicine"},
+            {"word": "宿題", "reading": "しゅくだい", "meaning": "homework"},
+            {"word": "出します", "reading": "だします", "meaning": "to hand in; to take out"},
+            {"word": "払います", "reading": "はらいます", "meaning": "to pay"},
+        ],
+    },
+    {
+        "id": "n4-09",
+        "title": "Because and although: ので and のに",
+        "jp_title": "〜ので・〜のに",
+        "goal": "Give soft, polite reasons and express surprising contrasts.",
+        "points": [
+            "**〜ので** = because, so: softer and more polite than から: 雨が降っているので、出かけません。",
+            "Nouns and な-adjectives take **な** before ので: テストなので, 静かなので.",
+            "**〜のに** = although, even though, often with surprise or disappointment: "
+            "薬を飲んだのに、まだ頭が痛いです。",
+            "のに follows the same な rule: 日曜日なのに、学校に行きました。",
+        ],
+        "examples": [
+            {"jp": "雨が降っているので、出かけません。", "kana": "あめがふっているので でかけません", "romaji": "ame ga futte iru node, dekakemasen", "en": "It's raining, so I won't go out."},
+            {"jp": "明日はテストなので、今晩勉強します。", "kana": "あしたはテストなので こんばんべんきょうします", "romaji": "ashita wa tesuto na node, konban benkyou shimasu", "en": "I have a test tomorrow, so I'll study tonight."},
+            {"jp": "薬を飲んだのに、まだ頭が痛いです。", "kana": "くすりをのんだのに まだあたまがいたいです", "romaji": "kusuri o nonda noni, mada atama ga itai desu", "en": "Even though I took medicine, my head still hurts."},
+            {"jp": "日曜日なのに、学校に行きました。", "kana": "にちようびなのに がっこうにいきました", "romaji": "nichiyoubi na noni, gakkou ni ikimashita", "en": "Even though it was Sunday, I went to school."},
+        ],
+        "vocab": [
+            {"word": "ので", "reading": "ので", "meaning": "because, so"},
+            {"word": "のに", "reading": "のに", "meaning": "although, even though"},
+            {"word": "頭", "reading": "あたま", "meaning": "head"},
+            {"word": "痛い", "reading": "いたい", "meaning": "painful, sore"},
+            {"word": "熱", "reading": "ねつ", "meaning": "fever"},
+            {"word": "風邪", "reading": "かぜ", "meaning": "a cold"},
+        ],
+    },
+    {
+        "id": "n4-10",
+        "title": "If and when: たら and と",
+        "jp_title": "〜たら・〜と",
+        "goal": "Talk about conditions, and what happens when something happens.",
+        "points": [
+            "**[plain past] + ら** = if / when: 雨が降ったら、行きません。 For future events it also means "
+            "\"once ...\": 駅に着いたら、電話してください。",
+            "**[dictionary form] + と** = whenever / it naturally follows: 春になると、花が咲きます。 "
+            "It's also used for directions: まっすぐ行くと、右に銀行があります。",
+            "と can't be followed by a request or an intention (〜てください, 〜つもり); use たら for those.",
+            "Adjectives work too: 安かったら (if it's cheap), 暇だったら (if you're free).",
+        ],
+        "examples": [
+            {"jp": "雨が降ったら、行きません。", "kana": "あめがふったら いきません", "romaji": "ame ga futtara, ikimasen", "en": "If it rains, I won't go."},
+            {"jp": "駅に着いたら、電話してください。", "kana": "えきについたら でんわしてください", "romaji": "eki ni tsuitara, denwa shite kudasai", "en": "Please call me when you get to the station."},
+            {"jp": "春になると、花が咲きます。", "kana": "はるになると はながさきます", "romaji": "haru ni naru to, hana ga sakimasu", "en": "When spring comes, flowers bloom."},
+            {"jp": "この道をまっすぐ行くと、右に銀行があります。", "kana": "このみちをまっすぐいくと みぎにぎんこうがあります", "romaji": "kono michi o massugu iku to, migi ni ginkou ga arimasu", "en": "Go straight along this street and there's a bank on the right."},
+        ],
+        "vocab": [
+            {"word": "春", "reading": "はる", "meaning": "spring"},
+            {"word": "咲きます", "reading": "さきます", "meaning": "to bloom"},
+            {"word": "曲がります", "reading": "まがります", "meaning": "to turn"},
+            {"word": "右", "reading": "みぎ", "meaning": "right (side)"},
+            {"word": "道", "reading": "みち", "meaning": "road, street; way"},
+            {"word": "暇", "reading": "ひま", "meaning": "free (time)"},
+        ],
+    },
 ]
 
 _BY_ID = {lesson["id"]: lesson for lesson in LESSONS}
+LEVELS = ("N5", "N4")
 
 
 def get(lesson_id: str) -> dict | None:
     return _BY_ID.get(lesson_id)
+
+
+def level(lesson: dict) -> str:
+    """"N5" or "N4", from the id prefix (n5-03, n4-01)."""
+    return lesson["id"].split("-")[0].upper()
+
+
+def number(lesson: dict) -> int:
+    """Position within its own level: n4-01 is N4 lesson 1."""
+    same = [les for les in LESSONS if level(les) == level(lesson)]
+    return same.index(lesson) + 1
+
+
+def label(lesson: dict) -> str:
+    return f"{level(lesson)} lesson {number(lesson)}"
 
 
 def tutor_brief(lesson: dict) -> str:

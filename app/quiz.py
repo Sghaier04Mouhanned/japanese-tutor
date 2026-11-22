@@ -29,11 +29,20 @@ def _near_misses(reading: str) -> list[str]:
     """Plausible wrong readings, the way the JLPT builds distractors:
     がっこう -> がこう (no small っ), かっこう (no dakuten), がっこ (short vowel)..."""
     out: set[str] = set()
+    i_row = set("きしちにひみりぎじぢびぴ")
     for i, c in enumerate(reading):
         if c in _VOICED:
             out.add(reading[:i] + _VOICED[c] + reading[i + 1:])
         if c in _SMALL:
-            out.add(reading[:i] + _SMALL[c] + reading[i + 1:])
+            small = _SMALL[c]
+            # Only swaps a real word could have: small ゃゅょ right after an i-row
+            # kana (きょう/きよう), small っ inside the word, never at the start.
+            if small in "ゃゅょ" and (i == 0 or reading[i - 1] not in i_row):
+                pass
+            elif small == "っ" and (i == 0 or i == len(reading) - 1):
+                pass
+            else:
+                out.add(reading[:i] + small + reading[i + 1:])
         if c == "っ":
             out.add(reading[:i] + reading[i + 1:])
         if c in "うい" and i > 0:  # long vowels: こう -> こ, せい -> せ

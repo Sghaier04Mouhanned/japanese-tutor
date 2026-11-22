@@ -388,6 +388,8 @@ input[type="checkbox"] { accent-color: var(--accent); width: 1rem; height: 1rem;
 .field-label { font-weight: 600; font-size: .9rem; margin-bottom: .4rem; display: flex; justify-content: space-between; align-items: baseline; }
 .field-label button { font-size: .8rem; }
 .chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.chip-group + .chip-group { margin-top: .75rem; }
+.chip-group-label { font-family: var(--mono); font-size: .72rem; color: var(--muted); margin-bottom: .35rem; }
 
 kbd {
   font-family: var(--mono); font-size: .72rem; border: 1px solid var(--border-strong);
@@ -505,6 +507,11 @@ kbd {
 .status-pill.done { color: var(--ok); background: var(--ok-soft); }
 .status-pill.started { color: var(--accent); background: var(--accent-soft); }
 
+.level-block + .level-block { margin-top: 2.25rem; }
+.level-head { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; flex-wrap: wrap; }
+.level-head h3 { font-size: 1.3rem; margin: 0; letter-spacing: -0.02em; }
+.level-intro { margin: .2rem 0 .9rem; }
+.lesson-level { font-family: var(--mono); font-size: .75rem; color: var(--muted); margin-top: .6rem; }
 .lesson-head { margin-bottom: 1rem; }
 .lesson-head .back { color: var(--muted); font-size: .9rem; text-decoration: none; }
 .lesson-head h2 { font-size: clamp(1.6rem, 4vw, 2.1rem); margin: .5rem 0 .15rem; letter-spacing: -0.03em; }

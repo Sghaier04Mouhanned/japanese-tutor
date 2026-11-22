@@ -61,6 +61,7 @@ _EVERYDAY_READINGS = {
     "上手": "じょうず",
     "下手": "へた",
     "何時": "なんじ",  # なんどき is literary
+    "富士山": "ふじさん",  # ふじやま is old-fashioned / poetic
 }
 
 # The analyzer reads number + counter one character at a time (四時 as
@@ -128,6 +129,10 @@ def _context_reading(prev, word, nxt=None) -> str | None:
     if word.surface == "人" and word.feature.pos1 == "接尾辞" and (
             word.feature.pos3 == "一般" and prev.feature.pos3 == "地名" or prev.surface == "外国"):
         return "じん"
+    # 富士山 is ふじさん (the analyzer splits it and reads 山 as やま). Many other
+    # mountains really are 〜やま, so this stays specific.
+    if word.surface == "山" and prev.surface == "富士":
+        return "さん"
     # Days: 土曜日, 何曜日 -> び; 誕生日 -> たんじょうび
     if word.surface == "日" and (prev.surface.endswith("曜") or prev.surface == "誕生"):
         return "び"

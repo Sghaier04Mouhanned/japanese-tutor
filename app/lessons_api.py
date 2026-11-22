@@ -36,6 +36,7 @@ def list_lessons():
         progress = _progress(conn)
     return {"lessons": [
         {"id": les["id"], "title": les["title"], "jp_title": les["jp_title"], "goal": les["goal"],
+         "level": lessons.level(les), "number": lessons.number(les),
          "status": progress.get(les["id"], "new")}
         for les in lessons.LESSONS
     ]}
@@ -50,7 +51,8 @@ def get_lesson(lesson_id: str):
     index = lessons.LESSONS.index(lesson)
     return {
         **lesson,
-        "number": index + 1,
+        "number": lessons.number(lesson),
+        "level": lessons.level(lesson),
         "status": status,
         "next_id": lessons.LESSONS[index + 1]["id"] if index + 1 < len(lessons.LESSONS) else None,
         "points": [furigana.annotate(p) for p in lesson["points"]],
@@ -65,7 +67,7 @@ def start_practice(lesson_id: str):
     """Open a chat in which Sensei runs exercises on this lesson."""
     lesson = _lesson_or_404(lesson_id)
     now = time.time()
-    title = f"Lesson {lessons.LESSONS.index(lesson) + 1}: {lesson['title']}"
+    title = f"{lessons.label(lesson)}: {lesson['title']}"
     with connect() as conn:
         cur = conn.execute(
             "INSERT INTO chats (title, created_at, updated_at, lesson_id) VALUES (?, ?, ?, ?)",

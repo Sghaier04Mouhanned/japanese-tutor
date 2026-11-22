@@ -45,7 +45,7 @@ def progress():
         mistake_rows = conn.execute(
             """SELECT c.state, c.stability FROM mistakes m
                LEFT JOIN deck_cards c ON c.kind = 'mistake' AND c.ref_id = m.id""").fetchall()
-        lessons_done = conn.execute("SELECT COUNT(*) FROM lesson_progress WHERE status = 'done'").fetchone()[0]
+        done_ids = {r[0] for r in conn.execute("SELECT lesson_id FROM lesson_progress WHERE status = 'done'")}
 
         all_days = {r[0] for r in conn.execute(
             """SELECT date(t, 'unixepoch', 'localtime') FROM (
@@ -88,7 +88,10 @@ def progress():
                          for s in reversed(sessions)],
         "quiz_by_type": {t: {"correct": c, "total": n} for t, (c, n) in by_type.items()},
         "kana": scripts,
-        "lessons": {"done": lessons_done, "total": len(lessons.LESSONS)},
+        # Per level, so the N5 building blocks only count N5 lessons.
+        "lessons": {lvl: {"done": sum(1 for les in lessons.LESSONS if lessons.level(les) == lvl and les["id"] in done_ids),
+                          "total": sum(1 for les in lessons.LESSONS if lessons.level(les) == lvl)}
+                    for lvl in lessons.LEVELS},
         "vocab": vocab,
         "mistakes": mistakes,
         "totals": {"study_days": len(all_days), "reviews": total_reviews, "quizzes": total_quizzes},

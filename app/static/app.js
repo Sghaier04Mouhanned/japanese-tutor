@@ -639,7 +639,8 @@ async function renderProgress() {
   $("#progress-meters").replaceChildren(
     meter("Hiragana", known(data.kana.hiragana), data.kana.hiragana.total, `${known(data.kana.hiragana)} / ${data.kana.hiragana.total}`),
     meter("Katakana", known(data.kana.katakana), data.kana.katakana.total, `${known(data.kana.katakana)} / ${data.kana.katakana.total}`),
-    meter("Lessons", data.lessons.done, data.lessons.total, `${data.lessons.done} / ${data.lessons.total} complete`),
+    meter("N5 lessons", data.lessons.N5.done, data.lessons.N5.total, `${data.lessons.N5.done} / ${data.lessons.N5.total} complete`),
+    meter("N4 lessons", data.lessons.N4.done, data.lessons.N4.total, `${data.lessons.N4.done} / ${data.lessons.N4.total} complete`),
     meter("Vocabulary (≈800 for N5)", known(data.vocab), data.vocab.target, `${known(data.vocab)} known · ${data.vocab.saved} saved`),
     ...quizMeters);
 
@@ -1281,20 +1282,31 @@ async function renderLessons() {
 
   const { lessons } = await api.get("/api/lessons");
   const next = lessons.find(l => l.status !== "done");
-  const done = lessons.filter(l => l.status === "done").length;
+  const levels = [...new Set(lessons.map(l => l.level))];
+  const intro = {
+    N5: "The basics: polite sentences, particles, verbs, adjectives and counting.",
+    N4: "Builds on N5: plain forms, experience, ability, plans, obligations and conditions.",
+  };
   body.replaceChildren(
     el("div", { class: "panel-head" },
-      el("h2", {}, "JLPT N5 lessons"),
-      el("span", { class: "muted" }, `${done} / ${lessons.length} complete`)),
-    el("p", { class: "muted", style: "margin-top:-.5rem" },
-      "Read a lesson, practice it with Sensei, then mark it complete to add its words to your reviews."),
-    el("div", { class: "lesson-grid" }, lessons.map((l, i) =>
-      el("a", { class: `lesson-card${l === next ? " next" : ""}`, href: `#lessons/${l.id}` },
-        el("div", { class: "num" }, `Lesson ${i + 1}`,
-          l.status !== "new" && el("span", { class: `status-pill ${l.status}` }, l.status === "done" ? "Done ✓" : "In progress")),
-        el("div", { class: "jp", lang: "ja" }, l.jp_title),
-        el("div", { class: "title" }, l.title),
-        el("div", { class: "goal" }, l.goal)))));
+      el("h2", {}, "JLPT lessons"),
+      el("span", { class: "muted" }, "Read, practice with Sensei, then mark complete to add the words to your reviews")),
+    ...levels.map(level => {
+      const ofLevel = lessons.filter(l => l.level === level);
+      const done = ofLevel.filter(l => l.status === "done").length;
+      return el("section", { class: "level-block", "aria-labelledby": `level-${level}` },
+        el("div", { class: "level-head" },
+          el("h3", { id: `level-${level}` }, `JLPT ${level}`),
+          el("span", { class: "muted" }, `${done} / ${ofLevel.length} complete`)),
+        intro[level] && el("p", { class: "muted level-intro" }, intro[level]),
+        el("div", { class: "lesson-grid" }, ofLevel.map(l =>
+          el("a", { class: `lesson-card${l === next ? " next" : ""}`, href: `#lessons/${l.id}` },
+            el("div", { class: "num" }, `${l.level} · Lesson ${l.number}`,
+              l.status !== "new" && el("span", { class: `status-pill ${l.status}` }, l.status === "done" ? "Done ✓" : "In progress")),
+            el("div", { class: "jp", lang: "ja" }, l.jp_title),
+            el("div", { class: "title" }, l.title),
+            el("div", { class: "goal" }, l.goal)))));
+    }));
 }
 
 // Shows which sounds of the target sentence Whisper heard (green) or missed (red).
@@ -1362,7 +1374,8 @@ async function renderLesson(body, id) {
   body.replaceChildren(
     el("div", { class: "lesson-head" },
       el("a", { class: "back", href: "#lessons" }, "← All lessons"),
-      el("h2", {}, `${lesson.number}. ${lesson.title}`),
+      el("div", { class: "lesson-level" }, `JLPT ${lesson.level} · Lesson ${lesson.number}`),
+      el("h2", {}, lesson.title),
       el("div", { class: "jp", lang: "ja" }, lesson.jp_title),
       el("p", { class: "goal" }, `Goal: ${lesson.goal}`)),
     el("div", { class: "lesson-section" },
@@ -1410,8 +1423,13 @@ async function renderQuiz() {
 
   const chip = (value, label, checked) =>
     el("label", { class: "chip" }, el("input", { type: "checkbox", value, checked }), label);
-  const lessonChips = opts.lessons.map((l, i) =>
-    chip(l.id, `${i + 1}. ${l.title}${l.status === "done" ? " ✓" : ""}`, settings.lessons.includes(l.id)));
+  const lessonChips = opts.lessons.map(l =>
+    chip(l.id, `${l.number}. ${l.title}${l.status === "done" ? " ✓" : ""}`, settings.lessons.includes(l.id)));
+  // Shown grouped by level; lessonChips keeps the flat list the buttons and start() use.
+  const lessonGroups = [...new Set(opts.lessons.map(l => l.level))].map(level =>
+    el("div", { class: "chip-group" },
+      el("div", { class: "chip-group-label" }, `JLPT ${level}`),
+      el("div", { class: "chips" }, lessonChips.filter((_, i) => opts.lessons[i].level === level))));
   const typeChips = Object.entries(QUIZ_TYPES).map(([t, [jp, en]]) =>
     chip(t, el("span", {}, el("span", { lang: "ja" }, jp), ` ${en}`), settings.types.includes(t)));
   const savedBox = el("input", { type: "checkbox", checked: settings.include_saved && opts.saved_words > 0,
@@ -1432,7 +1450,7 @@ async function renderQuiz() {
         el("span", {},
           el("button", { class: "btn btn-ghost", type: "button", onclick: () => lessonChips.forEach(c => { c.querySelector("input").checked = true; }) }, "All"),
           el("button", { class: "btn btn-ghost", type: "button", onclick: () => lessonChips.forEach(c => { c.querySelector("input").checked = false; }) }, "None"))),
-      el("div", { class: "chips" }, lessonChips)),
+      lessonGroups),
     el("div", { class: "field" },
       el("label", { class: "toggle" }, savedBox, `Include my saved words (${opts.saved_words})`)),
     el("div", { class: "field" },

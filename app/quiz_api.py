@@ -23,7 +23,8 @@ def options():
         recent = [dict(r) for r in conn.execute(
             "SELECT created_at, total, correct FROM quiz_sessions ORDER BY created_at DESC LIMIT 5")]
     return {
-        "lessons": [{"id": les["id"], "title": les["title"], "status": progress.get(les["id"], "new")}
+        "lessons": [{"id": les["id"], "title": les["title"], "level": lessons.level(les),
+                     "number": lessons.number(les), "status": progress.get(les["id"], "new")}
                     for les in lessons.LESSONS],
         "saved_words": saved,
         "types": list(quiz.TYPES),

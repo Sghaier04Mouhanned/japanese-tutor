@@ -4,7 +4,7 @@ actual progress in the database."""
 import json
 import re
 
-from . import kana
+from . import kana, lessons
 
 _BASIC_GROUPS = ["a", "ka", "sa", "ta", "na", "ha", "ma", "ya", "ra", "wa"]
 
@@ -28,8 +28,7 @@ learner asks for more detail.
 (school, shopping, travel, family, daily routine) like those on the JLPT.
 - End most replies with one small question or task so the learner practises right away; \
 JLPT-style questions (pick the right particle, choose the reading of a word) are welcome.
-- Stay within N5 vocabulary and grammar unless the learner asks for something specific; \
-if you use a harder word, gloss it and say which JLPT level it belongs to if you're sure.
+{level_rule}
 {romaji_rule}
 - Kanji readings (furigana) are added automatically by the app. Never write a reading \
 in brackets after kanji, e.g. write 学校, not 学校(がっこう).
@@ -117,7 +116,22 @@ def _progress(conn) -> tuple[str, str]:
                 "katakana words, e.g. コーヒー (koohii).")
     else:
         rule = "- The learner reads both kana: don't add romaji unless asked."
+    status = {r["lesson_id"]: r["status"] for r in conn.execute("SELECT lesson_id, status FROM lesson_progress")}
+    for lvl in lessons.LEVELS:
+        of_level = [les for les in lessons.LESSONS if lessons.level(les) == lvl]
+        done = sum(1 for les in of_level if status.get(les["id"]) == "done")
+        lines.append(f"- {lvl} lessons completed in the app: {done} / {len(of_level)}.")
     return "\n".join(lines), rule
+
+
+def _level_rule(conn) -> str:
+    """Lesson progress decides how far Sensei may go: N5 only, or N5 + N4."""
+    started ={r["lesson_id"] for r in conn.execute("SELECT lesson_id FROM lesson_progress")}
+    if any(lessons.level(les) == "N4" and les["id"] in started for les in lessons.LESSONS):
+        return ("- The learner has started N4. N5 and N4 vocabulary and grammar are fine; prefer what "
+                "their completed lessons cover. Gloss anything above N4 and say its JLPT level if you're sure.")
+    return ("- Stay within N5 vocabulary and grammar unless the learner asks for something specific; "
+            "if you use a harder word, gloss it and say which JLPT level it belongs to if you're sure.")
 
 
 _REMINDER = (
@@ -137,4 +151,4 @@ def with_reminder(history: list[dict]) -> list[dict]:
 
 def system_prompt(conn) -> str:
     progress, romaji_rule = _progress(conn)
-    return _PERSONA.format(progress=progress, romaji_rule=romaji_rule)
+    return _PERSONA.format(progress=progress, romaji_rule=romaji_rule, level_rule=_level_rule(conn))
