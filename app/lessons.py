@@ -2119,6 +2119,272 @@ LESSONS: list[dict] = [
             {"word": "すぐ", "reading": "すぐ", "meaning": "soon, right away"},
         ],
     },
+    {
+        "id": "n3-21",
+        "title": "Asking someone to, hoping that",
+        "jp_title": "〜ように言う・〜ますように",
+        "goal": "Report requests and instructions, and make a wish.",
+        "points": [
+            "**[dictionary or ない form] + ように言う / 頼む** reports a request or instruction: "
+            "先生に、もっと練習するように言われました。",
+            "Useful verbs: 言う (tell), 頼む (ask a favour), 注意する (warn): 子供に、道で走らないように注意しました。",
+            "**[ます-stem] + ますように** = a wish or prayer: 試験に合格できますように。 \"I hope I pass the exam.\"",
+            "Recap from N4: **ように** alone means \"so that\": 忘れないように、メモします。",
+        ],
+        "examples": [
+            {"jp": "先生に、もっと練習するように言われました。", "kana": "せんせいに もっとれんしゅうするようにいわれました", "romaji": "sensei ni, motto renshuu suru you ni iwaremashita", "en": "My teacher told me to practise more."},
+            {"jp": "母に、早く帰るように頼まれました。", "kana": "ははに はやくかえるようにたのまれました", "romaji": "haha ni, hayaku kaeru you ni tanomaremashita", "en": "My mother asked me to come home early."},
+            {"jp": "子供に、道で走らないように注意しました。", "kana": "こどもに みちではしらないようにちゅういしました", "romaji": "kodomo ni, michi de hashiranai you ni chuui shimashita", "en": "I warned the child not to run in the street."},
+            {"jp": "試験に合格できますように。", "kana": "しけんにごうかくできますように", "romaji": "shiken ni goukaku dekimasu you ni", "en": "I hope I pass the exam."},
+        ],
+        "vocab": [
+            {"word": "頼みます", "reading": "たのみます", "meaning": "to ask (a favour), to request"},
+            {"word": "注意", "reading": "ちゅうい", "meaning": "warning, caution"},
+            {"word": "走ります", "reading": "はしります", "meaning": "to run"},
+            {"word": "もっと", "reading": "もっと", "meaning": "more"},
+            {"word": "メモ", "reading": "メモ", "meaning": "memo, note"},
+        ],
+    },
+    {
+        "id": "n3-22",
+        "title": "Other people's feelings",
+        "jp_title": "〜がる・〜たがる",
+        "goal": "Describe what other people feel and want, as you see it.",
+        "points": [
+            "Feeling words like 欲しい, 怖い and 寂しい describe **your own** feelings. "
+            "For someone else, add **がる**: 怖い → 怖がる, 欲しい → 欲しがる.",
+            "**[ます-stem] + たがる** = someone else wants to: 弟は外で遊びたがっています。",
+            "It's usually in the ている form for what's going on now: 妹は犬を欲しがっています。",
+            "Also 嫌がる (show dislike) and 残念がる (be disappointed). Don't use がる for people above you; "
+            "it can sound like you're describing a child.",
+        ],
+        "examples": [
+            {"jp": "妹は犬を欲しがっています。", "kana": "いもうとはいぬをほしがっています", "romaji": "imouto wa inu o hoshigatte imasu", "en": "My little sister wants a dog."},
+            {"jp": "弟は外で遊びたがっています。", "kana": "おとうとはそとであそびたがっています", "romaji": "otouto wa soto de asobitagatte imasu", "en": "My little brother wants to play outside."},
+            {"jp": "子供は暗い部屋を怖がります。", "kana": "こどもはくらいへやをこわがります", "romaji": "kodomo wa kurai heya o kowagarimasu", "en": "Children are scared of dark rooms."},
+            {"jp": "猫はお風呂を嫌がります。", "kana": "ねこはおふろをいやがります", "romaji": "neko wa ofuro o iyagarimasu", "en": "Cats hate baths."},
+        ],
+        "vocab": [
+            {"word": "欲しがります", "reading": "ほしがります", "meaning": "(someone else) wants"},
+            {"word": "怖い", "reading": "こわい", "meaning": "scary; scared"},
+            {"word": "寂しい", "reading": "さびしい", "meaning": "lonely"},
+            {"word": "嫌がります", "reading": "いやがります", "meaning": "to dislike, to not want to"},
+            {"word": "暗い", "reading": "くらい", "meaning": "dark"},
+            {"word": "猫", "reading": "ねこ", "meaning": "cat"},
+        ],
+    },
+    {
+        "id": "n3-23",
+        "title": "Things like..., how surprising",
+        "jp_title": "〜なんて",
+        "goal": "Make light of something, be modest, or show surprise.",
+        "points": [
+            "**[noun] + なんて** = things like ..., the likes of ... (making light of it, or being modest): "
+            "私なんて、まだまだです。",
+            "**[plain form] + なんて** shows surprise or disbelief: 兄が結婚するなんて、びっくりしました。",
+            "It can sound negative: 宿題なんて、やりたくない。 \"I don't want to do stuff like homework.\"",
+            "**なんか** is a more casual version of the noun use: 私なんか…",
+        ],
+        "examples": [
+            {"jp": "私なんて、まだまだです。", "kana": "わたしなんて まだまだです", "romaji": "watashi nante, madamada desu", "en": "Me? I've still got a long way to go."},
+            {"jp": "兄が結婚するなんて、びっくりしました。", "kana": "あにがけっこんするなんて びっくりしました", "romaji": "ani ga kekkon suru nante, bikkuri shimashita", "en": "I was so surprised that my brother is getting married."},
+            {"jp": "こんなに早く雪が降るなんて、信じられません。", "kana": "こんなにはやくゆきがふるなんて しんじられません", "romaji": "konna ni hayaku yuki ga furu nante, shinjiraremasen", "en": "I can't believe it's snowing this early."},
+            {"jp": "宿題なんて、やりたくない。", "kana": "しゅくだいなんて やりたくない", "romaji": "shukudai nante, yaritakunai", "en": "I don't want to do stuff like homework."},
+        ],
+        "vocab": [
+            {"word": "なんて", "reading": "なんて", "meaning": "things like; (surprise) that ..."},
+            {"word": "結婚", "reading": "けっこん", "meaning": "marriage"},
+            {"word": "びっくりします", "reading": "びっくりします", "meaning": "to be surprised"},
+            {"word": "信じます", "reading": "しんじます", "meaning": "to believe"},
+            {"word": "雪", "reading": "ゆき", "meaning": "snow"},
+            {"word": "まだまだ", "reading": "まだまだ", "meaning": "still a long way to go"},
+        ],
+    },
+    {
+        "id": "n3-24",
+        "title": "Right in the middle of",
+        "jp_title": "〜最中に",
+        "goal": "Say that something happened at the very moment you were busy with something else.",
+        "points": [
+            "**[noun の / ている form] + 最中に** = right in the middle of (and then something interrupted): "
+            "食事の最中に、電話が鳴りました。",
+            "It's stronger than 〜ているときに: it stresses \"at that very moment\".",
+            "**最中です** at the end of a sentence = be in the middle of: 今、晩ご飯を作っている最中です。",
+            "Compare 〜ているところ (lesson 1): ところ just says what stage you're at; 最中に usually sets up an interruption.",
+        ],
+        "examples": [
+            {"jp": "食事の最中に、電話が鳴りました。", "kana": "しょくじのさいちゅうに でんわがなりました", "romaji": "shokuji no saichuu ni, denwa ga narimashita", "en": "The phone rang right in the middle of the meal."},
+            {"jp": "試験の最中に、お腹が痛くなりました。", "kana": "しけんのさいちゅうに おなかがいたくなりました", "romaji": "shiken no saichuu ni, onaka ga itaku narimashita", "en": "My stomach started hurting in the middle of the exam."},
+            {"jp": "話している最中に、電気が消えました。", "kana": "はなしているさいちゅうに でんきがきえました", "romaji": "hanashite iru saichuu ni, denki ga kiemashita", "en": "The lights went out right while we were talking."},
+            {"jp": "今、晩ご飯を作っている最中です。", "kana": "いま ばんごはんをつくっているさいちゅうです", "romaji": "ima, bangohan o tsukutte iru saichuu desu", "en": "I'm in the middle of making dinner right now."},
+        ],
+        "vocab": [
+            {"word": "最中", "reading": "さいちゅう", "meaning": "the middle of (doing something)"},
+            {"word": "食事", "reading": "しょくじ", "meaning": "meal"},
+            {"word": "鳴ります", "reading": "なります", "meaning": "to ring, to sound"},
+            {"word": "お腹", "reading": "おなか", "meaning": "stomach, belly"},
+            {"word": "痛い", "reading": "いたい", "meaning": "painful, sore"},
+            {"word": "消えます", "reading": "きえます", "meaning": "to go out, to disappear"},
+        ],
+    },
+    {
+        "id": "n3-25",
+        "title": "Not only..., but also",
+        "jp_title": "〜だけでなく・〜はもちろん",
+        "goal": "Add a second, less obvious point to a first one.",
+        "points": [
+            "**[noun or plain form] + だけでなく** = not only ... (but also): 姉は英語だけでなく、中国語も話せます。",
+            "**だけじゃなく** is the spoken version; **ばかりでなく** is more formal.",
+            "**[noun] + はもちろん** = ... of course, and also: この店は味はもちろん、値段も安いです。 "
+            "The first item is the obvious one.",
+            "The second half usually has **も**: 子供だけでなく、大人も楽しめます。",
+        ],
+        "examples": [
+            {"jp": "姉は英語だけでなく、中国語も話せます。", "kana": "あねはえいごだけでなく ちゅうごくごもはなせます", "romaji": "ane wa eigo dake de naku, chuugokugo mo hanasemasu", "en": "My older sister speaks not only English but also Chinese."},
+            {"jp": "この映画は子供だけでなく、大人も楽しめます。", "kana": "このえいがはこどもだけでなく おとなもたのしめます", "romaji": "kono eiga wa kodomo dake de naku, otona mo tanoshimemasu", "en": "Adults as well as children can enjoy this film."},
+            {"jp": "この店は味はもちろん、値段も安いです。", "kana": "このみせはあじはもちろん ねだんもやすいです", "romaji": "kono mise wa aji wa mochiron, nedan mo yasui desu", "en": "This restaurant tastes good, of course, and it's cheap too."},
+            {"jp": "週末はもちろん、平日も混んでいます。", "kana": "しゅうまつはもちろん へいじつもこんでいます", "romaji": "shuumatsu wa mochiron, heijitsu mo konde imasu", "en": "It's crowded on weekdays, never mind weekends."},
+        ],
+        "vocab": [
+            {"word": "中国語", "reading": "ちゅうごくご", "meaning": "Chinese (language)"},
+            {"word": "大人", "reading": "おとな", "meaning": "adult"},
+            {"word": "味", "reading": "あじ", "meaning": "taste, flavour"},
+            {"word": "値段", "reading": "ねだん", "meaning": "price"},
+            {"word": "平日", "reading": "へいじつ", "meaning": "weekday"},
+            {"word": "混みます", "reading": "こみます", "meaning": "to get crowded"},
+        ],
+    },
+    {
+        "id": "n3-26",
+        "title": "I want you to",
+        "jp_title": "〜てほしい・〜てもらいたい",
+        "goal": "Say what you want someone else to do, or not do.",
+        "points": [
+            "**[て-form] + ほしい** = I want someone to do something. The person takes **に**: "
+            "友達に引っ越しを手伝ってほしいです。",
+            "Negative: **〜ないでほしい** = I don't want someone to ...: 私の部屋に勝手に入らないでほしい。",
+            "**〜てもらいたい** means the same and sounds a little more polite: 先生にもう一度説明してもらいたいです。",
+            "Saying ほしい straight to someone above you can sound pushy; ask with **〜ていただけませんか** instead.",
+        ],
+        "examples": [
+            {"jp": "友達に引っ越しを手伝ってほしいです。", "kana": "ともだちにひっこしをてつだってほしいです", "romaji": "tomodachi ni hikkoshi o tetsudatte hoshii desu", "en": "I want my friends to help me move."},
+            {"jp": "私の部屋に勝手に入らないでほしい。", "kana": "わたしのへやにかってにはいらないでほしい", "romaji": "watashi no heya ni katte ni hairanaide hoshii", "en": "I don't want people coming into my room without asking."},
+            {"jp": "先生にもう一度説明してもらいたいです。", "kana": "せんせいにもういちどせつめいしてもらいたいです", "romaji": "sensei ni mou ichido setsumei shite moraitai desu", "en": "I'd like the teacher to explain it once more."},
+            {"jp": "早く元気になってほしいです。", "kana": "はやくげんきになってほしいです", "romaji": "hayaku genki ni natte hoshii desu", "en": "I hope you get well soon."},
+        ],
+        "vocab": [
+            {"word": "勝手に", "reading": "かってに", "meaning": "without permission, as one pleases"},
+            {"word": "もう一度", "reading": "もういちど", "meaning": "once more"},
+            {"word": "引っ越し", "reading": "ひっこし", "meaning": "moving (house)"},
+            {"word": "友達", "reading": "ともだち", "meaning": "friend"},
+            {"word": "元気", "reading": "げんき", "meaning": "well, healthy, lively"},
+        ],
+    },
+    {
+        "id": "n3-27",
+        "title": "Even if",
+        "jp_title": "たとえ〜ても・〜としても",
+        "goal": "Say that the result won't change, whatever happens.",
+        "points": [
+            "**ても** (N4) = even if. **たとえ** in front makes it stronger: たとえ雨が降っても、試合はあります。",
+            "Nouns and な-adjectives use **でも**: たとえ子供でも、ルールは守らなければなりません。",
+            "**[plain form] + としても** = even supposing that ... (more hypothetical): "
+            "今から急いだとしても、間に合わないでしょう。",
+            "The second half says what stays the same.",
+        ],
+        "examples": [
+            {"jp": "たとえ雨が降っても、試合はあります。", "kana": "たとえあめがふっても しあいはあります", "romaji": "tatoe ame ga futte mo, shiai wa arimasu", "en": "Even if it rains, the match will go ahead."},
+            {"jp": "たとえ子供でも、ルールは守らなければなりません。", "kana": "たとえこどもでも ルールはまもらなければなりません", "romaji": "tatoe kodomo demo, ruuru wa mamoranakereba narimasen", "en": "Even children have to follow the rules."},
+            {"jp": "今から急いだとしても、間に合わないでしょう。", "kana": "いまからいそいだとしても まにあわないでしょう", "romaji": "ima kara isoida to shite mo, maniawanai deshou", "en": "Even if we hurry now, we probably won't make it."},
+            {"jp": "たとえ反対されても、留学したいです。", "kana": "たとえはんたいされても りゅうがくしたいです", "romaji": "tatoe hantai sarete mo, ryuugaku shitai desu", "en": "Even if people are against it, I want to study abroad."},
+        ],
+        "vocab": [
+            {"word": "たとえ", "reading": "たとえ", "meaning": "even if (with 〜ても)"},
+            {"word": "守ります", "reading": "まもります", "meaning": "to follow (rules), to protect"},
+            {"word": "急ぎます", "reading": "いそぎます", "meaning": "to hurry"},
+            {"word": "間に合います", "reading": "まにあいます", "meaning": "to be in time"},
+            {"word": "留学", "reading": "りゅうがく", "meaning": "studying abroad"},
+            {"word": "ルール", "reading": "ルール", "meaning": "rule"},
+        ],
+    },
+    {
+        "id": "n3-28",
+        "title": "Can't very well",
+        "jp_title": "〜わけにはいかない",
+        "goal": "Say you can't do something because it wouldn't be right, and that you have no choice but to.",
+        "points": [
+            "**[dictionary form] + わけにはいかない** = can't (because of duty, common sense or feelings), "
+            "even if you'd like to: 明日は試験だから、遊びに行くわけにはいきません。",
+            "It isn't about ability (that's the potential form): you *could*, but it wouldn't be right.",
+            "**[ない form] + わけにはいかない** = have to, can't not: 約束したから、行かないわけにはいきません。",
+            "This builds on lesson 4's わけ. Polite form: わけにはいきません.",
+        ],
+        "examples": [
+            {"jp": "明日は試験だから、遊びに行くわけにはいきません。", "kana": "あしたはしけんだから あそびにいくわけにはいきません", "romaji": "ashita wa shiken da kara, asobi ni iku wake ni wa ikimasen", "en": "I have an exam tomorrow, so I can't very well go out and play."},
+            {"jp": "友達の秘密を話すわけにはいかない。", "kana": "ともだちのひみつをはなすわけにはいかない", "romaji": "tomodachi no himitsu o hanasu wake ni wa ikanai", "en": "I can't tell my friend's secret."},
+            {"jp": "約束したから、行かないわけにはいきません。", "kana": "やくそくしたから いかないわけにはいきません", "romaji": "yakusoku shita kara, ikanai wake ni wa ikimasen", "en": "I promised, so I have to go."},
+            {"jp": "熱があるけど、今日は休むわけにはいかない。", "kana": "ねつがあるけど きょうはやすむわけにはいかない", "romaji": "netsu ga aru kedo, kyou wa yasumu wake ni wa ikanai", "en": "I have a fever, but I can't take today off."},
+        ],
+        "vocab": [
+            {"word": "秘密", "reading": "ひみつ", "meaning": "secret"},
+            {"word": "約束", "reading": "やくそく", "meaning": "promise"},
+            {"word": "熱", "reading": "ねつ", "meaning": "fever; heat"},
+            {"word": "休みます", "reading": "やすみます", "meaning": "to rest, take time off"},
+            {"word": "遊びます", "reading": "あそびます", "meaning": "to play, hang out"},
+        ],
+    },
+    {
+        "id": "n3-29",
+        "title": "As ... changes",
+        "jp_title": "〜につれて・〜にしたがって",
+        "goal": "Describe two things changing together over time.",
+        "points": [
+            "**[dictionary form or noun] + につれて** = as one thing changes, another changes with it: "
+            "時間がたつにつれて、寂しくなりました。",
+            "Both halves are gradual changes, often with 〜なる or words like 増える.",
+            "**にしたがって** means the same, and also \"following (rules, instructions)\": "
+            "説明にしたがって、ボタンを押してください。",
+            "Compare ば〜ほど (lesson 12): a similar idea, but につれて sounds more like describing a process.",
+        ],
+        "examples": [
+            {"jp": "時間がたつにつれて、寂しくなりました。", "kana": "じかんがたつにつれて さびしくなりました", "romaji": "jikan ga tatsu ni tsurete, sabishiku narimashita", "en": "As time passed, I got lonelier."},
+            {"jp": "日本語が上手になるにつれて、日本の生活が楽しくなりました。", "kana": "にほんごがじょうずになるにつれて にほんのせいかつがたのしくなりました", "romaji": "nihongo ga jouzu ni naru ni tsurete, nihon no seikatsu ga tanoshiku narimashita", "en": "As my Japanese got better, life in Japan got more fun."},
+            {"jp": "山に登るにつれて、寒くなりました。", "kana": "やまにのぼるにつれて さむくなりました", "romaji": "yama ni noboru ni tsurete, samuku narimashita", "en": "As we climbed the mountain, it got colder."},
+            {"jp": "説明にしたがって、ボタンを押してください。", "kana": "せつめいにしたがって ボタンをおしてください", "romaji": "setsumei ni shitagatte, botan o oshite kudasai", "en": "Please press the button as the instructions say."},
+        ],
+        "vocab": [
+            {"word": "たちます", "reading": "たちます", "meaning": "(time) passes"},
+            {"word": "生活", "reading": "せいかつ", "meaning": "life, daily life"},
+            {"word": "登ります", "reading": "のぼります", "meaning": "to climb"},
+            {"word": "押します", "reading": "おします", "meaning": "to press, to push"},
+            {"word": "ボタン", "reading": "ボタン", "meaning": "button"},
+        ],
+    },
+    {
+        "id": "n3-30",
+        "title": "I should have...",
+        "jp_title": "〜ばよかった・〜のに",
+        "goal": "Express regret about what you did, or didn't do.",
+        "points": [
+            "**[ば-form] + よかった** = I should have ... (regret): もっと勉強すればよかったです。",
+            "Negative: **[ない → なければ] + よかった** = I shouldn't have ...: あんなこと、言わなければよかった。",
+            "**〜たらよかった** means the same and is common in speech: 傘を持ってきたらよかった。",
+            "**〜ばよかったのに** = you should have ... (regret on someone else's behalf): 早く言えばよかったのに。",
+        ],
+        "examples": [
+            {"jp": "もっと勉強すればよかったです。", "kana": "もっとべんきょうすればよかったです", "romaji": "motto benkyou sureba yokatta desu", "en": "I should have studied more."},
+            {"jp": "傘を持ってくればよかった。", "kana": "かさをもってくればよかった", "romaji": "kasa o motte kureba yokatta", "en": "I should have brought an umbrella."},
+            {"jp": "あんなこと、言わなければよかった。", "kana": "あんなこと いわなければよかった", "romaji": "anna koto, iwanakereba yokatta", "en": "I shouldn't have said that."},
+            {"jp": "困っていたなら、早く言えばよかったのに。", "kana": "こまっていたなら はやくいえばよかったのに", "romaji": "komatte ita nara, hayaku ieba yokatta noni", "en": "If you were having trouble, you should have said so sooner."},
+        ],
+        "vocab": [
+            {"word": "傘", "reading": "かさ", "meaning": "umbrella"},
+            {"word": "困ります", "reading": "こまります", "meaning": "to be in trouble, to be stuck"},
+            {"word": "あんな", "reading": "あんな", "meaning": "that kind of"},
+            {"word": "後悔", "reading": "こうかい", "meaning": "regret"},
+            {"word": "持ってきます", "reading": "もってきます", "meaning": "to bring"},
+        ],
+    },
 ]
 
 _BY_ID = {lesson["id"]: lesson for lesson in LESSONS}
