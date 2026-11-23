@@ -260,6 +260,7 @@ const views = {
   quiz: renderQuiz,
   kanji: renderKanji,
   reading: renderReading,
+  listening: renderListening,
 };
 
 function route() {
@@ -272,7 +273,8 @@ function route() {
   for (const section of document.querySelectorAll(".view")) {
     section.hidden = section.id !== `view-${name}`;
   }
-  const navName = name === "practice" ? "learn" : name; // Practice lives under Kana
+  // Practice lives under Kana, Listening under Reading.
+  const navName = { practice: "learn", listening: "reading" }[name] || name;
   for (const link of document.querySelectorAll(".nav a, .topbar-end a")) {
     link.classList.toggle("active", link.dataset.view === navName);
   }
@@ -500,7 +502,7 @@ function chartTip(container) {
 const SERIES = [
   ["kana", "Kana reviews", "var(--series-1)"],
   ["deck", "Word, kanji & mistake reviews", "var(--series-2)"],
-  ["quiz", "Quiz & reading questions", "var(--series-3)"],
+  ["quiz", "Quiz, reading & listening", "var(--series-3)"],
 ];
 
 function drawActivity(container, days) {
@@ -646,6 +648,7 @@ async function renderProgress() {
       meter(`Kanji (${lvl} list)`, known(data.kanji[lvl]), data.kanji[lvl].total,
         `${known(data.kanji[lvl])} known · ${data.kanji[lvl].total} total`)),
     ...Object.entries(data.reading || {}).map(([lvl, r]) => meter(`${lvl} reading passages`, r.done, r.total, `${r.done} / ${r.total} read`)),
+    ...Object.entries(data.listening || {}).map(([lvl, r]) => meter(`${lvl} listening items`, r.done, r.total, `${r.done} / ${r.total} done`)),
     meter("Vocabulary (≈800 for N5)", known(data.vocab), data.vocab.target, `${known(data.vocab)} known · ${data.vocab.saved} saved`),
     ...quizMeters);
 
@@ -1527,8 +1530,7 @@ async function renderReading() {
   const next = passages.find(p => !p.result);
   const levels = [...new Set(passages.map(p => p.level))];
   body.replaceChildren(
-    el("div", { class: "panel-head" },
-      el("h2", {}, "Reading practice"),
+    el("div", { class: "panel-head" }, practiceTabs("reading"),
       el("span", { class: "muted" }, "Tap any word to look it up")),
     ...levels.map(level => {
       const ofLevel = passages.filter(p => p.level === level);
@@ -1677,6 +1679,242 @@ async function renderPassage(body, id) {
     after);
   body.replaceChildren(page);
   window.scrollTo(0, 0);
+}
+
+/* ================= listening practice ================= */
+
+const LISTENING_INTRO = {
+  N3: "Conversations and short talks like the JLPT N3 listening section, read by a narrator, a woman and a man. Listen, answer, then check the transcript.",
+};
+const LISTENING_HOWTO = {
+  task: "Listen and choose what the person will do. The question is asked before and after the conversation.",
+  point: "Listen for the detail the question asks about. The question is asked before and after the conversation.",
+  summary: "Listen to the whole talk. On the test the question and the choices are only spoken, so they appear here as numbers.",
+  quick: "Listen to one line and three replies, then choose the best reply. The replies are only spoken.",
+};
+
+// The Reading / Listening switch at the top of both lists.
+function practiceTabs(active) {
+  return el("div", { class: "segmented" },
+    el("a", { class: active === "reading" ? "active" : "", href: "#reading" }, "Reading"),
+    el("a", { class: active === "listening" ? "active" : "", href: "#listening" }, "Listening"));
+}
+
+// Plays a script line by line, each role in its own VOICEVOX voice (or the browser's
+// voice at a different pitch when VOICEVOX isn't running).
+function dialoguePlayer(script, voices, { onLine } = {}) {
+  let stopped = false;
+  let audio = null;
+  const pitch = { N: 1, F: 1.3, M: 0.75 };
+  const pause = ms => new Promise(r => setTimeout(r, ms));
+
+  function browserLine(line) {
+    return new Promise(resolve => {
+      if (!jaVoice) return resolve();
+      const u = new SpeechSynthesisUtterance(line.text);
+      u.voice = jaVoice;
+      u.lang = "ja-JP";
+      u.rate = 0.9;
+      u.pitch = pitch[line.who] ?? 1;
+      u.onend = resolve;
+      u.onerror = resolve;
+      speechSynthesis.speak(u);
+    });
+  }
+
+  function playLine(line) {
+    if (!voices) return browserLine(line);
+    return new Promise(resolve => {
+      audio = new Audio(dialogueUrl(line, voices));
+      currentAudio = audio;  // so other 🔊 buttons stop it
+      audio.onended = resolve;
+      audio.onerror = () => browserLine(line).then(resolve);
+      audio.play().catch(() => browserLine(line).then(resolve));
+    });
+  }
+
+  return {
+    async play() {
+      stopped = false;
+      for (let i = 0; i < script.length; i++) {
+        if (stopped) return false;
+        onLine?.(i);
+        await playLine(script[i]);
+        // A longer pause after the narrator's opening, as on the test.
+        if (!stopped) await pause(i === 0 && script[0].who === "N" ? 1500 : 600);
+      }
+      onLine?.(-1);
+      return !stopped;
+    },
+    stop() {
+      stopped = true;
+      audio?.pause();
+      if ("speechSynthesis" in window) speechSynthesis.cancel();
+      onLine?.(-1);
+    },
+  };
+}
+
+function dialogueUrl(line, voices) {
+  return `/api/tts?text=${encodeURIComponent(line.text)}&speaker=${voices[line.who]}`;
+}
+
+async function renderListening() {
+  const body = $("#listening-body");
+  if (routeArg) return renderListeningItem(body, routeArg);
+
+  const { items } = await api.get("/api/listening");
+  const next = items.find(i => !i.result);
+  const levels = [...new Set(items.map(i => i.level))];
+  body.replaceChildren(
+    el("div", { class: "panel-head" }, practiceTabs("listening"),
+      el("span", { class: "muted" }, hasVoice() ? "Headphones recommended" : "No Japanese voice found: install VOICEVOX or a system voice")),
+    ...levels.map(level => {
+      const ofLevel = items.filter(i => i.level === level);
+      const done = ofLevel.filter(i => i.result).length;
+      return el("section", { class: "level-block", "aria-labelledby": `listening-${level}` },
+        el("div", { class: "level-head" },
+          el("h3", { id: `listening-${level}` }, `JLPT ${level}`),
+          el("span", { class: "muted" }, `${done} / ${ofLevel.length} done`)),
+        LISTENING_INTRO[level] && el("p", { class: "muted level-intro" }, LISTENING_INTRO[level]),
+        el("div", { class: "lesson-grid" }, ofLevel.map(i =>
+          el("a", { class: `lesson-card${i === next ? " next" : ""}`, href: `#listening/${i.id}` },
+            el("div", { class: "num" }, `${i.level} · Item ${i.number}`,
+              i.result && el("span", { class: `status-pill ${i.result.last ? "done" : "started"}` }, i.result.last ? "Correct ✓" : "Try again")),
+            el("div", { class: "jp", lang: "ja" }, i.kind_jp),
+            el("div", { class: "title" }, i.title),
+            el("div", { class: "goal" }, i.kind_en)))));
+    }));
+}
+
+async function renderListeningItem(body, id) {
+  await ttsChecked;
+  const item = await api.get(`/api/listening/${id}`);
+  let plays = 0;
+  let answered = false;
+  let playing = false;
+
+  const status = el("div", { class: "listen-status", role: "status" });
+  const playBtn = el("button", { class: "play-big", type: "button", "aria-label": "Play" }, "▶");
+  const player = dialoguePlayer(item.script, item.voices, {
+    onLine: i => {
+      status.textContent = i >= 0 ? `Playing… ${i + 1} / ${item.script.length}` : (plays ? `Played ${plays} time${plays > 1 ? "s" : ""}` : "");
+      if (answered) transcript.querySelectorAll(".listen-line").forEach((n, k) => n.classList.toggle("speaking", k === i));
+    },
+  });
+  onCleanup(() => player.stop());
+
+  async function togglePlay() {
+    if (playing) { player.stop(); return; }
+    playing = true;
+    plays++;
+    playBtn.textContent = "■";
+    playBtn.setAttribute("aria-label", "Stop");
+    await player.play();
+    playing = false;
+    playBtn.textContent = "▶";
+    playBtn.setAttribute("aria-label", "Play");
+  }
+  playBtn.addEventListener("click", togglePlay);
+
+  // Make every clip once before the first play, so lines follow each other without gaps.
+  async function prepare() {
+    if (!item.voices) { status.textContent = hasVoice() ? "Using the browser's voice (VOICEVOX isn't running)." : "No Japanese voice available."; return; }
+    playBtn.disabled = true;
+    for (let i = 0; i < item.script.length; i++) {
+      status.textContent = `Preparing audio… ${i + 1} / ${item.script.length}`;
+      try { await fetch(dialogueUrl(item.script[i], item.voices)); } catch { /* playing will fall back */ }
+      if (!body.isConnected) return;
+    }
+    playBtn.disabled = false;
+    status.textContent = "Ready. Press play when you're ready.";
+  }
+
+  const feedback = el("div");
+  const transcript = el("div");
+  const after = el("div");
+  const buttons = item.choices.map((c, n) =>
+    el("button", { class: `quiz-choice jp listen-choice${c ? "" : " number-only"}`, type: "button", onclick: () => choose(n) },
+      el("span", { class: "key" }, n + 1), c ? inlineRuby(c) : el("span", { class: "muted" }, `Choice ${n + 1}`)));
+
+  async function choose(n) {
+    if (answered) return;
+    answered = true;
+    buttons.forEach(b => { b.disabled = true; });
+    const res = await api.post(`/api/listening/${id}/answer`, { answer: n, plays });
+    buttons.forEach((b, i) => {
+      // Reveal what the spoken-only choices said.
+      if (!item.choices[i]) b.replaceChildren(el("span", { class: "key" }, i + 1), inlineRuby(res.choices[i]));
+      if (i === res.answer) b.classList.add("ok");
+      else if (i === n) b.classList.add("bad");
+    });
+    feedback.replaceChildren(
+      el("p", { class: `feedback ${res.correct ? "ok" : "bad"}` }, res.correct ? "✓ Correct" : `✗ The answer is ${res.answer + 1}`),
+      el("div", { class: "quiz-explain" }, res.why));
+    transcript.replaceChildren(el("div", { class: "lesson-section" },
+      el("h3", {}, "Transcript"),
+      el("div", { class: "listen-transcript" }, res.transcript.map(line =>
+        el("div", { class: `listen-line role-${line.who}` },
+          el("span", { class: "listen-who" }, line.label),
+          el("div", { class: "listen-text" },
+            richEl("div", { class: "jp-line", lang: "ja" }, line.segments),
+            line.en && el("div", { class: "en" }, line.en)),
+          el("button", { class: "speak", type: "button", "aria-label": "Play this line",
+            onclick: () => dialoguePlayer([line].map(l => ({ who: l.who, text: l.jp })), item.voices).play() }, "🔊"))))));
+    after.replaceChildren(...listeningAfter(res));
+  }
+
+  function listeningAfter(res) {
+    const unsaved = res.vocab.filter(v => !v.saved).length;
+    const addWords = el("button", { class: "btn", type: "button", disabled: !unsaved },
+      unsaved ? `＋ Add ${unsaved} key word${unsaved > 1 ? "s" : ""} to reviews` : "Key words are in your reviews ✓");
+    addWords.addEventListener("click", async () => {
+      addWords.disabled = true;
+      const r = await api.post(`/api/listening/${id}/words`, {});
+      addWords.textContent = `${r.words_added} word${r.words_added === 1 ? "" : "s"} added ✓`;
+      refreshBadge();
+    });
+    return [
+      el("div", { class: "lesson-section" },
+        el("h3", {}, "Key words"),
+        el("table", { class: "vocab-table" }, el("tbody", {}, res.vocab.map(v =>
+          el("tr", {},
+            el("td", {}, richEl("div", { class: "vw", lang: "ja" }, v.segments)),
+            el("td", { class: "vr", lang: "ja" }, v.reading !== v.word ? v.reading : ""),
+            el("td", { class: "vm" }, v.meaning),
+            el("td", {}, speakButton(v.reading))))))),
+      el("div", { class: "lesson-actions" },
+        addWords,
+        el("button", { class: "btn btn-ghost", type: "button", onclick: () => renderListeningItem(body, id) }, "↻ Try again"),
+        item.next_id && el("a", { class: "btn btn-primary", href: `#listening/${item.next_id}` }, "Next item →")),
+    ];
+  }
+
+  addKeyHandler(e => {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+    if (e.key === " " && !playBtn.disabled) { e.preventDefault(); togglePlay(); return; }
+    const n = Number(e.key) - 1;
+    if (!answered && n >= 0 && n < buttons.length) choose(n);
+  });
+
+  body.replaceChildren(
+    el("div", { class: "lesson-head" },
+      el("a", { class: "back", href: "#listening" }, "← All listening"),
+      el("div", { class: "lesson-level" }, `JLPT ${item.level} · Item ${item.number} · ${item.kind_en} (${item.kind_jp})`),
+      el("h2", {}, item.title),
+      el("p", { class: "goal" }, LISTENING_HOWTO[item.kind])),
+    el("div", { class: "listen-player" }, playBtn, status),
+    el("div", { class: "lesson-section" },
+      el("h3", {}, "Question"),
+      item.choices_printed && item.question_segments.length
+        ? richEl("div", { class: "jp-line listen-question", lang: "ja" }, item.question_segments)
+        : el("p", { class: "muted" }, item.kind === "quick" ? "Which reply is best?" : "Listen for the question at the end."),
+      el("div", { class: "quiz-choices listen-choices" }, buttons),
+      feedback),
+    transcript,
+    after);
+  window.scrollTo(0, 0);
+  prepare();
 }
 
 /* ================= kanji ================= */

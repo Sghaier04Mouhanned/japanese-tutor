@@ -788,3 +788,24 @@ kbd {
 .reading-score { font-size: 1.05rem; margin-top: .75rem; }
 .reading-translation summary { cursor: pointer; font-weight: 600; font-size: 1.05rem; }
 .reading-en { white-space: pre-line; margin: .6rem 0 0; }
+
+/* Listening practice */
+.listen-player { display: flex; align-items: center; gap: 1rem; margin-top: 1.25rem; padding: 1rem 1.25rem;
+  background: var(--deep); border: 1px solid var(--border); border-radius: 14px; }
+.listen-player .play-big:disabled { opacity: .5; cursor: wait; }
+.listen-status { color: var(--muted); font-size: .92rem; }
+.listen-question { font-family: var(--jp); font-size: 1.15rem; line-height: 2; margin-bottom: .4rem; }
+.listen-question p { margin: 0; }
+.listen-choices { width: 100%; }
+.listen-choice { font-size: 1rem; line-height: 1.9; }
+.listen-transcript { display: flex; flex-direction: column; gap: .5rem; }
+.listen-line { display: grid; grid-template-columns: 5.5rem 1fr auto; gap: .6rem; align-items: start;
+  padding: .5rem .7rem; border-radius: 10px; border: 1px solid transparent; }
+.listen-line.speaking { border-color: var(--accent); background: var(--accent-soft); }
+.listen-who { font-family: var(--mono); font-size: .75rem; color: var(--muted); padding-top: .45rem; }
+.listen-line.role-F .listen-who { color: var(--accent); }
+.listen-line.role-M .listen-who { color: var(--text); }
+.listen-text .jp-line { font-family: var(--jp); font-size: 1.05rem; line-height: 2; }
+.listen-text .jp-line p { margin: 0; }
+.listen-text .en { color: var(--muted); font-size: .88rem; }
+@media (max-width: 640px) { .listen-line { grid-template-columns: 1fr auto; } .listen-who { grid-column: 1 / -1; padding: 0; } }

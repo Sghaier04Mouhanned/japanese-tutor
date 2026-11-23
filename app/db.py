@@ -132,6 +132,15 @@ CREATE TABLE IF NOT EXISTS reading_results (
     created_at  REAL    NOT NULL
 );
 
+-- Answers to the listening items (app/listening.py), one row per attempt.
+CREATE TABLE IF NOT EXISTS listening_results (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    item_id     TEXT    NOT NULL,
+    correct     INTEGER NOT NULL,
+    plays       INTEGER NOT NULL DEFAULT 1,
+    created_at  REAL    NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS deck_reviews (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     card_id     INTEGER NOT NULL REFERENCES deck_cards (id) ON DELETE CASCADE,

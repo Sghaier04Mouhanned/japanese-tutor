@@ -136,8 +136,20 @@ async def default_speaker() -> int | None:
     return voices[0]["id"] if voices else None
 
 
+# Spellings the engine misreads, rewritten in kana before synthesis (何ですか is
+# なんですか, but the engine says なにですか).
+_SAY_FIXES = [("何ですか", "なんですか"), ("何でしょう", "なんでしょう"), ("何だろう", "なんだろう")]
+
+
+def _for_engine(text: str) -> str:
+    for written, said in _SAY_FIXES:
+        text = text.replace(written, said)
+    return text
+
+
 async def synthesize(text: str, speaker: int, speed: float = 1.0) -> bytes:
     """WAV audio for `text`, from the cache when possible."""
+    text = _for_engine(text)
     key = hashlib.sha256(f"{speaker}|{speed:.2f}|{text}".encode()).hexdigest()
     path = CACHE_DIR / f"{key}.wav"
     if path.exists():

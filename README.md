@@ -62,6 +62,17 @@ passing the JLPT (N5, then N4, then N3), powered by a free AI API or a local mod
   the key words to your reviews. Scores are saved, and the dashboard counts passages read
 - `python -m app.reading` checks the questions; add `--readings` to proofread the furigana
 
+**Listening practice (JLPT 聴解)**
+- 10 hand-written N3 items in the four test formats: task-based (課題理解), key point (ポイント理解),
+  summary (概要理解) and quick response (即時応答)
+- Read by VOICEVOX with a different voice per role (narrator 九州そら, woman 春日部つむぎ, man 玄野武宏);
+  the clips are made before the first play so lines follow each other smoothly. Without VOICEVOX the
+  browser's voice is used at a different pitch per role
+- As on the test, summary and quick-response choices are only spoken; after answering you get the
+  transcript with furigana, a translation of every line, and the key words
+- Under "Read & listen" in the top bar, next to reading practice; `python -m app.listening` checks the
+  items (`--readings` prints the transcripts' furigana)
+
 **Dictionary, notebook and reviews**
 - Click any Japanese word (chat or lessons) to look it up in JMdict and save it
 - Sensei logs the mistakes it corrects; they come back as review cards
