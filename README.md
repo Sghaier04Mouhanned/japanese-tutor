@@ -68,7 +68,7 @@ passing the JLPT (N5, then N4, N3 and N2), powered by a free AI API or a local m
 **Listening practice (JLPT 聴解, N3 and N2)**
 - 20 hand-written N3 items in the four test formats: task-based (課題理解), key point (ポイント理解),
   summary (概要理解) and quick response (即時応答)
-- 10 N2 items, adding integrated comprehension (統合理解): a staff member explains three options, two
+- 20 N2 items, adding integrated comprehension (統合理解): a staff member explains three options, two
   people discuss them, and you work out which one a person chooses
 - Read by VOICEVOX with a different voice per role (narrator 九州そら, woman 春日部つむぎ, man 玄野武宏,
   staff 青山龍星);
