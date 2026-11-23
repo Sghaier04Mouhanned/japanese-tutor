@@ -44,6 +44,10 @@ passing the JLPT (N5, then N4), powered by a free AI API or a local model.
 - Handwriting: draw each stroke with a mouse, finger or pen; order, direction and shape are checked
   stroke by stroke against KanjiVG, with hints after repeated misses. Trace or write from memory on
   any kanji page, or run a writing session (see the meaning and reading, write the kanji)
+- Writing from memory updates the kanji's review schedule: no mistakes counts as Good, one or two
+  as Hard, three or more (or using a hint) as Again. Tracing never counts, kanji not in your reviews
+  are left alone, and a kanji reviewed in the last 12 hours that isn't due yet isn't graded again.
+  Turn on "Write kanji from memory" in the Review tab to answer due kanji by writing them
 
 **Dictionary, notebook and reviews**
 - Click any Japanese word (chat or lessons) to look it up in JMdict and save it

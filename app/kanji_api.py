@@ -102,6 +102,48 @@ def kanji_answer(ans: KanjiAnswer):
     return {"next_due": new["due_ts"]}
 
 
+REVIEW_GAP = 12 * 3600  # don't re-grade a kanji that isn't due and was reviewed this recently
+
+
+def rating_for_writing(mistakes: int, hinted: bool) -> Rating:
+    """How a from-memory drawing counts as a review."""
+    if hinted or mistakes >= 3:
+        return Rating.Again
+    if mistakes:
+        return Rating.Hard
+    return Rating.Good
+
+
+class Written(BaseModel):
+    mistakes: int = Field(ge=0, le=200)
+    hinted: bool = False
+    elapsed_ms: int | None = Field(default=None, ge=0)
+
+
+@router.post("/{ch}/written")
+def written(ch: str, body: Written):
+    """Grade a kanji's review from a from-memory drawing.
+
+    Kanji not in the reviews aren't touched, and a card that isn't due yet and
+    was reviewed in the last 12 hours is left alone, so repeated practice
+    can't inflate its schedule."""
+    rating = rating_for_writing(body.mistakes, body.hinted)
+    now = time.time()
+    with connect() as conn:
+        row = conn.execute("SELECT id, fsrs, due_ts FROM kanji_cards WHERE kanji = ?", (ch,)).fetchone()
+        if row is None:
+            return {"counted": False, "reason": "not_in_reviews", "rating": rating.name}
+        last = conn.execute("SELECT MAX(reviewed_at) FROM kanji_reviews WHERE card_id = ?", (row["id"],)).fetchone()[0]
+        if row["due_ts"] > now and last and now - last < REVIEW_GAP:
+            return {"counted": False, "reason": "reviewed_recently", "rating": rating.name, "next_due": row["due_ts"]}
+        new = srs.to_row(srs.review(row["fsrs"], rating, body.elapsed_ms))
+        conn.execute("UPDATE kanji_cards SET state = ?, stability = ?, due_ts = ?, fsrs = ? WHERE id = ?",
+                     (new["state"], new["stability"], new["due_ts"], new["fsrs"], row["id"]))
+        conn.execute("""INSERT INTO kanji_reviews (card_id, rating, elapsed_ms, reviewed_at, source)
+                        VALUES (?, ?, ?, ?, 'writing')""", (row["id"], int(rating), body.elapsed_ms, now))
+    return {"counted": True, "rating": rating.name, "next_due": new["due_ts"]}
+
+
 class LearnNext(BaseModel):
     group: str
     count: int = Field(default=5, ge=1, le=20)

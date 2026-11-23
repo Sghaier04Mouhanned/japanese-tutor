@@ -622,6 +622,8 @@ kbd {
 .write-status.ok { color: var(--ok); }
 .write-status.bad { color: var(--bad); }
 .write-section h3 { gap: .75rem; flex-wrap: wrap; }
+.write-note { font-size: .9rem; text-align: center; min-height: 1.2em; }
+.review-options { display: flex; gap: 1rem; flex-wrap: wrap; }
 .write-answer { display: flex; align-items: center; gap: 1rem; margin-top: .5rem; }
 .write-results { display: flex; flex-wrap: wrap; gap: .45rem; justify-content: center; margin: 1rem 0; }
 .write-results .kanji-tile { width: 4.6rem; }

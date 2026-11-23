@@ -135,6 +135,7 @@ CREATE TABLE IF NOT EXISTS deck_reviews (
 # Columns added after a table first shipped: (table, column, definition).
 MIGRATIONS = [
     ("chats", "lesson_id", "TEXT"),  # practice chats belong to a lesson
+    ("kanji_reviews", "source", "TEXT NOT NULL DEFAULT 'recall'"),  # 'recall' (self-graded) or 'writing'
 ]
 
 

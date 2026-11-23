@@ -855,6 +855,11 @@ async function renderReview() {
   autoplay.onchange = () => prefs.set("autoplay", autoplay.checked);
 
   const session = { reviewed: 0, correct: 0 };
+  // Kanji cards can be answered by writing them; the drawing grades the card instead of self-grading.
+  const writeKanji = $("#opt-write-kanji");
+  writeKanji.checked = prefs.get("review.writeKanji", false);
+  let dropCardKeys = () => {};  // the shown card's keyboard shortcuts, dropped when the batch reloads
+  writeKanji.onchange = () => { prefs.set("review.writeKanji", writeKanji.checked); dropCardKeys(); loadBatch(); };
   await loadBatch();
 
   // Kana first (quick, typed), then saved words and mistakes (self-graded).
@@ -887,6 +892,7 @@ async function renderReview() {
       if (fn) document.addEventListener("keydown", fn);
     };
     onCleanup(() => setKeys(null));
+    dropCardKeys = () => setKeys(null);
 
     async function grade(rating) {
       setKeys(null);
@@ -921,6 +927,8 @@ async function renderReview() {
       });
     }
 
+    if (prefs.get("review.writeKanji", false) && card.strokes?.length) return writeCard();
+
     reveal.append(el("button", { class: "btn btn-primary", type: "button", onclick: showAnswer }, "Show answer"));
     setKeys(e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showAnswer(); } });
     stage.append(
@@ -928,6 +936,41 @@ async function renderReview() {
       el("div", { class: "big-word kanji-review-char", lang: "ja" }, card.kanji),
       reveal);
     body.replaceChildren(sessionBar(remaining), stage);
+
+    // Writing mode: see the meaning and readings, draw the kanji; the drawing grades the card.
+    function writeCard() {
+      let revealed = false;
+      const note = el("div", { class: "muted write-note", role: "status" });
+      const next = el("button", { class: "btn btn-primary", type: "button", hidden: true,
+        onclick: () => { setKeys(null); showKanjiCard(cards, idx + 1, dueCount); } }, el("span", { class: "arrow" }, "Next"));
+      const answer = el("div", { class: "write-answer", hidden: true },
+        el("span", { lang: "ja", class: "kanji-big", style: "font-size:2.5rem" }, card.kanji),
+        card.examples[0] ? el("span", { class: "muted", lang: "ja" }, `${card.examples[0].word} (${card.examples[0].reading})`) : "");
+      const helpers = el("div", { class: "btn-row" },
+        el("button", { class: "btn btn-ghost", type: "button", onclick: () => { revealed = true; pad.showHint(); } }, "Hint for this stroke"),
+        el("button", { class: "btn btn-ghost", type: "button", onclick: () => { revealed = true; pad.reset("trace"); } }, "Show the kanji"));
+      const pad = writingPad(card.strokes, { mode: "memory", onDone: async (mistakes, info) => {
+        helpers.hidden = true;
+        const hinted = revealed || info.hinted;
+        note.textContent = await recordWriting(card.kanji, mistakes, { ...info, hinted });
+        session.reviewed++;
+        if (!hinted && mistakes < 3) session.correct++;
+        updateBadge(Math.max(0, remaining - 1));
+        answer.hidden = false;
+        next.hidden = false;
+        next.focus();
+        speak(card.examples[0]?.word || card.kanji);
+        setKeys(e => { if (e.key === "Enter") { e.preventDefault(); next.click(); } });
+      } });
+      stage.replaceChildren(
+        el("div", { class: "prompt-label" }, `Write the kanji (${card.strokes.length} strokes):`),
+        el("div", { class: "quiz-meaning" }, `“${card.meanings.slice(0, 3).join(", ")}”`),
+        el("div", { class: "muted", lang: "ja" }, [card.kun.join("、"), card.on.join("、")].filter(Boolean).join(" ・ ")),
+        el("div", { class: "write-wrap" }, pad.canvas, pad.status, note, helpers),
+        answer,
+        next);
+      body.replaceChildren(sessionBar(remaining), stage);
+    }
   }
 
   function sessionBar(remaining) {
@@ -952,6 +995,7 @@ async function renderReview() {
       if (fn) document.addEventListener("keydown", fn);
     };
     onCleanup(() => setKeys(null));
+    dropCardKeys = () => setKeys(null);
 
     async function grade(rating) {
       setKeys(null);
@@ -1591,7 +1635,7 @@ function writingPad(paths, { mode = "trace", onDone } = {}) {
     "aria-label": "Writing area: draw the strokes in order", role: "img" });
   const status = el("div", { class: "write-status", role: "status", "aria-live": "polite" });
   const ctx = canvas.getContext("2d");
-  let k, mistakes, missesHere, current, flash, hint, finished;
+  let k, mistakes, missesHere, current, flash, hint, finished, usedHint, startedAt;
 
   const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
@@ -1638,6 +1682,7 @@ function writingPad(paths, { mode = "trace", onDone } = {}) {
   function reset(newMode = mode) {
     mode = newMode;
     k = 0; mistakes = 0; missesHere = 0; current = null; flash = null; hint = false; finished = false;
+    usedHint = false; startedAt = null;
     say(`Stroke 1 of ${paths.length}. Start drawing.`);
     draw();
   }
@@ -1652,7 +1697,9 @@ function writingPad(paths, { mode = "trace", onDone } = {}) {
       if (k === paths.length) {
         finished = true;
         say(mistakes ? `✓ Done, with ${mistakes} mistake${mistakes > 1 ? "s" : ""}.` : "✓ Perfect! Every stroke in the right order and direction.", "ok");
-        onDone?.(mistakes);
+        // Tracing a guide or seeing a hint means it wasn't written purely from memory.
+        onDone?.(mistakes, { hinted: usedHint || mode === "trace", mode,
+                             elapsedMs: startedAt ? Math.round(performance.now() - startedAt) : null });
       } else {
         say(`✓ Stroke ${k} correct. Now stroke ${k + 1} of ${paths.length}.`, "ok");
       }
@@ -1665,7 +1712,7 @@ function writingPad(paths, { mode = "trace", onDone } = {}) {
         order: `That's stroke ${verdict.j + 1}. Stroke ${k + 1} comes first.`,
         shape: `Not quite. Check where stroke ${k + 1} starts and how it moves.`,
       }[verdict.why];
-      if (missesHere >= 2) hint = true;
+      if (missesHere >= 2) { hint = true; usedHint = true; }
       say(message + (hint ? " The dotted line shows it." : ""), "bad");
     }
     draw();
@@ -1677,6 +1724,7 @@ function writingPad(paths, { mode = "trace", onDone } = {}) {
   };
   canvas.addEventListener("pointerdown", e => {
     if (finished) return;
+    startedAt ??= performance.now();
     try { canvas.setPointerCapture(e.pointerId); } catch { /* keep drawing without capture */ }
     current = [toPad(e)];
     draw();
@@ -1690,9 +1738,22 @@ function writingPad(paths, { mode = "trace", onDone } = {}) {
   canvas.addEventListener("pointerup", finishStroke);
   canvas.addEventListener("pointercancel", () => { current = null; draw(); });
 
-  const showHint = () => { if (!finished) { hint = true; draw(); say(`Stroke ${k + 1}: follow the dotted line from the dot.`); } };
+  const showHint = () => { if (!finished) { hint = true; usedHint = true; draw(); say(`Stroke ${k + 1}: follow the dotted line from the dot.`); } };
   reset(mode);
-  return { canvas, status, reset, showHint, get mistakes() { return mistakes; } };
+  return { canvas, status, reset, showHint, get mistakes() { return mistakes; }, get mode() { return mode; } };
+}
+
+// Send a from-memory drawing to the review schedule; returns a short note to show.
+async function recordWriting(ch, mistakes, { hinted, elapsedMs }) {
+  try {
+    const res = await api.post(`/api/kanji/${encodeURIComponent(ch)}/written`,
+      { mistakes, hinted, elapsed_ms: elapsedMs });
+    if (res.counted) return `Review updated (${res.rating}): next review ${timeUntil(res.next_due)}.`;
+    if (res.reason === "reviewed_recently") return "Already reviewed recently, so the schedule wasn't changed.";
+    return "Not in your reviews yet, so the schedule wasn't changed.";
+  } catch {
+    return "";
+  }
 }
 
 function kanjiTile(k) {
@@ -1753,21 +1814,29 @@ async function renderKanji() {
   );
 }
 
-function writingSection(paths) {
+function writingSection(paths, ch) {
   const mode = prefs.get("write.mode", "trace");
-  const pad = writingPad(paths, { mode });
+  const note = el("div", { class: "muted write-note", role: "status" });
+  const pad = writingPad(paths, { mode, onDone: async (mistakes, info) => {
+    // Only writing from memory counts as a review; tracing is copying.
+    note.textContent = info.mode === "memory" ? await recordWriting(ch, mistakes, info) : "Tracing doesn't change your review schedule. Try From memory.";
+    refreshBadge();
+  } });
   const modes = el("div", { class: "segmented" }, [["trace", "Trace"], ["memory", "From memory"]].map(([m, label]) =>
     el("button", { type: "button", class: m === mode ? "active" : "", onclick: e => {
       prefs.set("write.mode", m);
       modes.querySelectorAll("button").forEach(b => b.classList.toggle("active", b === e.currentTarget));
+      note.textContent = "";
       pad.reset(m);
     } }, label)));
   return el("div", { class: "lesson-section write-section" },
     el("h3", {}, "Practice writing", modes),
-    el("p", { class: "muted" }, "Draw each stroke with your mouse, finger or pen. Order and direction are checked as you go."),
+    el("p", { class: "muted" }, "Draw each stroke with your mouse, finger or pen. Order and direction are checked as you go. " +
+      "Writing from memory counts as a review of this kanji."),
     el("div", { class: "write-wrap" },
       pad.canvas,
       pad.status,
+      note,
       el("div", { class: "btn-row" },
         el("button", { class: "btn btn-ghost", type: "button", onclick: pad.showHint }, "Show hint"),
         el("button", { class: "btn btn-ghost", type: "button", onclick: () => pad.reset() }, "↻ Start over"))));
@@ -1795,11 +1864,22 @@ async function renderWritingSession(body) {
     const next = el("button", { class: "btn btn-primary", type: "button", hidden: true,
       onclick: () => { i++; show(); } }, el("span", { class: "arrow" }, i + 1 < items.length ? "Next kanji" : "See results"));
     let revealed = false;
-    const pad = writingPad(item.stroke_paths, { mode: "memory", onDone: mistakes => {
-      results.push({ kanji: item.kanji, mistakes, peeked: revealed });
+    const note = el("div", { class: "muted write-note", role: "status" });
+    const helpers = el("div", { class: "btn-row" },
+      el("button", { class: "btn btn-ghost", type: "button", onclick: () => { revealed = true; pad.reset("trace"); } }, "Show the kanji"),
+      el("button", { class: "btn btn-ghost", type: "button", onclick: () => { revealed = true; pad.showHint(); } }, "Hint for this stroke"),
+      el("button", { class: "btn btn-ghost", type: "button", onclick: () => { results.push({ kanji: item.kanji, mistakes: null, peeked: true }); i++; show(); } }, "Skip"));
+    const pad = writingPad(item.stroke_paths, { mode: "memory", onDone: async (mistakes, info) => {
+      helpers.hidden = true;  // once written, it can't be redone or skipped (that would count it twice)
+      const peeked = revealed || info.hinted;
+      const result = { kanji: item.kanji, mistakes, peeked, counted: false };
+      results.push(result);
       answer.hidden = false;
       next.hidden = false;
       next.focus();
+      note.textContent = await recordWriting(item.kanji, mistakes, { ...info, hinted: peeked });
+      result.counted = note.textContent.startsWith("Review updated");
+      refreshBadge();
     } });
     const answer = el("div", { class: "write-answer", hidden: true },
       el("span", { lang: "ja", class: "kanji-big", style: "font-size:2.5rem" }, item.kanji),
@@ -1814,21 +1894,21 @@ async function renderWritingSession(body) {
         el("div", { class: "prompt-label" }, `Write the kanji for (${item.strokes} strokes):`),
         el("div", { class: "quiz-meaning" }, `“${item.meanings.join(", ")}”`),
         el("div", { class: "muted", lang: "ja" }, [item.kun.join("、"), item.on.join("、")].filter(Boolean).join(" ・ ")),
-        el("div", { class: "write-wrap" }, pad.canvas, pad.status,
-          el("div", { class: "btn-row" },
-            el("button", { class: "btn btn-ghost", type: "button", onclick: () => { revealed = true; pad.reset("trace"); } }, "Show the kanji"),
-            el("button", { class: "btn btn-ghost", type: "button", onclick: () => { revealed = true; pad.showHint(); } }, "Hint for this stroke"),
-            el("button", { class: "btn btn-ghost", type: "button", onclick: () => { results.push({ kanji: item.kanji, mistakes: null, peeked: true }); i++; show(); } }, "Skip"))),
+        el("div", { class: "write-wrap" }, pad.canvas, pad.status, note, helpers),
         answer,
         next));
   }
 
   function summary() {
     const clean = results.filter(r => r.mistakes === 0 && !r.peeked).length;
+    const counted = results.filter(r => r.counted).length;
     body.replaceChildren(el("div", { class: "empty" },
       el("div", { class: "big" }, clean === results.length ? "🎉" : "✍️"),
       el("div", { class: "score-big" }, `${clean} / ${results.length}`),
       el("p", {}, "written from memory without mistakes"),
+      el("p", { class: "muted" }, counted
+        ? `${counted} kanji review${counted > 1 ? "s" : ""} updated from your writing.`
+        : "No reviews changed (these kanji aren't in your reviews yet, or were reviewed recently)."),
       el("div", { class: "write-results" }, results.map(r =>
         el("a", { class: `cell kanji-tile ${r.mistakes === 0 && !r.peeked ? "mastered" : r.mistakes === null ? "locked" : "learning"}`,
           href: `#kanji/${encodeURIComponent(r.kanji)}`,
@@ -1884,7 +1964,7 @@ async function renderKanjiDetail(body, ch) {
         k.lesson_label && el("p", { class: "muted" }, "First used in ",
           el("a", { href: `#lessons/${k.lesson}` }, k.lesson_label)),
         el("div", { class: "btn-row", style: "justify-content:flex-start" }, add))),
-    writingSection(k.stroke_paths),
+    writingSection(k.stroke_paths, k.kanji),
     el("div", { class: "lesson-section" },
       el("h3", {}, "Example words"),
       el("table", { class: "vocab-table" }, el("tbody", {}, k.examples.map(x =>
