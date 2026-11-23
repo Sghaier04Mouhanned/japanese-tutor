@@ -81,10 +81,12 @@ passing the JLPT (N5, then N4, then N3), powered by a free AI API or a local mod
   〜てみる, の/こと, transitive/intransitive pairs with 〜ている/〜てある
 - Once you start N4, Sensei may use N4 grammar too; progress and quizzes track N5 and N4 separately
 
-**JLPT N3 lessons (10 so far)**
+**JLPT N3 lessons (20 so far)**
 - 〜ところだ (about to / in the middle of / just did), 〜うちに, 〜ばかり, 〜わけだ/〜わけではない/〜わけがない,
   〜について/〜に対して/〜にとって, 〜によって/〜による, 〜おかげで/〜せいで, 〜ようとする/〜ようにする,
   〜まま/〜ずに, 〜ことになる/〜ことになっている
+- 〜たびに, 〜ば〜ほど, 〜っぽい/〜らしい (typical), 〜として, 〜かわりに, 〜わりに, 〜とおりに,
+  〜させてください, 〜という/〜って, 〜さえ/〜さえ〜ば
 - Once you start N3, Sensei may use N3 grammar too; kanji from these lessons join the Kanji section
   automatically (the kanji index rebuilds itself when lessons add new kanji)
 

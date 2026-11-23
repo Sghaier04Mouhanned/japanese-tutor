@@ -123,6 +123,9 @@ def _context_reading(prev, word, nxt=None) -> str | None:
     # 何 is なに before most particles (何が, 何を, 何も) and なん before です/の/counters.
     if word.surface == "何" and nxt is not None and nxt.surface in {"が", "を", "も", "か", "に", "へ"}:
         return "なに"
+    # 年 on its own (年のわりに, 年が近い) is とし "age"; after a number (2020年, 一年) it stays ねん.
+    if word.surface == "年" and (prev is None or prev.feature.pos1 in {"助詞", "補助記号"}):
+        return "とし"
     if prev is None:
         return None
     # Nationality: アメリカ人, 日本人, 外国人 -> じん (not にん)
