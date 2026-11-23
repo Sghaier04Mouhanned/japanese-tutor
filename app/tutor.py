@@ -14,7 +14,7 @@ You are Sensei, a warm, patient Japanese tutor inside a personal study app.
 ## The learner
 - An English speaker who is close to a complete beginner: knows some hiragana and \
 roughly 30 words picked up from anime.
-- Goal: pass the JLPT, first N5 and then N4.
+- Goal: pass the JLPT step by step: N5, then N4, then N3.
 {progress}
 
 ## How to teach
@@ -43,7 +43,7 @@ sentence in Japanese script too.
 ## Honesty
 - If a nuance is uncertain or depends on context or region, say so rather than guess.
 - Don't invent JLPT rules, statistics or official word lists; if unsure whether \
-something is N5 or N4, say so.
+something is N5, N4 or N3, say so.
 
 ## Formatting
 - Plain text with light Markdown only: **bold** for key words, "- " bullet lists, \
@@ -125,9 +125,13 @@ def _progress(conn) -> tuple[str, str]:
 
 
 def _level_rule(conn) -> str:
-    """Lesson progress decides how far Sensei may go: N5 only, or N5 + N4."""
-    started ={r["lesson_id"] for r in conn.execute("SELECT lesson_id FROM lesson_progress")}
-    if any(lessons.level(les) == "N4" and les["id"] in started for les in lessons.LESSONS):
+    """Lesson progress decides how far Sensei may go: N5 only, up to N4, or up to N3."""
+    started = {r["lesson_id"] for r in conn.execute("SELECT lesson_id FROM lesson_progress")}
+    levels = {lessons.level(les) for les in lessons.LESSONS if les["id"] in started}
+    if "N3" in levels:
+        return ("- The learner has started N3. N5, N4 and N3 vocabulary and grammar are fine; prefer what "
+                "their completed lessons cover. Gloss anything above N3 and say its JLPT level if you're sure.")
+    if "N4" in levels:
         return ("- The learner has started N4. N5 and N4 vocabulary and grammar are fine; prefer what "
                 "their completed lessons cover. Gloss anything above N4 and say its JLPT level if you're sure.")
     return ("- Stay within N5 vocabulary and grammar unless the learner asks for something specific; "

@@ -640,8 +640,7 @@ async function renderProgress() {
   $("#progress-meters").replaceChildren(
     meter("Hiragana", known(data.kana.hiragana), data.kana.hiragana.total, `${known(data.kana.hiragana)} / ${data.kana.hiragana.total}`),
     meter("Katakana", known(data.kana.katakana), data.kana.katakana.total, `${known(data.kana.katakana)} / ${data.kana.katakana.total}`),
-    meter("N5 lessons", data.lessons.N5.done, data.lessons.N5.total, `${data.lessons.N5.done} / ${data.lessons.N5.total} complete`),
-    meter("N4 lessons", data.lessons.N4.done, data.lessons.N4.total, `${data.lessons.N4.done} / ${data.lessons.N4.total} complete`),
+    ...Object.entries(data.lessons).map(([lvl, l]) => meter(`${lvl} lessons`, l.done, l.total, `${l.done} / ${l.total} complete`)),
     ...["N5", "N4"].filter(lvl => data.kanji?.[lvl]).map(lvl =>
       meter(`Kanji (${lvl} list)`, known(data.kanji[lvl]), data.kanji[lvl].total,
         `${known(data.kanji[lvl])} known · ${data.kanji[lvl].total} total`)),
@@ -1396,6 +1395,7 @@ async function renderLessons() {
   const intro = {
     N5: "The basics: polite sentences, particles, verbs, adjectives and counting.",
     N4: "Builds on N5: plain forms, experience, ability, plans, obligations and conditions.",
+    N3: "Everyday intermediate grammar: timing, cause and effect, viewpoints, rules and decisions.",
   };
   body.replaceChildren(
     el("div", { class: "panel-head" },

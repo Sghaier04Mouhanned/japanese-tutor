@@ -1,4 +1,4 @@
-"""The JLPT N5 lesson path, written by hand so the core content is reliable.
+"""The JLPT lesson path (N5, N4, N3), written by hand so the core content is reliable.
 
 The tutor builds practice sessions on top of this, but the explanations,
 example sentences and vocabulary here are the ground truth. Each example has
@@ -1592,10 +1592,279 @@ LESSONS: list[dict] = [
             {"word": "電気", "reading": "でんき", "meaning": "electricity; light"},
         ],
     },
+    # ------------------------------------------------------------------ N3
+    {
+        "id": "n3-01",
+        "title": "About to, in the middle of, just did",
+        "jp_title": "〜ところです",
+        "goal": "Say exactly where you are in an action: about to start, in the middle of it, or just finished.",
+        "points": [
+            "**[dictionary form] + ところです** = about to do it: 今から出かけるところです。 \"I'm just about to go out.\"",
+            "**[て-form] + いるところです** = in the middle of doing it right now: 今、昼ご飯を食べているところです。",
+            "**[た-form] + ところです** = have just done it, moments ago: 今、駅に着いたところです。",
+            "These often answer 今、何をしていますか or もう〜ましたか. With friends, drop です: 出かけるところ。",
+        ],
+        "examples": [
+            {"jp": "今から出かけるところです。", "kana": "いまからでかけるところです", "romaji": "ima kara dekakeru tokoro desu", "en": "I'm just about to go out."},
+            {"jp": "今、昼ご飯を食べているところです。", "kana": "いま ひるごはんをたべているところです", "romaji": "ima, hirugohan o tabete iru tokoro desu", "en": "I'm eating lunch right now."},
+            {"jp": "今、駅に着いたところです。", "kana": "いま えきについたところです", "romaji": "ima, eki ni tsuita tokoro desu", "en": "I've just arrived at the station."},
+            {"jp": "ちょうど宿題が終わったところです。", "kana": "ちょうどしゅくだいがおわったところです", "romaji": "choudo shukudai ga owatta tokoro desu", "en": "I've just finished my homework."},
+        ],
+        "vocab": [
+            {"word": "ところ", "reading": "ところ", "meaning": "point, moment (in an action)"},
+            {"word": "出かけます", "reading": "でかけます", "meaning": "to go out"},
+            {"word": "着きます", "reading": "つきます", "meaning": "to arrive"},
+            {"word": "ちょうど", "reading": "ちょうど", "meaning": "just, exactly"},
+            {"word": "昼ご飯", "reading": "ひるごはん", "meaning": "lunch"},
+            {"word": "宿題", "reading": "しゅくだい", "meaning": "homework"},
+        ],
+    },
+    {
+        "id": "n3-02",
+        "title": "While you still can",
+        "jp_title": "〜うちに",
+        "goal": "Say to do something while a situation lasts, before it changes.",
+        "points": [
+            "**[state] + うちに** = while it is still that way, before it changes: 若いうちに, 温かいうちに, 学生のうちに.",
+            "い-adjectives attach directly (温かいうちに), な-adjectives take な (元気なうちに), nouns take の (学生のうちに). "
+            "Negatives work too: 雨が降らないうちに \"before it starts raining\".",
+            "Often used for advice: 温かいうちに食べてください。 \"Please eat it while it's warm.\"",
+            "**[verb ている] + うちに** can mean \"while doing it, something happened without you noticing\": "
+            "本を読んでいるうちに、寝てしまいました。",
+        ],
+        "examples": [
+            {"jp": "温かいうちに食べてください。", "kana": "あたたかいうちにたべてください", "romaji": "atatakai uchi ni tabete kudasai", "en": "Please eat it while it's warm."},
+            {"jp": "学生のうちに、いろいろな国に行きたいです。", "kana": "がくせいのうちに いろいろなくににいきたいです", "romaji": "gakusei no uchi ni, iroiro na kuni ni ikitai desu", "en": "I want to go to lots of countries while I'm still a student."},
+            {"jp": "雨が降らないうちに帰りましょう。", "kana": "あめがふらないうちにかえりましょう", "romaji": "ame ga furanai uchi ni kaerimashou", "en": "Let's go home before it starts raining."},
+            {"jp": "本を読んでいるうちに、寝てしまいました。", "kana": "ほんをよんでいるうちに ねてしまいました", "romaji": "hon o yonde iru uchi ni, nete shimaimashita", "en": "While I was reading, I fell asleep."},
+        ],
+        "vocab": [
+            {"word": "うちに", "reading": "うちに", "meaning": "while (still), before it changes"},
+            {"word": "温かい", "reading": "あたたかい", "meaning": "warm (food, drinks, feelings)"},
+            {"word": "若い", "reading": "わかい", "meaning": "young"},
+            {"word": "明るい", "reading": "あかるい", "meaning": "bright, light"},
+            {"word": "寝ます", "reading": "ねます", "meaning": "to sleep, to go to bed"},
+        ],
+    },
+    {
+        "id": "n3-03",
+        "title": "Nothing but..., just did",
+        "jp_title": "〜ばかり",
+        "goal": "Complain that someone does only one thing, and say something happened only recently.",
+        "points": [
+            "**[noun] + ばかり** = nothing but, only (often a complaint): 弟はゲームばかりしています。",
+            "**[て-form] + ばかりいます** = do nothing but ...: 毎日寝てばかりいます。",
+            "**[た-form] + ばかりです** = just did, recently (it still feels new): 先月日本に来たばかりです。",
+            "Compare たところ: 着いたところ is exact and moments ago; 来たばかり can be weeks ago, as long as it feels recent.",
+        ],
+        "examples": [
+            {"jp": "弟はゲームばかりしています。", "kana": "おとうとはゲームばかりしています", "romaji": "otouto wa geemu bakari shite imasu", "en": "My little brother does nothing but play games."},
+            {"jp": "毎日寝てばかりいます。", "kana": "まいにちねてばかりいます", "romaji": "mainichi nete bakari imasu", "en": "I do nothing but sleep every day."},
+            {"jp": "先月日本に来たばかりです。", "kana": "せんげつにほんにきたばかりです", "romaji": "sengetsu nihon ni kita bakari desu", "en": "I only came to Japan last month."},
+            {"jp": "このパソコンは買ったばかりなのに、もう壊れました。", "kana": "このパソコンはかったばかりなのに もうこわれました", "romaji": "kono pasokon wa katta bakari na noni, mou kowaremashita", "en": "I only just bought this computer, and it's already broken."},
+        ],
+        "vocab": [
+            {"word": "ばかり", "reading": "ばかり", "meaning": "only, nothing but; just (did)"},
+            {"word": "弟", "reading": "おとうと", "meaning": "younger brother"},
+            {"word": "先月", "reading": "せんげつ", "meaning": "last month"},
+            {"word": "壊れます", "reading": "こわれます", "meaning": "to break (by itself)"},
+            {"word": "パソコン", "reading": "パソコン", "meaning": "personal computer"},
+        ],
+    },
+    {
+        "id": "n3-04",
+        "title": "That's why, it doesn't mean",
+        "jp_title": "〜わけだ・〜わけではない",
+        "goal": "Draw a conclusion, soften a statement, and say something is impossible.",
+        "points": [
+            "**[plain form] + わけです** = so that's why, no wonder: 十年も住んでいたんですか。上手なわけですね。",
+            "**わけではありません** = it's not that ..., it doesn't necessarily mean ...: 嫌いなわけではありません。 "
+            "\"It's not that I dislike it.\"",
+            "**わけがない** = there's no way that ...: こんな難しい問題、できるわけがない。",
+            "な-adjectives take な (上手なわけ), nouns take の or という (学生というわけではない).",
+        ],
+        "examples": [
+            {"jp": "十年も日本に住んでいたんですか。上手なわけですね。", "kana": "じゅうねんもにほんにすんでいたんですか じょうずなわけですね", "romaji": "juunen mo nihon ni sunde ita n desu ka. jouzu na wake desu ne", "en": "You lived in Japan for ten years? No wonder you're so good."},
+            {"jp": "肉が嫌いなわけではありません。", "kana": "にくがきらいなわけではありません", "romaji": "niku ga kirai na wake de wa arimasen", "en": "It's not that I dislike meat."},
+            {"jp": "高い物がいつもいいわけではありません。", "kana": "たかいものがいつもいいわけではありません", "romaji": "takai mono ga itsumo ii wake de wa arimasen", "en": "Expensive things aren't always good."},
+            {"jp": "こんな難しい問題、私にできるわけがない。", "kana": "こんなむずかしいもんだい わたしにできるわけがない", "romaji": "konna muzukashii mondai, watashi ni dekiru wake ga nai", "en": "There's no way I can do such a hard problem."},
+        ],
+        "vocab": [
+            {"word": "わけ", "reading": "わけ", "meaning": "reason, meaning; conclusion"},
+            {"word": "嫌い", "reading": "きらい", "meaning": "disliked"},
+            {"word": "肉", "reading": "にく", "meaning": "meat"},
+            {"word": "問題", "reading": "もんだい", "meaning": "problem, question"},
+            {"word": "住みます", "reading": "すみます", "meaning": "to live (somewhere)"},
+            {"word": "こんな", "reading": "こんな", "meaning": "this kind of, such a"},
+        ],
+    },
+    {
+        "id": "n3-05",
+        "title": "About, toward, for",
+        "jp_title": "〜について・〜に対して・〜にとって",
+        "goal": "Name the topic, the target, and the point of view of a sentence.",
+        "points": [
+            "**[noun] + について** = about, concerning a topic: 日本の歴史について調べています。",
+            "**[noun] + に対して** = toward, to (the person or thing your attitude or action is aimed at): "
+            "子供に対して、優しく話してください。",
+            "**[noun] + にとって** = for, from someone's point of view: 私にとって、家族が一番大切です。",
+            "Before a noun, use **についての** and **に対する**: 日本についての本, 質問に対する答え.",
+        ],
+        "examples": [
+            {"jp": "日本の歴史について調べています。", "kana": "にほんのれきしについてしらべています", "romaji": "nihon no rekishi ni tsuite shirabete imasu", "en": "I'm looking into Japanese history."},
+            {"jp": "私にとって、家族が一番大切です。", "kana": "わたしにとって かぞくがいちばんたいせつです", "romaji": "watashi ni totte, kazoku ga ichiban taisetsu desu", "en": "For me, family is the most important thing."},
+            {"jp": "子供に対して、優しく話してください。", "kana": "こどもにたいして やさしくはなしてください", "romaji": "kodomo ni taishite, yasashiku hanashite kudasai", "en": "Please speak gently to children."},
+            {"jp": "質問に対する答えを書いてください。", "kana": "しつもんにたいするこたえをかいてください", "romaji": "shitsumon ni taisuru kotae o kaite kudasai", "en": "Please write the answers to the questions."},
+        ],
+        "vocab": [
+            {"word": "歴史", "reading": "れきし", "meaning": "history"},
+            {"word": "調べます", "reading": "しらべます", "meaning": "to look into, to look up"},
+            {"word": "大切", "reading": "たいせつ", "meaning": "important, precious"},
+            {"word": "優しい", "reading": "やさしい", "meaning": "kind, gentle"},
+            {"word": "答え", "reading": "こたえ", "meaning": "answer"},
+            {"word": "家族", "reading": "かぞく", "meaning": "family"},
+        ],
+    },
+    {
+        "id": "n3-06",
+        "title": "By, depending on, because of",
+        "jp_title": "〜によって・〜による",
+        "goal": "Use によって for \"depending on\", \"by\" (who did it) and \"because of\".",
+        "points": [
+            "**[noun] + によって** has three common uses. 1) **depending on**: 人によって考え方が違います。",
+            "2) **by**, naming who made something in a passive sentence: この本は有名な作家によって書かれました。",
+            "3) **because of, due to** (formal, as on the news): 台風によって電車が止まりました。",
+            "Before a noun use **による**: 台風による被害 \"damage caused by the typhoon\". "
+            "**によっては** = in some cases: 国によっては…",
+        ],
+        "examples": [
+            {"jp": "人によって考え方が違います。", "kana": "ひとによってかんがえかたがちがいます", "romaji": "hito ni yotte kangaekata ga chigaimasu", "en": "Ways of thinking differ from person to person."},
+            {"jp": "この本は有名な作家によって書かれました。", "kana": "このほんはゆうめいなさっかによってかかれました", "romaji": "kono hon wa yuumei na sakka ni yotte kakaremashita", "en": "This book was written by a famous author."},
+            {"jp": "台風によって電車が止まりました。", "kana": "たいふうによってでんしゃがとまりました", "romaji": "taifuu ni yotte densha ga tomarimashita", "en": "The trains stopped because of the typhoon."},
+            {"jp": "季節によって、景色が変わります。", "kana": "きせつによって けしきがかわります", "romaji": "kisetsu ni yotte, keshiki ga kawarimasu", "en": "The scenery changes with the seasons."},
+        ],
+        "vocab": [
+            {"word": "考え方", "reading": "かんがえかた", "meaning": "way of thinking"},
+            {"word": "作家", "reading": "さっか", "meaning": "author, writer"},
+            {"word": "台風", "reading": "たいふう", "meaning": "typhoon"},
+            {"word": "季節", "reading": "きせつ", "meaning": "season"},
+            {"word": "景色", "reading": "けしき", "meaning": "scenery, view"},
+            {"word": "違います", "reading": "ちがいます", "meaning": "to differ; to be wrong"},
+        ],
+    },
+    {
+        "id": "n3-07",
+        "title": "Thanks to, because of",
+        "jp_title": "〜おかげで・〜せいで",
+        "goal": "Give credit for a good result and blame the cause of a bad one.",
+        "points": [
+            "**おかげで** = thanks to (a good result): 先生のおかげで、試験に合格しました。",
+            "**せいで** = because of, blaming the cause of a bad result: 雨のせいで、試合が中止になりました。",
+            "Nouns take の, verbs and い-adjectives use the plain form, な-adjectives take な: "
+            "薬を飲んだおかげで, 寝坊したせいで, 静かなおかげで.",
+            "**おかげさまで** is a set polite phrase: \"I'm well, thank you.\" **〜せいか** = maybe because of.",
+        ],
+        "examples": [
+            {"jp": "先生のおかげで、試験に合格しました。", "kana": "せんせいのおかげで しけんにごうかくしました", "romaji": "sensei no okage de, shiken ni goukaku shimashita", "en": "Thanks to my teacher, I passed the exam."},
+            {"jp": "雨のせいで、試合が中止になりました。", "kana": "あめのせいで しあいがちゅうしになりました", "romaji": "ame no sei de, shiai ga chuushi ni narimashita", "en": "Because of the rain, the match was called off."},
+            {"jp": "薬を飲んだおかげで、よくなりました。", "kana": "くすりをのんだおかげで よくなりました", "romaji": "kusuri o nonda okage de, yoku narimashita", "en": "Thanks to taking the medicine, I got better."},
+            {"jp": "寝坊したせいで、バスに乗り遅れました。", "kana": "ねぼうしたせいで バスにのりおくれました", "romaji": "nebou shita sei de, basu ni noriokuremashita", "en": "I overslept, so I missed the bus."},
+        ],
+        "vocab": [
+            {"word": "合格", "reading": "ごうかく", "meaning": "passing (an exam)"},
+            {"word": "試合", "reading": "しあい", "meaning": "match, game"},
+            {"word": "中止", "reading": "ちゅうし", "meaning": "cancellation, calling off"},
+            {"word": "寝坊", "reading": "ねぼう", "meaning": "oversleeping"},
+            {"word": "乗り遅れます", "reading": "のりおくれます", "meaning": "to miss (a train, bus)"},
+            {"word": "薬", "reading": "くすり", "meaning": "medicine"},
+        ],
+    },
+    {
+        "id": "n3-08",
+        "title": "Trying to, making a point of",
+        "jp_title": "〜ようとする・〜ようにする",
+        "goal": "Describe an attempt, a refusal, and an effort you make regularly.",
+        "points": [
+            "**[volitional form] + とする** = try to, be about to (often interrupted): "
+            "出かけようとしたとき、雨が降り出しました。",
+            "**[volitional form] + としない** = won't even try, refuses to: 弟は野菜を食べようとしません。",
+            "**[dictionary or ない form] + ようにする** = make a point of, try to (as a habit): "
+            "毎日野菜を食べるようにしています。 夜遅くまでゲームをしないようにしています。",
+            "Compare ようになる (N4): a change that just happens. ようにする: something you do on purpose.",
+        ],
+        "examples": [
+            {"jp": "出かけようとしたとき、雨が降り出しました。", "kana": "でかけようとしたとき あめがふりだしました", "romaji": "dekakeyou to shita toki, ame ga furidashimashita", "en": "Just as I was about to go out, it started to rain."},
+            {"jp": "弟は野菜を食べようとしません。", "kana": "おとうとはやさいをたべようとしません", "romaji": "otouto wa yasai o tabeyou to shimasen", "en": "My little brother won't even try to eat vegetables."},
+            {"jp": "毎日野菜を食べるようにしています。", "kana": "まいにちやさいをたべるようにしています", "romaji": "mainichi yasai o taberu you ni shite imasu", "en": "I make a point of eating vegetables every day."},
+            {"jp": "夜遅くまでゲームをしないようにしています。", "kana": "よるおそくまでゲームをしないようにしています", "romaji": "yoru osoku made geemu o shinai you ni shite imasu", "en": "I try not to play games until late at night."},
+        ],
+        "vocab": [
+            {"word": "野菜", "reading": "やさい", "meaning": "vegetables"},
+            {"word": "降り出します", "reading": "ふりだします", "meaning": "to start to rain or snow"},
+            {"word": "遅く", "reading": "おそく", "meaning": "late (adverb)"},
+            {"word": "甘い", "reading": "あまい", "meaning": "sweet"},
+            {"word": "健康", "reading": "けんこう", "meaning": "health"},
+        ],
+    },
+    {
+        "id": "n3-09",
+        "title": "Leaving things as they are",
+        "jp_title": "〜まま・〜ずに",
+        "goal": "Say that something stayed the same, and that you did something without doing something else.",
+        "points": [
+            "**[た-form] + まま** = with something left as it is: 窓を開けたまま寝てしまいました。 "
+            "\"I fell asleep with the window open.\"",
+            "Nouns take の and adjectives attach as usual: 子供のまま, 若いまま, きれいなまま. "
+            "**このまま / そのまま** = like this / as it is: そのままでいいです。",
+            "**[ない-stem] + ずに** = without doing (a more written ないで): 朝ご飯を食べずに出かけました。",
+            "する becomes **せずに**: 勉強せずに試験を受けました。",
+        ],
+        "examples": [
+            {"jp": "窓を開けたまま寝てしまいました。", "kana": "まどをあけたまま ねてしまいました", "romaji": "mado o aketa mama nete shimaimashita", "en": "I fell asleep with the window open."},
+            {"jp": "靴をはいたまま入らないでください。", "kana": "くつをはいたまま はいらないでください", "romaji": "kutsu o haita mama hairanaide kudasai", "en": "Please don't come in with your shoes on."},
+            {"jp": "朝ご飯を食べずに出かけました。", "kana": "あさごはんをたべずに でかけました", "romaji": "asagohan o tabezu ni dekakemashita", "en": "I went out without eating breakfast."},
+            {"jp": "勉強せずに試験を受けました。", "kana": "べんきょうせずに しけんをうけました", "romaji": "benkyou sezu ni shiken o ukemashita", "en": "I took the exam without studying."},
+        ],
+        "vocab": [
+            {"word": "まま", "reading": "まま", "meaning": "as it is, unchanged"},
+            {"word": "窓", "reading": "まど", "meaning": "window"},
+            {"word": "靴", "reading": "くつ", "meaning": "shoes"},
+            {"word": "はきます", "reading": "はきます", "meaning": "to put on, wear (shoes, trousers)"},
+            {"word": "受けます", "reading": "うけます", "meaning": "to take (an exam)"},
+            {"word": "そのまま", "reading": "そのまま", "meaning": "as it is"},
+        ],
+    },
+    {
+        "id": "n3-10",
+        "title": "It's been decided",
+        "jp_title": "〜ことになる・〜ことになっている",
+        "goal": "Report decisions and rules without making them sound like your own choice.",
+        "points": [
+            "**[dictionary or ない form] + ことになりました** = it has been decided (by others, or by circumstances): "
+            "来月、大阪に引っ越すことになりました。",
+            "Compare ことにする (N4): **you** decide. ことになる sounds modest, so people use it even for their own plans.",
+            "**ことになっています** = it's the rule, it's arranged that way: この部屋では靴を脱ぐことになっています。",
+            "Negative rules use the ない form: 図書館では話さないことになっています。",
+        ],
+        "examples": [
+            {"jp": "来月、大阪に引っ越すことになりました。", "kana": "らいげつ おおさかにひっこすことになりました", "romaji": "raigetsu, oosaka ni hikkosu koto ni narimashita", "en": "It's been decided that I'm moving to Osaka next month."},
+            {"jp": "夏休みに、家族で旅行することになりました。", "kana": "なつやすみに かぞくでりょこうすることになりました", "romaji": "natsuyasumi ni, kazoku de ryokou suru koto ni narimashita", "en": "We've decided to take a family trip in the summer holidays."},
+            {"jp": "この部屋では靴を脱ぐことになっています。", "kana": "このへやではくつをぬぐことになっています", "romaji": "kono heya de wa kutsu o nugu koto ni natte imasu", "en": "In this room, you take your shoes off."},
+            {"jp": "図書館では話さないことになっています。", "kana": "としょかんでははなさないことになっています", "romaji": "toshokan de wa hanasanai koto ni natte imasu", "en": "You're not supposed to talk in the library."},
+        ],
+        "vocab": [
+            {"word": "引っ越します", "reading": "ひっこします", "meaning": "to move (house)"},
+            {"word": "脱ぎます", "reading": "ぬぎます", "meaning": "to take off (clothes, shoes)"},
+            {"word": "決まります", "reading": "きまります", "meaning": "to be decided"},
+            {"word": "規則", "reading": "きそく", "meaning": "rule"},
+            {"word": "旅行", "reading": "りょこう", "meaning": "trip, travel"},
+            {"word": "図書館", "reading": "としょかん", "meaning": "library"},
+        ],
+    },
 ]
 
 _BY_ID = {lesson["id"]: lesson for lesson in LESSONS}
-LEVELS = ("N5", "N4")
+LEVELS = ("N5", "N4", "N3")
 
 
 def get(lesson_id: str) -> dict | None:
@@ -1603,7 +1872,7 @@ def get(lesson_id: str) -> dict | None:
 
 
 def level(lesson: dict) -> str:
-    """"N5" or "N4", from the id prefix (n5-03, n4-01)."""
+    """"N5", "N4" or "N3", from the id prefix (n5-03, n4-01, n3-02)."""
     return lesson["id"].split("-")[0].upper()
 
 

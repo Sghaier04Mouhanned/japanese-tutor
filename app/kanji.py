@@ -135,9 +135,13 @@ def available() -> bool:
 @lru_cache(maxsize=1)
 def _load() -> dict[str, dict]:
     with _lock:
-        if not INDEX.exists():
+        data = json.loads(INDEX.read_text(encoding="utf-8")) if INDEX.exists() else None
+        # Rebuild when new lessons use kanji the index doesn't have (or has under another lesson).
+        if data is None or (SOURCE.exists() and any(
+                data.get(ch, {}).get("lesson") != lid for ch, lid in _lesson_kanji().items())):
             build()
-        return json.loads(INDEX.read_text(encoding="utf-8"))
+            data = json.loads(INDEX.read_text(encoding="utf-8"))
+        return data
 
 
 def all_kanji() -> dict[str, dict]:

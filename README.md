@@ -1,7 +1,7 @@
 # 日本語 Tutor
 
 A personal Japanese tutor that runs in the browser, built for going from zero to
-passing the JLPT (N5, then N4), powered by a free AI API or a local model.
+passing the JLPT (N5, then N4, then N3), powered by a free AI API or a local model.
 
 ## Features
 
@@ -36,8 +36,8 @@ passing the JLPT (N5, then N4), powered by a free AI API or a local model.
 - Quiz score trend; study days, total reviews and quizzes
 
 **Kanji study**
-- 387 kanji: the lists closest to N5 and N4 (KANJIDIC's old JLPT levels 4 and 3) plus every
-  other kanji used in the lessons
+- The lists closest to N5 and N4 (KANJIDIC's old JLPT levels 4 and 3) plus every other kanji
+  used in the lessons
 - Animated stroke order (KanjiVG), on/kun readings with audio, meanings, and example words
   (lesson vocabulary first, then common dictionary words)
 - Add kanji to your reviews one by one or five at a time; they join the Review tab and the dashboard
@@ -80,6 +80,13 @@ passing the JLPT (N5, then N4), powered by a free AI API or a local model.
 - 〜ば, 〜ために/〜ように, 〜すぎる, 〜やすい/〜にくい, 〜し, 〜はず, 〜ようだ/〜みたい/〜らしい,
   〜てみる, の/こと, transitive/intransitive pairs with 〜ている/〜てある
 - Once you start N4, Sensei may use N4 grammar too; progress and quizzes track N5 and N4 separately
+
+**JLPT N3 lessons (10 so far)**
+- 〜ところだ (about to / in the middle of / just did), 〜うちに, 〜ばかり, 〜わけだ/〜わけではない/〜わけがない,
+  〜について/〜に対して/〜にとって, 〜によって/〜による, 〜おかげで/〜せいで, 〜ようとする/〜ようにする,
+  〜まま/〜ずに, 〜ことになる/〜ことになっている
+- Once you start N3, Sensei may use N3 grammar too; kanji from these lessons join the Kanji section
+  automatically (the kanji index rebuilds itself when lessons add new kanji)
 
 ## Setup
 
