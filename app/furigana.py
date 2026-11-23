@@ -100,6 +100,9 @@ _COUNTERS: dict[str, list] = {
     "週間": [("いっ", "しゅうかん"), ("に", "しゅうかん"), ("さん", "しゅうかん"), ("よん", "しゅうかん"),
            ("ご", "しゅうかん"), ("ろく", "しゅうかん"), ("なな", "しゅうかん"), ("はっ", "しゅうかん"),
            ("きゅう", "しゅうかん"), ("じゅっ", "しゅうかん"), ("なん", "しゅうかん")],
+    # Nights' stay: 一泊 いっぱく, 三泊 さんぱく
+    "泊": [("いっ", "ぱく"), ("に", "はく"), ("さん", "ぱく"), ("よん", "はく"), ("ご", "はく"), ("ろっ", "ぱく"),
+          ("なな", "はく"), ("はっ", "ぱく"), ("きゅう", "はく"), ("じゅっ", "ぱく"), ("なん", "ぱく")],
     # Dishes, items: 一品 いっぴん
     "品": [("いっ", "ぴん"), ("に", "ひん"), ("さん", "ぴん"), ("よん", "ひん"), ("ご", "ひん"), ("ろっ", "ぴん"),
           ("なな", "ひん"), ("はっ", "ぴん"), ("きゅう", "ひん"), ("じゅっ", "ぴん"), ("なん", "ぴん")],
@@ -140,6 +143,13 @@ def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
     # 体 on its own before a particle is からだ (body); たい is for compounds like 体育.
     if word.surface == "体" and nxt is not None and nxt.surface in {"に", "が", "を", "は", "も", "の", "で"}:
         return "からだ"
+    # "Throughout": 一日中 いちにちじゅう, 今日中 きょうじゅう, 世界中 せかいじゅう (not ちゅう).
+    if word.surface == "中" and prev is not None and (
+            prev.surface in _JUU_AFTER or (prev.surface in {"日", "年", "晩"} and prev2 is not None and prev2.surface == "一")):
+        return "じゅう"
+    # 三文の徳 (an old coin): もん.
+    if word.surface == "文" and prev is not None and prev.surface == "三" and nxt is not None and nxt.surface == "の":
+        return "もん"
     # Flours: 小麦粉 こむぎこ, パン粉 パンこ (the analyzer reads a split-off 粉 as こな).
     if word.surface == "粉" and prev is not None and prev.surface in {"小麦", "パン", "そば", "米"}:
         return "こ"
@@ -199,6 +209,7 @@ def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
 
 _SPECIAL_COUNTED = {"二十歳": "はたち"}  # age 20 has its own word
 
+_JUU_AFTER = {"今日", "明日", "今年", "世界", "一晩", "夜", "町", "家"}
 _MONO_AFTER = {"洗濯", "忘れ", "落とし", "預かり", "届け", "買い"}
 _WEEKDAYS = {"月": "げつ", "火": "か", "水": "すい", "木": "もく", "金": "きん", "土": "ど", "日": "にち"}
 _HONORIFIC_FAMILY = {"母": "かあ", "父": "とう", "兄": "にい", "姉": "ねえ"}
@@ -326,6 +337,13 @@ def annotate(text: str) -> list[dict]:
                     counted = _counter_word(surface, following.surface, _reading(word))
                     if counted:
                         segments.append(counted)
+                        skip = True
+                        continue
+                    # 1日 after a month (9月1日) is ついたち, the 1st; on its own (1日に3回) it's いちにち.
+                    if surface in {"1", "１"} and following.surface == "日":
+                        ruby = "ついたち" if n_word and words[n_word - 1].surface == "月" else "いちにち"
+                        segments.append({"t": surface + "日", "b": surface + "日", "k": ruby, "p": "noun",
+                                         "parts": [{"t": surface + "日", "r": ruby}]})
                         skip = True
                         continue
                     counter = _digit_counter(surface, following.surface)

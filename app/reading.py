@@ -1646,6 +1646,567 @@ PASSAGES: list[dict] = [
             {"word": "単に", "reading": "たんに", "meaning": "simply, merely"},
         ],
     },
+    {
+        "id": "n2-r11",
+        "title": "Clearing the bicycle shed",
+        "jp_title": "自転車置き場の整理について",
+        "kind": "Short passage",
+        "minutes": 3,
+        "text": [
+            "住民の皆様へ",
+            "自転車置き場に、長い間使われていないと思われる自転車が増えております。そこで、下記のとおり整理を行うことになりました。",
+            "引き続きご利用になる自転車には、管理事務所でお配りしている黄色いシールを、5月20日までに貼ってください。"
+            "シールが貼られていない自転車は、5月末に処分させていただきます。",
+            "なお、シールは一つの世帯につき二枚までとさせていただきます。",
+            "管理事務所",
+        ],
+        "en": [
+            "To all residents,",
+            "There are more and more bicycles in the bicycle shed that seem not to have been used for a long time. We have therefore "
+            "decided to clear the shed as set out below.",
+            "If you will continue using your bicycle, please put one of the yellow stickers handed out at the management office on it "
+            "by 20 May. Bicycles without a sticker will be disposed of at the end of May.",
+            "Please note that each household may have up to two stickers.",
+            "Management office",
+        ],
+        "questions": [
+            {
+                "q": "自転車置き場を使い続けたい人は、どうしなければならないか。",
+                "choices": [
+                    "5月末までに、自転車を別の場所に移す。",
+                    "5月20日までに、自転車にシールを貼る。",
+                    "管理事務所に、使っている自転車の数を知らせる。",
+                    "新しい自転車を買って、登録する。",
+                ],
+                "answer": 1,
+                "why": "引き続きご利用になる自転車には…5月20日までに貼ってください. The end of May is when unmarked bikes are removed.",
+            },
+        ],
+        "vocab": [
+            {"word": "住民", "reading": "じゅうみん", "meaning": "resident"},
+            {"word": "整理", "reading": "せいり", "meaning": "sorting out, clearing"},
+            {"word": "引き続き", "reading": "ひきつづき", "meaning": "continuing, still"},
+            {"word": "貼る", "reading": "はる", "meaning": "to stick (on)"},
+            {"word": "処分", "reading": "しょぶん", "meaning": "disposal"},
+            {"word": "世帯", "reading": "せたい", "meaning": "household"},
+        ],
+    },
+    {
+        "id": "n2-r12",
+        "title": "Changing a hotel booking",
+        "jp_title": "ご予約内容の変更について",
+        "kind": "Short passage",
+        "minutes": 3,
+        "text": [
+            "件名：ご予約内容の変更について",
+            "田中様",
+            "このたびは、ホテルみどりをご予約いただき、ありがとうございます。お問い合わせいただいた、ご宿泊日の変更についてご連絡いたします。",
+            "ご希望の7月15日は、あいにく和室が満室となっております。洋室でしたらご用意できますが、料金が一泊につき二千円高くなります。"
+            "洋室でよろしければ、7月5日までにお電話にてお知らせください。期日までにご連絡がない場合は、元のご予約のままとさせていただきます。",
+            "ホテルみどり　予約係",
+        ],
+        "en": [
+            "Subject: About changing your booking",
+            "Dear Mr./Ms. Tanaka,",
+            "Thank you for booking with Hotel Midori. We are writing about your inquiry on changing the date of your stay.",
+            "Unfortunately, the Japanese-style rooms are fully booked on 15 July, the date you requested. We can offer a Western-style "
+            "room, but it costs 2,000 yen more per night. If a Western-style room is acceptable, please let us know by phone by 5 July. "
+            "If we don't hear from you by then, your original booking will stay as it is.",
+            "Hotel Midori, reservations",
+        ],
+        "questions": [
+            {
+                "q": "このメールの内容と合っているものはどれか。",
+                "choices": [
+                    "7月15日は、和室に泊まることができる。",
+                    "洋室に変更すると、料金が安くなる。",
+                    "連絡をしなければ、予約は元の日のままになる。",
+                    "洋室への変更は、メールで申し込む。",
+                ],
+                "answer": 2,
+                "why": "期日までにご連絡がない場合は、元のご予約のまま. The Japanese rooms are full, the Western room costs more, "
+                       "and the change must be made by phone (お電話にて).",
+            },
+        ],
+        "vocab": [
+            {"word": "問い合わせ", "reading": "といあわせ", "meaning": "inquiry"},
+            {"word": "宿泊", "reading": "しゅくはく", "meaning": "staying (at a hotel)"},
+            {"word": "あいにく", "reading": "あいにく", "meaning": "unfortunately"},
+            {"word": "満室", "reading": "まんしつ", "meaning": "fully booked (rooms)"},
+            {"word": "洋室", "reading": "ようしつ", "meaning": "Western-style room"},
+            {"word": "期日", "reading": "きじつ", "meaning": "set date, deadline"},
+        ],
+    },
+    {
+        "id": "n2-r13",
+        "title": "Comparing yourself with others",
+        "jp_title": "人と比べること",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "私たちはつい、自分を他人と比べてしまう。友人が自分より良い成績を取ったり、楽しそうな旅行の写真を投稿したりしているのを見ると、"
+            "自分だけが取り残されたような気持ちになる。",
+            "しかし、比べる相手は他人ではなく、過去の自分であるべきではないだろうか。一年前にはできなかったことが、今はできるようになっている。"
+            "そうした小さな成長に目を向けることが、自信につながるのだと思う。",
+        ],
+        "en": [
+            "We can't help comparing ourselves with others. When we see a friend get better grades than us, or post photos of a fun "
+            "trip, we feel as if we alone have been left behind.",
+            "But shouldn't the person we compare ourselves with be our past self, not other people? Things we couldn't do a year ago, "
+            "we can do now. I think paying attention to that kind of small growth is what builds confidence.",
+        ],
+        "questions": [
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "友人と比べることで、もっと頑張れる。",
+                    "自分の成長は、過去の自分と比べて考えたほうがいい。",
+                    "旅行の写真は、投稿しないほうがいい。",
+                    "他人より良い成績を取ることが、自信につながる。",
+                ],
+                "answer": 1,
+                "why": "比べる相手は他人ではなく、過去の自分であるべき, and small growth is what builds confidence.",
+            },
+        ],
+        "vocab": [
+            {"word": "他人", "reading": "たにん", "meaning": "other people"},
+            {"word": "投稿", "reading": "とうこう", "meaning": "posting (online)"},
+            {"word": "取り残す", "reading": "とりのこす", "meaning": "to leave behind"},
+            {"word": "過去", "reading": "かこ", "meaning": "the past"},
+            {"word": "成長", "reading": "せいちょう", "meaning": "growth"},
+            {"word": "つながる", "reading": "つながる", "meaning": "to lead to, be connected"},
+        ],
+    },
+    {
+        "id": "n2-r14",
+        "title": "Saying hello",
+        "jp_title": "あいさつ",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "引っ越してきたばかりのころ、近所の人にあいさつをしても、返事が返ってこないことがあった。都会では、"
+            "人と関わりたくない人も多いのだろうと、少し寂しく思った。",
+            "それでも、毎朝あいさつを続けていると、半年ほどたったころから、向こうから声をかけてくれる人が増えてきた。"
+            "今では、旅行のお土産を交換するほどの仲になった人もいる。人間関係は、一度で築けるものではない。小さな積み重ねが大切なのだ。",
+        ],
+        "en": [
+            "When I had just moved here, sometimes I'd say hello to my neighbours and get no reply. I felt a little lonely, thinking "
+            "that in the city many people probably don't want to get involved with others.",
+            "Even so, I kept saying hello every morning, and after about six months more and more people started greeting me first. "
+            "Now there are even people I'm close enough to that we swap souvenirs from our trips. Relationships can't be built in one "
+            "go. It's the small things, added up, that matter.",
+        ],
+        "questions": [
+            {
+                "q": "筆者が最も言いたいことは何か。",
+                "choices": [
+                    "都会の人は、あいさつをしない。",
+                    "人間関係は、少しずつ作っていくものだ。",
+                    "近所の人とは、関わらないほうがいい。",
+                    "お土産を渡せば、すぐに仲良くなれる。",
+                ],
+                "answer": 1,
+                "why": "人間関係は、一度で築けるものではない。小さな積み重ねが大切: relationships are built bit by bit.",
+            },
+        ],
+        "vocab": [
+            {"word": "関わる", "reading": "かかわる", "meaning": "to get involved with"},
+            {"word": "声をかける", "reading": "こえをかける", "meaning": "to speak to, greet"},
+            {"word": "交換", "reading": "こうかん", "meaning": "exchange"},
+            {"word": "人間関係", "reading": "にんげんかんけい", "meaning": "relationships"},
+            {"word": "築く", "reading": "きずく", "meaning": "to build"},
+            {"word": "積み重ね", "reading": "つみかさね", "meaning": "accumulation, building up"},
+        ],
+    },
+    {
+        "id": "n2-r15",
+        "title": "Morning people and night people",
+        "jp_title": "朝型と夜型",
+        "kind": "Medium passage",
+        "minutes": 7,
+        "text": [
+            "「早起きは三文の徳」ということわざがあるように、日本では昔から、朝早く起きることが良いこととされてきた。"
+            "最近も、朝の時間を勉強や運動に使う「朝活」が人気を集めている。",
+            "しかし、だれもが朝型の生活に向いているわけではない。人によって、体のリズムには違いがあることが分かってきた。"
+            "夜になると頭がよく働く人が無理に早起きをしても、かえって一日中眠くて、集中できないということもあるそうだ。",
+            "大切なのは、世間で良いとされている方法をそのまま取り入れることではなく、自分の体に合った生活のリズムを見つけることだろう。"
+            "朝型でも夜型でも、自分が最も力を発揮できる時間を知っておくことが大切なのである。",
+        ],
+        "en": [
+            "As the proverb \"the early riser gains three coins\" suggests, getting up early has long been considered a good thing in "
+            "Japan. Recently, \"asakatsu\", using the morning for study or exercise, has also become popular.",
+            "But not everyone is suited to a morning lifestyle. It has become clear that body rhythms differ from person to person. "
+            "Apparently, when people whose minds work best at night force themselves to get up early, they can end up sleepy all day "
+            "and unable to concentrate.",
+            "What matters is probably not adopting whatever method society considers good, but finding a daily rhythm that suits your "
+            "own body. Whether you're a morning or a night person, the important thing is to know when you can perform at your best.",
+        ],
+        "questions": [
+            {
+                "q": "「朝活」とは、どのようなことか。",
+                "choices": [
+                    "朝早く起きて、勉強や運動をすること",
+                    "朝ご飯をしっかり食べること",
+                    "夜遅くまで勉強すること",
+                    "朝早く出かけて、買い物をすること",
+                ],
+                "answer": 0,
+                "why": "朝の時間を勉強や運動に使う「朝活」: using the morning for study or exercise.",
+            },
+            {
+                "q": "筆者によると、夜型の人が無理に早起きすると、どうなることがあるか。",
+                "choices": [
+                    "体のリズムが、朝型に変わる。",
+                    "一日中眠くて、集中できない。",
+                    "夜、早く眠れるようになる。",
+                    "朝の時間を、有効に使える。",
+                ],
+                "answer": 1,
+                "why": "かえって一日中眠くて、集中できないということもある.",
+            },
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "だれでも、朝型の生活をするべきだ。",
+                    "夜型の生活のほうが、効率がいい。",
+                    "自分の体に合った生活のリズムを見つけることが大切だ。",
+                    "ことわざに従って、生活するべきだ。",
+                ],
+                "answer": 2,
+                "why": "大切なのは…自分の体に合った生活のリズムを見つけること. The writer doesn't favour either type.",
+            },
+        ],
+        "vocab": [
+            {"word": "ことわざ", "reading": "ことわざ", "meaning": "proverb"},
+            {"word": "朝活", "reading": "あさかつ", "meaning": "morning activities (study, exercise)"},
+            {"word": "向く", "reading": "むく", "meaning": "to be suited to"},
+            {"word": "世間", "reading": "せけん", "meaning": "society, the world"},
+            {"word": "取り入れる", "reading": "とりいれる", "meaning": "to adopt, take in"},
+            {"word": "発揮", "reading": "はっき", "meaning": "showing (one's ability)"},
+        ],
+    },
+    {
+        "id": "n2-r16",
+        "title": "Saving the local railway",
+        "jp_title": "町の鉄道を守る",
+        "kind": "Medium passage",
+        "minutes": 7,
+        "text": [
+            "私が住んでいる町には、一時間に一本しか電車が来ない小さな鉄道がある。利用者は年々減り続け、数年前には廃止の話も出た。",
+            "そこで、町の人たちが立ち上がった。駅に花を植えたり、電車の中で地元の野菜を売る「マルシェ列車」を走らせたりしたのだ。"
+            "すると、そうした取り組みがテレビで紹介され、休日には遠くから観光客が訪れるようになった。",
+            "もちろん、観光客だけで鉄道を支えるのは難しい。ふだんから地元の人が利用しなければ、いずれまた同じ問題が起きるだろう。"
+            "鉄道を守るということは、結局、自分たちの町の暮らしを考えることなのだと思う。",
+        ],
+        "en": [
+            "My town has a small railway with only one train an hour. The number of passengers fell year after year, and a few years "
+            "ago there was even talk of closing it.",
+            "So the townspeople took action. They planted flowers at the stations and ran a \"market train\" selling local vegetables "
+            "on board. These efforts were then featured on TV, and now tourists come from far away on holidays.",
+            "Of course, it's hard to keep a railway going on tourists alone. If local people don't use it in everyday life, the same "
+            "problem will come back sooner or later. In the end, I think protecting the railway means thinking about life in our own town.",
+        ],
+        "questions": [
+            {
+                "q": "町の人たちは、なぜ取り組みを始めたのか。",
+                "choices": [
+                    "テレビで紹介されたかったから",
+                    "鉄道がなくなるかもしれなかったから",
+                    "野菜がたくさん取れたから",
+                    "観光客が多すぎたから",
+                ],
+                "answer": 1,
+                "why": "Passengers kept falling and there was talk of closure (廃止の話も出た). そこで (so) they took action.",
+            },
+            {
+                "q": "取り組みの結果、どうなったか。",
+                "choices": [
+                    "電車の本数が増えた。",
+                    "地元の人が毎日電車を使うようになった。",
+                    "休日に、遠くから人が来るようになった。",
+                    "鉄道の廃止が決まった。",
+                ],
+                "answer": 2,
+                "why": "休日には遠くから観光客が訪れるようになった. The writer actually worries that locals don't use it enough.",
+            },
+            {
+                "q": "筆者は、鉄道を守るために何が必要だと考えているか。",
+                "choices": [
+                    "もっと観光客を増やすこと",
+                    "テレビでたくさん紹介してもらうこと",
+                    "地元の人が、ふだんから鉄道を利用すること",
+                    "電車の中で、野菜を売り続けること",
+                ],
+                "answer": 2,
+                "why": "観光客だけで鉄道を支えるのは難しい; ふだんから地元の人が利用しなければ the problem will return.",
+            },
+        ],
+        "vocab": [
+            {"word": "廃止", "reading": "はいし", "meaning": "abolition, closing down"},
+            {"word": "立ち上がる", "reading": "たちあがる", "meaning": "to stand up; take action"},
+            {"word": "植える", "reading": "うえる", "meaning": "to plant"},
+            {"word": "訪れる", "reading": "おとずれる", "meaning": "to visit"},
+            {"word": "支える", "reading": "ささえる", "meaning": "to support"},
+            {"word": "結局", "reading": "けっきょく", "meaning": "in the end, after all"},
+        ],
+    },
+    {
+        "id": "n2-r17",
+        "title": "Aiming for 80 percent",
+        "jp_title": "まず八割",
+        "kind": "Medium passage",
+        "minutes": 7,
+        "text": [
+            "何事も完璧にやらないと気がすまない人がいる。私もその一人で、学生時代は、レポートの文章を何度も書き直し、"
+            "締め切りぎりぎりまで提出できないことがよくあった。",
+            "ある時、先生に「八割できたら、一度出してみなさい」と言われた。半信半疑で試してみると、意外なことに、評価はほとんど変わらなかった。"
+            "それどころか、早めに出したことで先生から意見をもらえ、かえって良いものに仕上げることができたのだ。",
+            "完璧を目指すこと自体は悪くない。だが、一人で百点を目指して時間をかけるより、早い段階で人の意見を聞いたほうが、"
+            "結果的に良いものができることもある。それ以来、私は「まず八割」を心がけている。",
+        ],
+        "en": [
+            "Some people aren't satisfied unless everything is perfect. I'm one of them: as a student, I'd rewrite my reports again "
+            "and again and often couldn't hand them in until the very last minute.",
+            "Once, a teacher told me, \"When it's 80 percent done, try handing it in.\" I tried it, half doubting, and to my surprise "
+            "my grade hardly changed. What's more, handing it in early meant I got the teacher's comments, so I could actually make "
+            "it better.",
+            "Aiming for perfection isn't bad in itself. But rather than spending a long time alone aiming for full marks, asking for "
+            "others' opinions at an early stage can lead to a better result. Since then, I've kept \"80 percent first\" in mind.",
+        ],
+        "questions": [
+            {
+                "q": "筆者は学生時代、どんな問題を抱えていたか。",
+                "choices": [
+                    "レポートの書き方が分からなかった。",
+                    "完璧にしようとして、なかなか提出できなかった。",
+                    "締め切りを忘れることが多かった。",
+                    "先生の意見を聞かなかった。",
+                ],
+                "answer": 1,
+                "why": "何度も書き直し、締め切りぎりぎりまで提出できない: rewriting for perfection kept the writer from handing in.",
+            },
+            {
+                "q": "「八割できたら、一度出してみなさい」と言われて、筆者はどうなったか。",
+                "choices": [
+                    "評価が大きく下がった。",
+                    "先生から意見をもらい、より良いものにできた。",
+                    "完璧主義を、すぐにやめた。",
+                    "半分しか書かないで、提出した。",
+                ],
+                "answer": 1,
+                "why": "評価はほとんど変わらなかった, and 早めに出したことで先生から意見をもらえ、かえって良いものに仕上げることができた.",
+            },
+            {
+                "q": "筆者の考えに合うものはどれか。",
+                "choices": [
+                    "完璧を目指すのは、悪いことだ。",
+                    "一人で百点を目指すべきだ。",
+                    "早めに人の意見を聞くと、良いものができることがある。",
+                    "レポートは、締め切りぎりぎりに出したほうがいい。",
+                ],
+                "answer": 2,
+                "why": "早い段階で人の意見を聞いたほうが、結果的に良いものができることもある. Aiming for perfection 自体は悪くない.",
+            },
+        ],
+        "vocab": [
+            {"word": "完璧", "reading": "かんぺき", "meaning": "perfect"},
+            {"word": "気がすまない", "reading": "きがすまない", "meaning": "not satisfied (until)"},
+            {"word": "提出", "reading": "ていしゅつ", "meaning": "handing in"},
+            {"word": "半信半疑", "reading": "はんしんはんぎ", "meaning": "half doubting"},
+            {"word": "評価", "reading": "ひょうか", "meaning": "evaluation, grade"},
+            {"word": "心がける", "reading": "こころがける", "meaning": "to keep in mind, aim to"},
+        ],
+    },
+    {
+        "id": "n2-r18",
+        "title": "School uniforms",
+        "jp_title": "制服は必要か",
+        "kind": "Comparison (A/B)",
+        "minutes": 6,
+        "text": [
+            "A\n中学校や高校の制服には、良い点が多いと思う。毎朝、何を着ていくか悩む必要がないし、家庭の経済的な差も目立ちにくい。"
+            "また、制服を着ることで、学校の一員であるという意識も生まれるだろう。",
+            "B\n制服は、もう必要ないのではないか。決められた服を全員が着ることは、生徒一人一人の個性を大切にする考え方に合わない。"
+            "それに、制服は値段が高く、成長の早い子供の場合、何度も買い直さなければならないという家庭の負担もある。",
+        ],
+        "en": [
+            "A\nI think school uniforms at junior high and high school have many good points. Students don't have to worry every "
+            "morning about what to wear, and differences in families' finances are less noticeable. Wearing a uniform also gives a "
+            "sense of being part of the school.",
+            "B\nAren't uniforms unnecessary now? Making everyone wear set clothes doesn't fit with valuing each student's "
+            "individuality. Besides, uniforms are expensive, and children who grow fast need new ones again and again, which is a "
+            "burden on families.",
+        ],
+        "questions": [
+            {
+                "q": "AとBのどちらも触れている点は何か。",
+                "choices": [
+                    "制服を着ると、学校への意識が高まること",
+                    "制服と、家庭のお金の問題",
+                    "毎朝、着る服を選ぶ楽しさ",
+                    "生徒の個性を大切にすること",
+                ],
+                "answer": 1,
+                "why": "A says uniforms hide differences in family finances (経済的な差); B says they are expensive to keep buying "
+                       "(家庭の負担). Both mention money; the other points appear in only one text.",
+            },
+            {
+                "q": "AとBは、制服について、どのように考えているか。",
+                "choices": [
+                    "AもBも、制服は必要だと考えている。",
+                    "Aは制服に賛成で、Bは制服は必要ないと考えている。",
+                    "Aは制服に反対で、Bは制服に賛成している。",
+                    "AもBも、制服の値段を下げるべきだと考えている。",
+                ],
+                "answer": 1,
+                "why": "A: 良い点が多い. B: もう必要ないのではないか.",
+            },
+        ],
+        "vocab": [
+            {"word": "制服", "reading": "せいふく", "meaning": "school uniform"},
+            {"word": "悩む", "reading": "なやむ", "meaning": "to worry, agonise"},
+            {"word": "経済的", "reading": "けいざいてき", "meaning": "economic, financial"},
+            {"word": "目立つ", "reading": "めだつ", "meaning": "to stand out"},
+            {"word": "個性", "reading": "こせい", "meaning": "individuality"},
+            {"word": "負担", "reading": "ふたん", "meaning": "burden"},
+        ],
+    },
+    {
+        "id": "n2-r19",
+        "title": "City marathon entry",
+        "jp_title": "市民マラソン大会のご案内",
+        "kind": "Information search",
+        "minutes": 6,
+        "text": [
+            "第10回　さくら市民マラソン大会　参加者募集",
+            "◆開催日：10月20日（日）　※雨天決行",
+            "◆種目と参加費\n"
+            "・10キロの部（高校生以上）：3,000円\n"
+            "・5キロの部（中学生以上）：2,000円\n"
+            "・親子ペアの部（2キロ・小学生とその保護者）：1組2,500円",
+            "◆申し込み方法\n"
+            "・インターネット：9月1日〜9月30日\n"
+            "・郵便：9月1日〜9月20日（必着）\n"
+            "※定員になり次第、締め切ります。",
+            "◆注意\n"
+            "・大会当日の申し込みはできません。\n"
+            "・一度お支払いいただいた参加費は、どのような理由があってもお返しできません。",
+        ],
+        "en": [
+            "10th Sakura City Marathon: entries wanted",
+            "Date: Sunday 20 October. Held rain or shine.",
+            "Races and entry fees\n"
+            "- 10 km (high school students and over): 3,000 yen\n"
+            "- 5 km (junior high school students and over): 2,000 yen\n"
+            "- Parent-and-child pairs (2 km, a primary school child and their parent): 2,500 yen per pair",
+            "How to enter\n"
+            "- Online: 1 to 30 September\n"
+            "- By post: 1 to 20 September (must arrive by then)\n"
+            "* Entries close as soon as places are full.",
+            "Please note\n"
+            "- You cannot enter on the day.\n"
+            "- Entry fees cannot be refunded for any reason once paid.",
+        ],
+        "questions": [
+            {
+                "q": "中学2年生のさきさんは、大学生の姉と同じ種目に出たいと思っている。二人が一緒に出られる種目と、二人分の参加費の合計は、どれか。",
+                "choices": ["10キロの部・6,000円", "5キロの部・4,000円", "親子ペアの部・2,500円", "5キロの部・2,000円"],
+                "answer": 1,
+                "why": "A junior high student can't run 10 km (high school and over), and the pair race is for a primary school child "
+                       "and a parent. So 5 km at 2,000 yen each: 4,000 yen.",
+            },
+            {
+                "q": "申し込みについて、正しいものはどれか。",
+                "choices": [
+                    "郵便なら、9月30日まで申し込める。",
+                    "大会当日に、会場で申し込める。",
+                    "定員になると、期間中でも締め切られることがある。",
+                    "雨で大会が中止になったら、参加費が返ってくる。",
+                ],
+                "answer": 2,
+                "why": "定員になり次第、締め切ります. Post closes on 20 September, there's no entry on the day, and the race is held "
+                       "rain or shine (雨天決行) with no refunds.",
+            },
+        ],
+        "vocab": [
+            {"word": "募集", "reading": "ぼしゅう", "meaning": "recruiting, call for entries"},
+            {"word": "開催", "reading": "かいさい", "meaning": "holding (an event)"},
+            {"word": "雨天決行", "reading": "うてんけっこう", "meaning": "held rain or shine"},
+            {"word": "種目", "reading": "しゅもく", "meaning": "event, race category"},
+            {"word": "必着", "reading": "ひっちゃく", "meaning": "must arrive by (a date)"},
+            {"word": "定員", "reading": "ていいん", "meaning": "capacity, number of places"},
+        ],
+    },
+    {
+        "id": "n2-r20",
+        "title": "Maps and getting lost",
+        "jp_title": "地図アプリと道に迷うこと",
+        "kind": "Medium passage",
+        "minutes": 7,
+        "text": [
+            "スマートフォンの地図アプリのおかげで、知らない町でも道に迷うことはほとんどなくなった。目的地を入力すれば、"
+            "最短の道を教えてくれるし、到着する時間まで分かる。",
+            "ただ、最近ふと気がついた。アプリに頼るようになってから、町の様子をほとんど覚えていないのだ。画面の矢印ばかり見て歩いているので、"
+            "どんな店があったか、どんな景色だったかが記憶に残らない。昔、紙の地図を見ながら迷った町のほうが、今でもはっきり思い出せるのは"
+            "不思議なことだ。",
+            "迷うことは、時間の無駄だと思われがちだ。しかし、迷いながら歩くからこそ、周りをよく見て、町を自分の体で覚えるのではないだろうか。"
+            "急がない日には、あえてアプリを閉じて歩いてみるのも悪くない。",
+        ],
+        "en": [
+            "Thanks to map apps on smartphones, I hardly ever get lost now, even in unfamiliar towns. Enter a destination and the app "
+            "shows you the shortest route, and even when you'll arrive.",
+            "But recently it suddenly struck me: since I started relying on the app, I barely remember what towns are like. Because I "
+            "walk looking only at the arrow on the screen, I don't remember what shops there were or what the scenery was like. It's "
+            "strange that I can still clearly remember towns where I got lost with a paper map long ago.",
+            "Getting lost tends to be seen as a waste of time. But isn't it precisely because we wander while lost that we look "
+            "around carefully and learn a town with our own bodies? On days when you're not in a hurry, it's not a bad idea to close "
+            "the app on purpose and just walk.",
+        ],
+        "questions": [
+            {
+                "q": "筆者が「ふと気がついた」のは、どんなことか。",
+                "choices": [
+                    "地図アプリが、間違った道を教えること",
+                    "アプリを使うと、町の様子を覚えていないこと",
+                    "紙の地図のほうが、見やすいこと",
+                    "最短の道が、一番いい道ではないこと",
+                ],
+                "answer": 1,
+                "why": "アプリに頼るようになってから、町の様子をほとんど覚えていない.",
+            },
+            {
+                "q": "筆者によると、迷いながら歩くと、どんな良さがあるか。",
+                "choices": [
+                    "早く目的地に着ける。",
+                    "周りをよく見て、町を体で覚えられる。",
+                    "新しいアプリを試せる。",
+                    "時間を無駄にしなくてすむ。",
+                ],
+                "answer": 1,
+                "why": "迷いながら歩くからこそ、周りをよく見て、町を自分の体で覚える.",
+            },
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "地図アプリは、使わないほうがいい。",
+                    "急いでいないときは、アプリを使わずに歩くのもいい。",
+                    "紙の地図を持って、出かけるべきだ。",
+                    "迷うのは時間の無駄なので、避けるべきだ。",
+                ],
+                "answer": 1,
+                "why": "急がない日には、あえてアプリを閉じて歩いてみるのも悪くない: only on days when you're not in a hurry. "
+                       "Choice 1 goes too far.",
+            },
+        ],
+        "vocab": [
+            {"word": "目的地", "reading": "もくてきち", "meaning": "destination"},
+            {"word": "最短", "reading": "さいたん", "meaning": "shortest"},
+            {"word": "頼る", "reading": "たよる", "meaning": "to rely on"},
+            {"word": "矢印", "reading": "やじるし", "meaning": "arrow"},
+            {"word": "記憶", "reading": "きおく", "meaning": "memory"},
+            {"word": "ふと", "reading": "ふと", "meaning": "suddenly, by chance"},
+        ],
+    },
 ]
 
 _BY_ID = {p["id"]: p for p in PASSAGES}
