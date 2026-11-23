@@ -100,6 +100,9 @@ _COUNTERS: dict[str, list] = {
     "週間": [("いっ", "しゅうかん"), ("に", "しゅうかん"), ("さん", "しゅうかん"), ("よん", "しゅうかん"),
            ("ご", "しゅうかん"), ("ろく", "しゅうかん"), ("なな", "しゅうかん"), ("はっ", "しゅうかん"),
            ("きゅう", "しゅうかん"), ("じゅっ", "しゅうかん"), ("なん", "しゅうかん")],
+    # Steps: 一歩 いっぽ, 三歩 さんぽ
+    "歩": [("いっ", "ぽ"), ("に", "ほ"), ("さん", "ぽ"), ("よん", "ほ"), ("ご", "ほ"), ("ろっ", "ぽ"),
+          ("なな", "ほ"), ("はっ", "ぽ"), ("きゅう", "ほ"), ("じゅっ", "ぽ"), ("なん", "ぽ")],
     # Cups and glasses: 一杯 いっぱい, 三杯 さんばい
     "杯": [("いっ", "ぱい"), ("に", "はい"), ("さん", "ばい"), ("よん", "はい"), ("ご", "はい"), ("ろっ", "ぱい"),
           ("なな", "はい"), ("はっ", "ぱい"), ("きゅう", "はい"), ("じゅっ", "ぱい"), ("なん", "ばい")],
@@ -134,6 +137,9 @@ def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
     # 体 on its own before a particle is からだ (body); たい is for compounds like 体育.
     if word.surface == "体" and nxt is not None and nxt.surface in {"に", "が", "を", "は", "も", "の", "で"}:
         return "からだ"
+    # 水道管 すいどうかん: the analyzer splits it as 水 (みず) + 道管.
+    if word.surface == "水" and nxt is not None and nxt.surface == "道管":
+        return "すい"
     # 道案内 (giving directions) is みちあんない.
     if word.surface == "道" and nxt is not None and nxt.surface == "案内":
         return "みち"
@@ -302,6 +308,14 @@ def annotate(text: str) -> list[dict]:
                     push_plain(word.white_space)
                 surface = word.surface
                 following = words[n_word + 1] if n_word + 1 < len(words) else None
+                # 十分か(もしれない) is "enough" (じゅうぶん), not ten minutes; the analyzer only splits
+                # 十分 into 十 + 分 in this pattern.
+                after = words[n_word + 2] if n_word + 2 < len(words) else None
+                if surface == "十" and following is not None and following.surface == "分" and after is not None and after.surface == "か":
+                    segments.append({"t": "十分", "b": "十分", "k": "じゅうぶん", "p": "na-adjective",
+                                     "parts": [{"t": "十分", "r": "じゅうぶん"}]})
+                    skip = True
+                    continue
                 if following is not None and not following.white_space:
                     counted = _counter_word(surface, following.surface, _reading(word))
                     if counted:

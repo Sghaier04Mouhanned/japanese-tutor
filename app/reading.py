@@ -1072,6 +1072,580 @@ PASSAGES: list[dict] = [
             {"word": "瞬間", "reading": "しゅんかん", "meaning": "moment"},
         ],
     },
+    # ------------------------------------------------------------------ N2
+    {
+        "id": "n2-r01",
+        "title": "Water cut notice",
+        "jp_title": "断水のお知らせ",
+        "kind": "Short passage",
+        "minutes": 3,
+        "text": [
+            "さくらハイツにお住まいの皆様へ",
+            "水道管の点検工事のため、下記の日時に断水いたします。ご不便をおかけしますが、ご理解とご協力をお願いいたします。",
+            "日時：6月12日（水）午前9時〜午後3時\n※工事の状況によっては、終了時間が遅れる場合があります。",
+            "断水中は、トイレも使用できません。必要な水は、前日までにご用意くださいますようお願いいたします。"
+            "なお、工事終了後しばらくの間、水が濁ることがありますが、少し流していただければ問題ありません。",
+            "さくらハイツ管理事務所",
+        ],
+        "en": [
+            "To all residents of Sakura Heights,",
+            "Because of inspection work on the water pipes, the water will be cut off at the time below. We apologise for the "
+            "inconvenience and ask for your understanding and cooperation.",
+            "When: Wednesday 12 June, 9 a.m. to 3 p.m.\n* Depending on how the work goes, it may finish later.",
+            "The toilets cannot be used while the water is off. Please prepare any water you need by the day before. "
+            "After the work, the water may be cloudy for a while, but it will be fine once you let it run a little.",
+            "Sakura Heights management office",
+        ],
+        "questions": [
+            {
+                "q": "このお知らせの内容と合っているものはどれか。",
+                "choices": [
+                    "断水は、午後3時に必ず終わる。",
+                    "断水中でも、トイレは使える。",
+                    "断水の前に、使う水を準備しておく必要がある。",
+                    "工事のあと水が濁ったら、管理事務所に連絡しなければならない。",
+                ],
+                "answer": 2,
+                "why": "必要な水は、前日までにご用意ください: prepare water the day before. The end time may be later, the toilets "
+                       "can't be used, and cloudy water just needs to run a little.",
+            },
+        ],
+        "vocab": [
+            {"word": "断水", "reading": "だんすい", "meaning": "water cut-off"},
+            {"word": "水道管", "reading": "すいどうかん", "meaning": "water pipe"},
+            {"word": "点検", "reading": "てんけん", "meaning": "inspection"},
+            {"word": "下記", "reading": "かき", "meaning": "the following, below"},
+            {"word": "協力", "reading": "きょうりょく", "meaning": "cooperation"},
+            {"word": "濁る", "reading": "にごる", "meaning": "to become cloudy, muddy"},
+        ],
+    },
+    {
+        "id": "n2-r02",
+        "title": "A delayed order",
+        "jp_title": "ご注文の商品について",
+        "kind": "Short passage",
+        "minutes": 3,
+        "text": [
+            "件名：ご注文の商品について",
+            "山田様",
+            "このたびは当店をご利用いただき、誠にありがとうございます。ご注文いただいた本棚ですが、メーカーでの生産が遅れているため、"
+            "お届けが予定より一週間ほど遅れる見込みです。",
+            "お急ぎの場合は、ご注文を取り消していただくことも可能です。その際は、お手数ですが、今月20日までにこのメールにご返信ください。"
+            "ご返信がない場合は、このまま商品をお送りいたします。",
+            "家具のミドリ　お客様係",
+        ],
+        "en": [
+            "Subject: About your order",
+            "Dear Mr./Ms. Yamada,",
+            "Thank you very much for shopping with us. Regarding the bookshelf you ordered: because production at the manufacturer "
+            "is behind schedule, delivery is expected to be about a week later than planned.",
+            "If you're in a hurry, you can also cancel your order. In that case, we're sorry for the trouble, but please reply to "
+            "this email by the 20th of this month. If we don't hear from you, we'll send the item as planned.",
+            "Midori Furniture, customer service",
+        ],
+        "questions": [
+            {
+                "q": "山田さんが注文を取り消したい場合、どうすればいいか。",
+                "choices": [
+                    "何もしなくていい。",
+                    "20日までに、このメールに返信する。",
+                    "メーカーに電話する。",
+                    "商品が届いてから返品する。",
+                ],
+                "answer": 1,
+                "why": "その際は…今月20日までにこのメールにご返信ください. Doing nothing means the item is sent as planned.",
+            },
+        ],
+        "vocab": [
+            {"word": "当店", "reading": "とうてん", "meaning": "this shop, our shop"},
+            {"word": "誠に", "reading": "まことに", "meaning": "truly, sincerely"},
+            {"word": "本棚", "reading": "ほんだな", "meaning": "bookshelf"},
+            {"word": "見込み", "reading": "みこみ", "meaning": "expectation, estimate"},
+            {"word": "取り消す", "reading": "とりけす", "meaning": "to cancel"},
+            {"word": "お手数", "reading": "おてすう", "meaning": "trouble (お手数ですが = sorry to trouble you)"},
+        ],
+    },
+    {
+        "id": "n2-r03",
+        "title": "The price of convenience",
+        "jp_title": "便利さと引きかえに",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "コンビニやインターネットのおかげで、私たちの生活はずいぶん便利になった。夜中でも買い物ができるし、"
+            "家から一歩も出ずに、ほしい物を手に入れることもできる。しかし、便利になればなるほど、"
+            "私たちは待つことが苦手になってきたのではないだろうか。",
+            "かつては、手紙の返事を何日も待つのが当たり前だった。待つ時間があったからこそ、相手のことをゆっくり考えることができたのだ。"
+            "便利さと引きかえに、私たちはそうした時間を失いつつあるのかもしれない。",
+        ],
+        "en": [
+            "Thanks to convenience stores and the internet, our lives have become much more convenient. We can shop in the middle "
+            "of the night and get what we want without taking a single step outside. But isn't it true that the more convenient "
+            "life becomes, the worse we get at waiting?",
+            "In the past, waiting days for a reply to a letter was normal. It was precisely because we had that time to wait that "
+            "we could think slowly about the other person. In exchange for convenience, we may be losing that kind of time.",
+        ],
+        "questions": [
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "生活は、もっと便利になるべきだ。",
+                    "便利になったことで、待つ時間の価値が失われつつある。",
+                    "手紙はメールより早く届くので、便利だ。",
+                    "夜中に買い物をするのは、よくない。",
+                ],
+                "answer": 1,
+                "why": "便利さと引きかえに、私たちはそうした時間を失いつつある: in exchange for convenience we're losing the time "
+                       "that waiting gave us to think about others.",
+            },
+        ],
+        "vocab": [
+            {"word": "引きかえ", "reading": "ひきかえ", "meaning": "exchange (〜と引きかえに = in exchange for)"},
+            {"word": "手に入れる", "reading": "てにいれる", "meaning": "to get, obtain"},
+            {"word": "苦手", "reading": "にがて", "meaning": "bad at, not good with"},
+            {"word": "かつて", "reading": "かつて", "meaning": "once, in the past"},
+            {"word": "当たり前", "reading": "あたりまえ", "meaning": "natural, normal"},
+            {"word": "失う", "reading": "うしなう", "meaning": "to lose"},
+        ],
+    },
+    {
+        "id": "n2-r04",
+        "title": "How to praise children",
+        "jp_title": "ほめること",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "子供を育てるうえで、ほめることが大切だとよく言われる。確かに、ほめられれば子供はやる気になる。"
+            "しかし、何でも「すごいね」とほめればいいというものではない。",
+            "結果だけをほめていると、子供は失敗を恐れて、難しいことに挑戦しなくなるおそれがある。大切なのは、結果ではなく、"
+            "努力した過程をほめることだ。そうすれば、子供はうまくいかなかったときでも、もう一度頑張ろうと思えるようになる。",
+        ],
+        "en": [
+            "It's often said that praise is important in raising children. It's true that children feel motivated when they're "
+            "praised. But that doesn't mean you should say \"amazing!\" about everything.",
+            "If you only praise results, children may become afraid of failing and stop taking on difficult things. What matters "
+            "is to praise the effort they put in, not the result. Then, even when things don't go well, children can feel like "
+            "trying again.",
+        ],
+        "questions": [
+            {
+                "q": "筆者が最も言いたいことは何か。",
+                "choices": [
+                    "子供は、できるだけたくさんほめたほうがいい。",
+                    "子供をほめると、やる気がなくなる。",
+                    "結果より、努力した過程をほめるべきだ。",
+                    "失敗した子供は、ほめないほうがいい。",
+                ],
+                "answer": 2,
+                "why": "大切なのは、結果ではなく、努力した過程をほめることだ. Praise isn't bad, but praising everything or only "
+                       "results is.",
+            },
+        ],
+        "vocab": [
+            {"word": "やる気", "reading": "やるき", "meaning": "motivation"},
+            {"word": "恐れる", "reading": "おそれる", "meaning": "to fear"},
+            {"word": "過程", "reading": "かてい", "meaning": "process"},
+            {"word": "頑張る", "reading": "がんばる", "meaning": "to try hard"},
+            {"word": "ほめる", "reading": "ほめる", "meaning": "to praise"},
+        ],
+    },
+    {
+        "id": "n2-r05",
+        "title": "Language changes",
+        "jp_title": "言葉の変化",
+        "kind": "Medium passage",
+        "minutes": 8,
+        "text": [
+            "「最近の若者の言葉は乱れている」という意見を、よく耳にする。たとえば、「全然いい」のように、本来は否定の言葉と一緒に使う"
+            "「全然」を、肯定の意味で使う人が増えている。こうした使い方に、違和感を覚える人も少なくないだろう。",
+            "しかし、言葉は時代とともに変化するものだ。実は、明治時代の小説には、「全然」を肯定の意味で使った例がいくつもあるという。"
+            "つまり、今「正しい」とされている使い方も、昔から決まっていたわけではないのである。",
+            "もちろん、改まった場面では、相手に合わせた言葉づかいをする必要がある。だが、新しい表現をすぐに「間違いだ」と"
+            "決めつけるのではなく、言葉が変わっていく様子を楽しむくらいの余裕を持ちたいものだ。",
+        ],
+        "en": [
+            "We often hear the opinion that \"young people's language is a mess these days\". For example, more and more people "
+            "use 全然 (\"not at all\"), which is originally used with negative words, in a positive sense, as in 全然いい "
+            "(\"totally fine\"). Quite a few people probably feel this usage sounds wrong.",
+            "But language changes with the times. In fact, it's said that novels from the Meiji era contain several examples of "
+            "全然 used positively. In other words, even the usage considered \"correct\" today wasn't fixed from the start.",
+            "Of course, in formal situations we need to choose our words to suit the other person. But rather than immediately "
+            "labelling new expressions \"wrong\", I'd like us to be relaxed enough to enjoy watching language change.",
+        ],
+        "questions": [
+            {
+                "q": "「全然」について、筆者はどのように述べているか。",
+                "choices": [
+                    "昔から、否定の言葉と一緒にしか使われなかった。",
+                    "昔の小説にも、肯定の意味で使った例がある。",
+                    "若者だけが、間違った使い方をしている。",
+                    "明治時代に、初めて使われるようになった。",
+                ],
+                "answer": 1,
+                "why": "明治時代の小説には、「全然」を肯定の意味で使った例がいくつもある: Meiji-era novels already used it positively.",
+            },
+            {
+                "q": "「余裕を持ちたい」とあるが、どういうことか。",
+                "choices": [
+                    "新しい表現を、使わないようにしたい。",
+                    "言葉の変化を、広い心で受け入れたい。",
+                    "改まった場面でも、若者の言葉を使いたい。",
+                    "言葉を勉強する時間を、もっと作りたい。",
+                ],
+                "answer": 1,
+                "why": "余裕 here means having the composure to enjoy change instead of calling new usage wrong at once "
+                       "(すぐに「間違いだ」と決めつけるのではなく).",
+            },
+            {
+                "q": "筆者の考えに合うものはどれか。",
+                "choices": [
+                    "言葉は、変化しないほうがいい。",
+                    "場面に合わせた言葉づかいは、必要ない。",
+                    "新しい言葉の使い方を、すぐに間違いだと決めつけるべきではない。",
+                    "若者の言葉は乱れているので、直すべきだ。",
+                ],
+                "answer": 2,
+                "why": "The writer accepts change, still values suiting words to formal situations, and argues against immediately "
+                       "calling new usage wrong.",
+            },
+        ],
+        "vocab": [
+            {"word": "乱れる", "reading": "みだれる", "meaning": "to be in disorder"},
+            {"word": "本来", "reading": "ほんらい", "meaning": "originally, by nature"},
+            {"word": "否定", "reading": "ひてい", "meaning": "negation, denial"},
+            {"word": "肯定", "reading": "こうてい", "meaning": "affirmation"},
+            {"word": "違和感", "reading": "いわかん", "meaning": "sense that something is off"},
+            {"word": "決めつける", "reading": "きめつける", "meaning": "to jump to a conclusion, label"},
+            {"word": "余裕", "reading": "よゆう", "meaning": "room; composure"},
+        ],
+    },
+    {
+        "id": "n2-r06",
+        "title": "Eating alone",
+        "jp_title": "一人で食事をすること",
+        "kind": "Medium passage",
+        "minutes": 7,
+        "text": [
+            "以前は、一人で外食をすると「友達がいないのか」と思われるのではないかと、気にする人が多かった。"
+            "しかし最近は、一人用の席を用意するレストランが増え、一人で食事を楽しむ人の姿も珍しくなくなった。",
+            "一人で食事をする良さは、何といっても自由なことだ。食べたい物を、食べたいときに、自分のペースで食べられる。"
+            "だれかに気をつかう必要もない。忙しい毎日の中で、一人の時間を大切にしたいと考える人が増えているのだろう。",
+            "一方で、家族や友人と食卓を囲む時間には、一人では得られない楽しさがある。大切なのは、どちらか一方だけを選ぶのではなく、"
+            "その日の気分や状況に応じて、上手に使い分けることではないだろうか。",
+        ],
+        "en": [
+            "In the past, many people worried that if they ate out alone, others would think \"Doesn't this person have any "
+            "friends?\". But recently more restaurants have seats for one, and people enjoying a meal alone are no longer unusual.",
+            "The great thing about eating alone is, above all, the freedom. You can eat what you want, when you want, at your own "
+            "pace, and you don't need to worry about anyone else. More people probably want to value time alone in their busy days.",
+            "On the other hand, sitting around the table with family or friends brings a kind of enjoyment you can't get alone. "
+            "Isn't the important thing not to choose only one, but to switch between them depending on your mood and the situation?",
+        ],
+        "questions": [
+            {
+                "q": "最近の変化として、本文に書かれていることはどれか。",
+                "choices": [
+                    "一人で食事をする人が減っている。",
+                    "一人用の席を用意する店が増えている。",
+                    "友達と外食する人がいなくなった。",
+                    "レストランの数が減っている。",
+                ],
+                "answer": 1,
+                "why": "一人用の席を用意するレストランが増え: more restaurants offer seats for one.",
+            },
+            {
+                "q": "筆者は、一人で食事をする良さは何だと言っているか。",
+                "choices": [
+                    "料金が安いこと",
+                    "新しい友達ができること",
+                    "自分の好きなように食べられること",
+                    "早く食べ終わること",
+                ],
+                "answer": 2,
+                "why": "何といっても自由なこと: you can eat what you like, when you like, at your own pace.",
+            },
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "食事は、いつも家族と一緒にするべきだ。",
+                    "一人の食事と大勢での食事を、状況に応じて使い分けるのがいい。",
+                    "一人で食事をするのは寂しいので、やめたほうがいい。",
+                    "忙しい人は、一人で食事をするしかない。",
+                ],
+                "answer": 1,
+                "why": "どちらか一方だけを選ぶのではなく…状況に応じて、上手に使い分ける: switch between the two as the situation suits.",
+            },
+        ],
+        "vocab": [
+            {"word": "姿", "reading": "すがた", "meaning": "figure, sight (of someone)"},
+            {"word": "何といっても", "reading": "なんといっても", "meaning": "above all, after all"},
+            {"word": "気をつかう", "reading": "きをつかう", "meaning": "to be considerate, worry about others"},
+            {"word": "食卓", "reading": "しょくたく", "meaning": "dining table"},
+            {"word": "囲む", "reading": "かこむ", "meaning": "to surround, sit around"},
+            {"word": "使い分ける", "reading": "つかいわける", "meaning": "to use each appropriately"},
+        ],
+    },
+    {
+        "id": "n2-r07",
+        "title": "English in primary school",
+        "jp_title": "小学校の英語教育",
+        "kind": "Comparison (A/B)",
+        "minutes": 6,
+        "text": [
+            "A\n小学校から英語を学ぶことには、大きな意味があると思う。子供は耳がいいので、小さいうちから英語の音に慣れておけば、"
+            "自然な発音が身につきやすい。また、早い時期に外国の文化に触れることは、世界に目を向けるきっかけにもなるだろう。",
+            "B\n小学校で英語を教えることには、慎重であるべきだ。まずは母語である日本語で、しっかり考え、表現する力を育てることが"
+            "大切である。それに、英語を教えられる先生が十分にいないまま授業を増やしても、効果は期待できないのではないか。",
+        ],
+        "en": [
+            "A\nI think learning English from primary school is very worthwhile. Children have good ears, so if they get used to the "
+            "sounds of English while they're young, they pick up natural pronunciation more easily. Coming into contact with "
+            "foreign cultures early can also be a first step towards looking out at the world.",
+            "B\nWe should be careful about teaching English in primary school. First, it's important to develop the ability to think "
+            "and express oneself properly in Japanese, the mother tongue. Besides, if we add more lessons without enough teachers "
+            "who can teach English, can we really expect results?",
+        ],
+        "questions": [
+            {
+                "q": "AとBは、小学校での英語教育について、どのように述べているか。",
+                "choices": [
+                    "AもBも、早く始めたほうがいいと述べている。",
+                    "Aは良い点を挙げて賛成し、Bは問題点を挙げて慎重な考えを示している。",
+                    "AもBも、先生が足りないことを問題にしている。",
+                    "Aは発音より文化が大切だと述べ、Bは文化より発音が大切だと述べている。",
+                ],
+                "answer": 1,
+                "why": "A lists benefits (pronunciation, culture) and is in favour; B raises problems (mother tongue first, too few "
+                       "teachers) and urges caution (慎重であるべきだ). Only B mentions the teacher shortage.",
+            },
+            {
+                "q": "Bの筆者が、まず大切だと考えていることは何か。",
+                "choices": [
+                    "英語の発音を身につけること",
+                    "外国の文化に触れること",
+                    "日本語で考え、表現する力を育てること",
+                    "英語の授業を増やすこと",
+                ],
+                "answer": 2,
+                "why": "まずは母語である日本語で、しっかり考え、表現する力を育てることが大切である.",
+            },
+        ],
+        "vocab": [
+            {"word": "発音", "reading": "はつおん", "meaning": "pronunciation"},
+            {"word": "身につく", "reading": "みにつく", "meaning": "to be acquired, learned"},
+            {"word": "触れる", "reading": "ふれる", "meaning": "to come into contact with"},
+            {"word": "慎重", "reading": "しんちょう", "meaning": "careful, cautious"},
+            {"word": "母語", "reading": "ぼご", "meaning": "mother tongue"},
+            {"word": "期待", "reading": "きたい", "meaning": "expectation"},
+        ],
+    },
+    {
+        "id": "n2-r08",
+        "title": "How to enjoy a trip",
+        "jp_title": "旅の楽しみ方",
+        "kind": "Medium passage",
+        "minutes": 7,
+        "text": [
+            "旅行に行く前に、細かく計画を立てる人がいる。どの電車に乗り、何時にどこを見て、どの店で食事をするか、すべて決めておくのだ。"
+            "こうすれば、時間を無駄にせずに、見たい所を全部回ることができる。",
+            "私も以前はそうだった。しかし、ある旅行で、乗る予定の電車が止まってしまい、計画がすべてだめになったことがある。"
+            "仕方なく駅の近くを歩いていると、観光客がほとんど来ない小さな町を見つけた。地元の人が勧めてくれた食堂の料理は、"
+            "ガイドブックに載っているどの店よりもおいしかった。",
+            "それ以来、私は旅の計画に、あえて何も決めない時間を作るようにしている。予定どおりに進む旅は安心だが、"
+            "思いがけない出会いこそが、旅を忘れられないものにしてくれると思うからだ。",
+        ],
+        "en": [
+            "Some people plan their trips in detail before they go. Which trains to take, what to see when, which restaurants to eat "
+            "at: they decide everything in advance. That way, they can see everything they want without wasting time.",
+            "I used to be like that too. But once, on a trip, the train I'd planned to take stopped running, and my whole plan fell "
+            "apart. With nothing else to do, I walked around near the station and found a small town that tourists hardly ever "
+            "visit. The food at a little diner a local recommended was better than any restaurant in the guidebook.",
+            "Since then, I deliberately leave time with nothing planned on my trips. A trip that goes to plan is reassuring, but I "
+            "think it's the unexpected encounters that make a trip unforgettable.",
+        ],
+        "questions": [
+            {
+                "q": "筆者の計画が「すべてだめになった」のは、なぜか。",
+                "choices": [
+                    "乗る予定の電車が止まってしまったから",
+                    "天気が悪かったから",
+                    "計画を立てるのを忘れたから",
+                    "町が観光客でいっぱいだったから",
+                ],
+                "answer": 0,
+                "why": "乗る予定の電車が止まってしまい、計画がすべてだめになった.",
+            },
+            {
+                "q": "筆者は、小さな町でどんな経験をしたか。",
+                "choices": [
+                    "ガイドブックに載っている店で食事をした。",
+                    "地元の人に勧められた店の料理が、とてもおいしかった。",
+                    "観光客と友達になった。",
+                    "電車が動くまで、駅で待っていた。",
+                ],
+                "answer": 1,
+                "why": "地元の人が勧めてくれた食堂の料理は、ガイドブックに載っているどの店よりもおいしかった.",
+            },
+            {
+                "q": "筆者は今、旅行についてどう考えているか。",
+                "choices": [
+                    "時間を無駄にしないように、細かく計画を立てるべきだ。",
+                    "計画は立てずに、すべて自由に行動するべきだ。",
+                    "計画の中に、何も決めない時間を作るといい。",
+                    "有名な観光地だけを回るのがいい。",
+                ],
+                "answer": 2,
+                "why": "旅の計画に、あえて何も決めない時間を作るようにしている: the writer still plans, but leaves some time free. "
+                       "Choice 2 goes too far (no plan at all).",
+            },
+        ],
+        "vocab": [
+            {"word": "無駄", "reading": "むだ", "meaning": "waste"},
+            {"word": "地元", "reading": "じもと", "meaning": "local"},
+            {"word": "食堂", "reading": "しょくどう", "meaning": "diner, canteen"},
+            {"word": "載る", "reading": "のる", "meaning": "to appear (in print)"},
+            {"word": "あえて", "reading": "あえて", "meaning": "deliberately, on purpose"},
+            {"word": "思いがけない", "reading": "おもいがけない", "meaning": "unexpected"},
+        ],
+    },
+    {
+        "id": "n2-r09",
+        "title": "Summer events at the library",
+        "jp_title": "図書館の夏休みイベント",
+        "kind": "Information search",
+        "minutes": 6,
+        "text": [
+            "みどり市立図書館　夏休みイベントのご案内",
+            "①おはなし会（対象：3歳〜小学2年生）\n"
+            "・7月27日（土）、8月10日（土）　午前10時30分〜11時\n"
+            "・申し込み不要。当日、直接2階の子どもコーナーへお越しください。",
+            "②自由研究お助け講座（対象：小学3年生〜6年生）\n"
+            "・8月3日（土）　午後1時〜3時\n"
+            "・定員20名（先着順）。7月20日から、図書館のカウンターまたは電話でお申し込みください。",
+            "③英語の絵本を読もう（対象：小学生とその保護者）\n"
+            "・8月17日（土）　午後2時〜3時\n"
+            "・定員15組（申し込みが多い場合は抽選）。7月31日までに、図書館のホームページからお申し込みください。",
+            "※いずれも参加費は無料です。駐車場には限りがありますので、できるだけ公共交通機関をご利用ください。",
+        ],
+        "en": [
+            "Midori City Library: summer holiday events",
+            "1. Storytime (ages 3 to year 2 of primary school)\n"
+            "- Saturday 27 July and Saturday 10 August, 10:30 to 11 a.m.\n"
+            "- No sign-up needed. On the day, come straight to the children's corner on the 2nd floor.",
+            "2. Help with your summer research project (years 3 to 6 of primary school)\n"
+            "- Saturday 3 August, 1 to 3 p.m.\n"
+            "- 20 places (first come, first served). Sign up from 20 July at the library counter or by phone.",
+            "3. Let's read English picture books (primary school children and their parents)\n"
+            "- Saturday 17 August, 2 to 3 p.m.\n"
+            "- 15 pairs (a lottery if there are many applications). Sign up on the library website by 31 July.",
+            "* All events are free. Parking is limited, so please use public transport where possible.",
+        ],
+        "questions": [
+            {
+                "q": "小学4年生のけんたくんは、夏休みの宿題の自由研究について相談できるイベントに参加したい。どうすればいいか。",
+                "choices": [
+                    "当日、直接2階の子どもコーナーへ行く。",
+                    "7月20日以降に、カウンターか電話で申し込む。",
+                    "7月31日までに、ホームページから申し込む。",
+                    "申し込みをして、抽選の結果を待つ。",
+                ],
+                "answer": 1,
+                "why": "The research-project event (②) is for years 3 to 6, and sign-up opens on 20 July at the counter or by "
+                       "phone (7月20日から). The other methods belong to events ① and ③.",
+            },
+            {
+                "q": "このお知らせの内容と合っているものはどれか。",
+                "choices": [
+                    "イベントによっては、参加費がかかる。",
+                    "③のイベントは、申し込んだ人が全員参加できる。",
+                    "①のイベントは、申し込みをしなくても参加できる。",
+                    "図書館の駐車場は、いつでも十分に空いている。",
+                ],
+                "answer": 2,
+                "why": "① says 申し込み不要 (no sign-up needed). All events are free, ③ may hold a lottery, and parking is limited.",
+            },
+        ],
+        "vocab": [
+            {"word": "対象", "reading": "たいしょう", "meaning": "intended for, target group"},
+            {"word": "不要", "reading": "ふよう", "meaning": "not needed"},
+            {"word": "定員", "reading": "ていいん", "meaning": "capacity, number of places"},
+            {"word": "先着順", "reading": "せんちゃくじゅん", "meaning": "first come, first served"},
+            {"word": "抽選", "reading": "ちゅうせん", "meaning": "lottery, draw"},
+            {"word": "公共交通機関", "reading": "こうきょうこうつうきかん", "meaning": "public transport"},
+        ],
+    },
+    {
+        "id": "n2-r10",
+        "title": "Machine translation and learning languages",
+        "jp_title": "機械翻訳と語学学習",
+        "kind": "Medium passage",
+        "minutes": 8,
+        "text": [
+            "最近の機械翻訳は、驚くほど性能が上がった。スマートフォンに話しかけるだけで、外国語に訳してくれるアプリもある。"
+            "そのため、「もう外国語を勉強する必要はない」と考える人もいるようだ。",
+            "確かに、旅行先で道を聞いたり、買い物をしたりする程度なら、機械翻訳で十分かもしれない。しかし、言葉には、"
+            "その国の文化や考え方が深く結びついている。冗談の面白さや、遠回しな言い方に込められた気持ちまで、"
+            "機械が正確に伝えられるとは限らない。",
+            "外国語を学ぶことは、単に言葉を覚えることではなく、別の文化を持つ人の見方を知ることでもある。機械翻訳は便利な道具として"
+            "上手に使いつつも、自分の言葉で相手と向き合う努力を続けたいものだ。",
+        ],
+        "en": [
+            "Machine translation has improved surprisingly in recent years. There are even apps that translate into a foreign "
+            "language just by speaking to your smartphone. Because of this, some people seem to think there's no need to study "
+            "foreign languages any more.",
+            "It's true that for asking the way or shopping while travelling, machine translation may be enough. But language is "
+            "deeply tied to a country's culture and way of thinking. A machine can't always convey exactly what makes a joke "
+            "funny, or the feelings packed into an indirect way of saying something.",
+            "Learning a foreign language isn't simply memorising words; it's also learning how people from another culture see "
+            "things. While making good use of machine translation as a handy tool, I want to keep making the effort to engage "
+            "with others in my own words.",
+        ],
+        "questions": [
+            {
+                "q": "筆者によると、機械翻訳で十分なのはどんな場合か。",
+                "choices": [
+                    "冗談を言うとき",
+                    "旅行先で、簡単な会話をするとき",
+                    "外国の文化を学ぶとき",
+                    "遠回しな言い方を理解するとき",
+                ],
+                "answer": 1,
+                "why": "旅行先で道を聞いたり、買い物をしたりする程度なら、機械翻訳で十分かもしれない.",
+            },
+            {
+                "q": "「機械が正確に伝えられるとは限らない」とあるが、なぜか。",
+                "choices": [
+                    "機械翻訳の性能が、まだ低いから",
+                    "スマートフォンでしか使えないから",
+                    "言葉には、文化や考え方が深く結びついているから",
+                    "外国語を話す人が少ないから",
+                ],
+                "answer": 2,
+                "why": "The sentence before gives the reason: 言葉には、その国の文化や考え方が深く結びついている. "
+                       "The writer actually says performance has improved a lot.",
+            },
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "機械翻訳があれば、外国語を勉強する必要はない。",
+                    "機械翻訳は、使わないほうがいい。",
+                    "機械翻訳を上手に使いながらも、外国語を学ぶ努力を続けたい。",
+                    "外国語は、旅行に行く人だけが学べばいい。",
+                ],
+                "answer": 2,
+                "why": "機械翻訳は便利な道具として上手に使いつつも、自分の言葉で相手と向き合う努力を続けたい.",
+            },
+        ],
+        "vocab": [
+            {"word": "翻訳", "reading": "ほんやく", "meaning": "translation"},
+            {"word": "性能", "reading": "せいのう", "meaning": "performance (of a machine)"},
+            {"word": "訳す", "reading": "やくす", "meaning": "to translate"},
+            {"word": "結びつく", "reading": "むすびつく", "meaning": "to be tied to, connected"},
+            {"word": "冗談", "reading": "じょうだん", "meaning": "joke"},
+            {"word": "遠回し", "reading": "とおまわし", "meaning": "roundabout, indirect"},
+            {"word": "単に", "reading": "たんに", "meaning": "simply, merely"},
+        ],
+    },
 ]
 
 _BY_ID = {p["id"]: p for p in PASSAGES}
@@ -1082,7 +1656,7 @@ def get(passage_id: str) -> dict | None:
 
 
 def level(passage: dict) -> str:
-    """"N3" from the id prefix (n3-r01)."""
+    """The JLPT level from the id prefix: n3-r01 -> "N3", n2-r01 -> "N2"."""
     return passage["id"].split("-")[0].upper()
 
 
