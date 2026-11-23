@@ -580,6 +580,37 @@ kbd {
 .word-entry .btn { padding: .35rem .8rem; font-size: .85rem; }
 .credit { font-size: .7rem; color: var(--muted); margin: .75rem 0 0; }
 
+/* kanji */
+.kanji-actions { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.kanji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(4.6rem, 1fr)); gap: .45rem; }
+.kanji-tile { width: auto; height: 4.6rem; text-decoration: none; padding: .25rem; }
+.kanji-tile .k { font-size: 1.7rem; }
+.kanji-tile .r { font-family: var(--ui); font-size: .62rem; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kanji-detail { display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: start; }
+.kanji-stage { display: flex; flex-direction: column; align-items: center; gap: .5rem; }
+.kanji-stage svg, .kanji-review-answer svg {
+  background: var(--deep); border: 1px solid var(--border); border-radius: 12px; max-width: 100%; height: auto;
+}
+.stroke-grid { stroke: rgba(255, 255, 255, .07); stroke-width: .5; stroke-dasharray: 2 2; fill: none; }
+.stroke-ghost path { fill: none; stroke: rgba(255, 255, 255, .1); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.stroke-ink path { fill: none; stroke: var(--text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.stroke-nums text { fill: var(--accent); font-family: var(--mono); font-size: 7px; }
+.kanji-big { font-family: var(--jp); font-size: 4.5rem; line-height: 1; margin-bottom: .4rem; }
+.kanji-meaning { font-size: 1.5rem; margin: 0 0 1rem; }
+.kanji-meaning::first-letter { text-transform: uppercase; }
+.kanji-reading { display: flex; align-items: center; gap: .6rem; margin-bottom: .5rem; }
+.kanji-reading .label { font-family: var(--mono); font-size: .72rem; color: var(--muted); min-width: 4rem; }
+.kanji-reading .values { font-size: 1.15rem; }
+.kanji-reading .speak { width: 2rem; height: 2rem; font-size: .85rem; }
+.kanji-review-char { font-size: clamp(4rem, 16vw, 6rem); }
+.kanji-review-answer { display: flex; gap: 1.25rem; align-items: center; text-align: left; margin-bottom: .5rem; }
+@media (max-width: 640px) {
+  .kanji-detail { grid-template-columns: 1fr; gap: 1rem; }
+  .kanji-info { text-align: center; }
+  .kanji-reading { justify-content: center; }
+  .kanji-review-answer { flex-direction: column; text-align: center; }
+}
+
 /* quiz */
 .quiz-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .5rem; padding: .5rem 0; }
 .quiz-type { font-family: var(--mono); font-size: .75rem; color: var(--muted); display: flex; gap: .5rem; align-items: center; }

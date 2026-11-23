@@ -258,6 +258,7 @@ const views = {
   notebook: renderNotebook,
   lessons: renderLessons,
   quiz: renderQuiz,
+  kanji: renderKanji,
 };
 
 function route() {
@@ -497,7 +498,7 @@ function chartTip(container) {
 
 const SERIES = [
   ["kana", "Kana reviews", "var(--series-1)"],
-  ["deck", "Word & mistake reviews", "var(--series-2)"],
+  ["deck", "Word, kanji & mistake reviews", "var(--series-2)"],
   ["quiz", "Quiz questions", "var(--series-3)"],
 ];
 
@@ -641,6 +642,9 @@ async function renderProgress() {
     meter("Katakana", known(data.kana.katakana), data.kana.katakana.total, `${known(data.kana.katakana)} / ${data.kana.katakana.total}`),
     meter("N5 lessons", data.lessons.N5.done, data.lessons.N5.total, `${data.lessons.N5.done} / ${data.lessons.N5.total} complete`),
     meter("N4 lessons", data.lessons.N4.done, data.lessons.N4.total, `${data.lessons.N4.done} / ${data.lessons.N4.total} complete`),
+    ...["N5", "N4"].filter(lvl => data.kanji?.[lvl]).map(lvl =>
+      meter(`Kanji (${lvl} list)`, known(data.kanji[lvl]), data.kanji[lvl].total,
+        `${known(data.kanji[lvl])} known · ${data.kanji[lvl].total} total`)),
     meter("Vocabulary (≈800 for N5)", known(data.vocab), data.vocab.target, `${known(data.vocab)} known · ${data.vocab.saved} saved`),
     ...quizMeters);
 
@@ -854,14 +858,76 @@ async function renderReview() {
   await loadBatch();
 
   // Kana first (quick, typed), then saved words and mistakes (self-graded).
+  // Order: kana, then saved words and mistakes, then kanji.
   async function loadBatch() {
-    const [kanaData, deckData] = await Promise.all([api.get("/api/kana/review"), api.get("/api/deck/review")]);
-    const total = kanaData.due_count + deckData.due_count;
+    const [kanaData, deckData, kanjiData] = await Promise.all([
+      api.get("/api/kana/review"), api.get("/api/deck/review"),
+      api.get("/api/kanji/review").catch(() => ({ cards: [], due_count: 0, next_due: null })),
+    ]);
+    const total = kanaData.due_count + deckData.due_count + kanjiData.due_count;
     updateBadge(total);
     if (kanaData.cards.length) return showCard(kanaData.cards, 0, total);
-    if (deckData.cards.length) return showDeckCard(deckData.cards, 0, deckData.due_count);
-    const upcoming = [kanaData.next_due, deckData.next_due].filter(Boolean);
+    if (deckData.cards.length) return showDeckCard(deckData.cards, 0, deckData.due_count + kanjiData.due_count);
+    if (kanjiData.cards.length) return showKanjiCard(kanjiData.cards, 0, kanjiData.due_count);
+    const upcoming = [kanaData.next_due, deckData.next_due, kanjiData.next_due].filter(Boolean);
     finished(upcoming.length ? Math.min(...upcoming) : null);
+  }
+
+  function showKanjiCard(cards, idx, dueCount) {
+    if (idx >= cards.length) return loadBatch();
+    const card = cards[idx];
+    const remaining = dueCount - idx;
+    const shownAt = performance.now();
+    const stage = el("div", { class: "card-stage" });
+    const reveal = el("div", { class: "reveal" });
+    let keyHandler = null;
+    const setKeys = fn => {
+      if (keyHandler) document.removeEventListener("keydown", keyHandler);
+      keyHandler = fn;
+      if (fn) document.addEventListener("keydown", fn);
+    };
+    onCleanup(() => setKeys(null));
+
+    async function grade(rating) {
+      setKeys(null);
+      stage.querySelectorAll("button").forEach(b => { b.disabled = true; });
+      await api.post("/api/kanji/review", { card_id: card.id, rating, elapsed_ms: Math.round(performance.now() - shownAt) });
+      session.reviewed++;
+      if (rating !== "again") session.correct++;
+      updateBadge(Math.max(0, remaining - 1));
+      showKanjiCard(cards, idx + 1, dueCount);
+    }
+
+    function showAnswer() {
+      const example = card.examples[0];
+      const diagram = strokeDiagram(card.strokes, { size: 120, numbers: false });
+      reveal.replaceChildren(
+        el("div", { class: "kanji-review-answer" },
+          diagram.node,
+          el("div", {},
+            el("div", { class: "meaning" }, card.meanings.slice(0, 3).join(", ")),
+            card.on.length ? el("div", { class: "kanji-reading" }, el("span", { class: "label" }, "On"), el("span", { lang: "ja" }, card.on.join("、"))) : "",
+            card.kun.length ? el("div", { class: "kanji-reading" }, el("span", { class: "label" }, "Kun"), el("span", { lang: "ja" }, card.kun.join("、"))) : "",
+            example ? el("div", { class: "muted" }, el("span", { lang: "ja" }, `${example.word} (${example.reading})`), ` ${example.meaning}`) : "")),
+        el("div", { class: "grade-row" },
+          [["again", "Again", "forgot"], ["hard", "Hard", "barely"], ["good", "Good", "knew it"], ["easy", "Easy", "instant"]]
+            .map(([r, label, hint], n) => el("button", { class: `btn grade-${r}`, type: "button", onclick: () => grade(r) },
+              label, el("small", {}, `${n + 1} · ${hint}`)))));
+      later(diagram.play, 100);
+      if (example) speak(example.word);
+      setKeys(e => {
+        const r = ["again", "hard", "good", "easy"][Number(e.key) - 1];
+        if (r) grade(r);
+      });
+    }
+
+    reveal.append(el("button", { class: "btn btn-primary", type: "button", onclick: showAnswer }, "Show answer"));
+    setKeys(e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showAnswer(); } });
+    stage.append(
+      el("div", { class: "prompt-label" }, "What does this kanji mean, and how is it read?"),
+      el("div", { class: "big-word kanji-review-char", lang: "ja" }, card.kanji),
+      reveal);
+    body.replaceChildren(sessionBar(remaining), stage);
   }
 
   function sessionBar(remaining) {
@@ -1399,6 +1465,158 @@ async function renderLesson(body, id) {
     el("p", { class: "hint" }, "Tip: click any Japanese word to look it up."),
   );
   window.scrollTo(0, 0);
+}
+
+/* ================= kanji ================= */
+
+const KANJI_GROUPS = {
+  N5: ["N5", "Closest to JLPT N5 (KANJIDIC's old level-4 list)"],
+  N4: ["N4", "Closest to JLPT N4 (KANJIDIC's old level-3 list)"],
+  lessons: ["From lessons", "Kanji used in your lessons that are on neither list"],
+};
+
+// Stroke-order diagram from KanjiVG paths (109×109). Strokes draw one by one;
+// a faint copy underneath shows the whole character.
+function strokeDiagram(paths, { size = 220, numbers = true } = {}) {
+  const ghost = svg("g", { class: "stroke-ghost" }, paths.map(d => svg("path", { d })));
+  const ink = svg("g", { class: "stroke-ink" }, paths.map(d => svg("path", { d })));
+  const nums = svg("g", { class: "stroke-nums" });
+  const root = svg("svg", { viewBox: "0 0 109 109", width: size, height: size, role: "img",
+    "aria-label": `Stroke order, ${paths.length} strokes` },
+    svg("path", { class: "stroke-grid", d: "M54.5 0V109M0 54.5H109" }), ghost, ink, nums);
+  let run = 0;
+
+  async function play() {
+    const myRun = ++run;
+    const strokes = [...ink.children];
+    nums.replaceChildren();
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    for (const [i, p] of strokes.entries()) {
+      const len = p.getTotalLength();
+      p.style.strokeDasharray = `${len}`;
+      p.style.strokeDashoffset = reduce ? "0" : `${len}`;
+    }
+    for (const [i, p] of strokes.entries()) {
+      if (myRun !== run) return; // replay pressed: abandon this run
+      if (numbers) {
+        const start = p.getPointAtLength(0);
+        nums.append(svg("text", { x: start.x - 3, y: start.y - 2 }, String(i + 1)));
+      }
+      if (reduce) continue;
+      const len = p.getTotalLength();
+      await p.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }],
+        { duration: Math.max(280, len * 9), easing: "ease-in-out", fill: "forwards" }).finished;
+      p.style.strokeDashoffset = "0";
+      await new Promise(r => setTimeout(r, 90));
+    }
+  }
+  return { node: root, play };
+}
+
+function kanjiTile(k) {
+  return el("a", { class: `kanji-tile cell ${k.status}`, href: `#kanji/${encodeURIComponent(k.kanji)}`,
+    title: `${k.kanji}: ${k.meaning}` },
+    el("span", { class: "k", lang: "ja" }, k.kanji),
+    el("span", { class: "r" }, k.meaning));
+}
+
+async function renderKanji() {
+  const body = $("#kanji-body");
+  if (routeArg) return renderKanjiDetail(body, decodeURIComponent(routeArg));
+  const data = await api.get("/api/kanji");
+  if (!data.available) {
+    body.replaceChildren(el("div", { class: "empty" },
+      el("h2", {}, "Kanji data isn't installed"),
+      el("p", {}, "Download KANJIDIC2 (data/dict/kanjidic2.xml.gz) and KanjiVG (data/kanjivg) to use this section.")));
+    return;
+  }
+  const group = prefs.get("kanji.group", "N5");
+  const items = data.groups[group] || [];
+  const known = items.filter(k => k.status === "known" || k.status === "mastered").length;
+  const studying = items.filter(k => k.status !== "locked").length;
+
+  const tabs = el("div", { class: "segmented" }, Object.entries(KANJI_GROUPS).map(([g, [label]]) =>
+    el("button", { type: "button", class: g === group ? "active" : "",
+      onclick: () => { prefs.set("kanji.group", g); renderKanji(); } }, label)));
+  const learnBtn = el("button", { class: "btn btn-primary", type: "button", disabled: studying === items.length },
+    el("span", { class: "arrow" }, "Add next 5 to reviews"));
+  learnBtn.addEventListener("click", async () => {
+    learnBtn.disabled = true;
+    const { added } = await api.post("/api/kanji/learn-next", { group, count: 5 });
+    refreshBadge();
+    await renderKanji();
+    if (added.length) $("#kanji-added").textContent = `Added ${added.join(" ")} to your reviews.`;
+  });
+
+  body.replaceChildren(
+    el("div", { class: "panel-head" },
+      el("h2", {}, "Kanji"),
+      tabs),
+    el("p", { class: "muted", style: "margin-top:-.4rem" }, KANJI_GROUPS[group][1],
+      ". Tap a kanji for its stroke order, readings and example words."),
+    el("div", { class: "progress-line" },
+      el("div", { class: "progress" }, el("div", { class: "progress-fill", style: `width:${items.length ? known / items.length * 100 : 0}%` })),
+      el("span", {}, `${known} / ${items.length} known · ${studying} studying`)),
+    el("div", { class: "kanji-actions" }, learnBtn, el("span", { class: "muted", id: "kanji-added", role: "status" })),
+    el("div", { class: "legend" },
+      el("span", {}, el("i", { class: "dot locked" }), "Not studied"),
+      el("span", {}, el("i", { class: "dot learning" }), "Learning"),
+      el("span", {}, el("i", { class: "dot known" }), "Known"),
+      el("span", {}, el("i", { class: "dot mastered" }), "Mastered")),
+    el("div", { class: "kanji-grid" }, items.map(kanjiTile)),
+    el("p", { class: "credit" }, "Readings and meanings: KANJIDIC2 (EDRDG, CC BY-SA 4.0). Stroke order: KanjiVG (Ulrich Apel, CC BY-SA 3.0)."),
+  );
+}
+
+async function renderKanjiDetail(body, ch) {
+  const k = await api.get(`/api/kanji/${encodeURIComponent(ch)}`);
+  prefetchSpeech(k.examples.map(e => e.word));
+  const diagram = strokeDiagram(k.stroke_paths);
+  const kunForSpeech = r => r.replace(/[()]/g, "");
+  const reading = (label, list, speakText) => list.length ? el("div", { class: "kanji-reading" },
+    el("span", { class: "label" }, label),
+    el("span", { class: "values", lang: "ja" }, list.join("、")),
+    speakButton(speakText(list[0]))) : "";
+
+  const add = el("button", { class: "btn btn-primary", type: "button", disabled: k.status !== "locked" },
+    k.status === "locked" ? el("span", { class: "arrow" }, "Add to reviews") : "In your reviews ✓");
+  add.addEventListener("click", async () => {
+    add.disabled = true;
+    await api.post(`/api/kanji/${encodeURIComponent(ch)}/learn`, {});
+    add.textContent = "In your reviews ✓";
+    refreshBadge();
+  });
+
+  body.replaceChildren(
+    el("div", { class: "lesson-head" },
+      el("a", { class: "back", href: "#kanji" }, "← All kanji"),
+      el("div", { class: "lesson-level" }, `${KANJI_GROUPS[k.group][0]} · ${k.position} / ${k.group_size} · ${k.strokes} strokes`)),
+    el("div", { class: "kanji-detail" },
+      el("div", { class: "kanji-stage" },
+        diagram.node,
+        el("button", { class: "btn btn-ghost", type: "button", onclick: diagram.play }, "↻ Replay strokes")),
+      el("div", { class: "kanji-info" },
+        el("div", { class: "kanji-big", lang: "ja" }, k.kanji),
+        el("h2", { class: "kanji-meaning" }, k.meanings.join(", ")),
+        reading("On (音)", k.on, r => r),
+        reading("Kun (訓)", k.kun, kunForSpeech),
+        k.lesson_label && el("p", { class: "muted" }, "First used in ",
+          el("a", { href: `#lessons/${k.lesson}` }, k.lesson_label)),
+        el("div", { class: "btn-row", style: "justify-content:flex-start" }, add))),
+    el("div", { class: "lesson-section" },
+      el("h3", {}, "Example words"),
+      el("table", { class: "vocab-table" }, el("tbody", {}, k.examples.map(x =>
+        el("tr", {},
+          el("td", {}, richEl("div", { class: "vw", lang: "ja" }, x.segments)),
+          el("td", { class: "vr", lang: "ja" }, x.reading),
+          el("td", { class: "vm" }, x.meaning, x.lesson ? el("span", { class: "tag", style: "margin-left:.4rem" }, "lesson") : ""),
+          el("td", {}, speakButton(x.word))))))),
+    el("div", { class: "lesson-actions" },
+      k.prev && el("a", { class: "btn", href: `#kanji/${encodeURIComponent(k.prev)}` }, `← ${k.prev}`),
+      k.next && el("a", { class: "btn", href: `#kanji/${encodeURIComponent(k.next)}` }, `${k.next} →`)),
+  );
+  window.scrollTo(0, 0);
+  later(diagram.play, 250);
 }
 
 /* ================= quiz ================= */

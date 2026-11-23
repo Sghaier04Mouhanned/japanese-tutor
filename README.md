@@ -33,6 +33,13 @@ passing the JLPT (N5, then N4), powered by a free AI API or a local model.
 - Last 30 days of study (kana, words & mistakes, quizzes) with hover details and a table view
 - Quiz score trend; study days, total reviews and quizzes
 
+**Kanji study**
+- 387 kanji: the lists closest to N5 and N4 (KANJIDIC's old JLPT levels 4 and 3) plus every
+  other kanji used in the lessons
+- Animated stroke order (KanjiVG), on/kun readings with audio, meanings, and example words
+  (lesson vocabulary first, then common dictionary words)
+- Add kanji to your reviews one by one or five at a time; they join the Review tab and the dashboard
+
 **Dictionary, notebook and reviews**
 - Click any Japanese word (chat or lessons) to look it up in JMdict and save it
 - Sensei logs the mistakes it corrects; they come back as review cards
@@ -84,6 +91,15 @@ JMdict is © the Electronic Dictionary Research and Development Group, used unde
 Speech recognition downloads the Whisper "small" model (~480 MB) into `data/models/`
 the first time you press a 🎤 button.
 
+For kanji study, add KANJIDIC2 and KanjiVG (the index builds itself on first use):
+
+```bash
+curl -o data/dict/kanjidic2.xml.gz http://ftp.edrdg.org/pub/Nihongo/kanjidic2.xml.gz
+# KanjiVG "main" zip from https://github.com/KanjiVG/kanjivg/releases, unzipped into data/kanjivg/
+```
+
+KANJIDIC2 is © EDRDG (CC BY-SA 4.0); KanjiVG is © Ulrich Apel (CC BY-SA 3.0).
+
 For natural Japanese voices, download the VOICEVOX engine (Windows CPU `.vvpp` from
 https://github.com/VOICEVOX/voicevox_engine/releases, ~1.9 GB) and unzip it into
 `data/voicevox/engine/`. The app starts it automatically and falls back to the browser's
@@ -122,6 +138,7 @@ app/
   quiz.py       JLPT-style question generator (+ quiz_api.py)
   speech.py     Whisper transcription and shadowing comparison (+ speech_api.py)
   tts.py        VOICEVOX engine control and cached speech synthesis (+ tts_api.py)
+  kanji.py      kanji index from KANJIDIC2 + KanjiVG strokes (+ kanji_api.py)
   kana_api.py   kana endpoints (groups, unlock, review, stats)
   kana.py       kana tables and answer checking
   srs.py        FSRS spaced-repetition wrapper

@@ -1,0 +1,156 @@
+import time
+
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
+
+from . import furigana, kanji, lessons, srs
+from .db import connect
+from .srs import Rating
+
+router = APIRouter(prefix="/api/kanji", tags=["kanji"])
+
+_RATINGS = {"again": Rating.Again, "hard": Rating.Hard, "good": Rating.Good, "easy": Rating.Easy}
+_LESSON_ORDER = {les["id"]: i for i, les in enumerate(lessons.LESSONS)}
+
+
+def _ordered(group: str) -> list[dict]:
+    """A group's kanji in study order: frequency for the JLPT lists, lesson
+    order for kanji that only come from the lessons."""
+    items = [e for e in kanji.all_kanji().values() if e["group"] == group]
+    if group == "lessons":
+        return sorted(items, key=lambda e: (_LESSON_ORDER.get(e["lesson"], 999), e["strokes"]))
+    return sorted(items, key=lambda e: (e["freq"] or 9999, e["strokes"]))
+
+
+def _statuses(conn) -> dict[str, str]:
+    return {r["kanji"]: srs.status(r["state"], r["stability"])
+            for r in conn.execute("SELECT kanji, state, stability FROM kanji_cards")}
+
+
+def _require_data() -> None:
+    if not kanji.available():
+        raise HTTPException(503, "Kanji data isn't installed (data/dict/kanjidic2.xml.gz).")
+
+
+def _add_card(conn, ch: str) -> bool:
+    row = srs.to_row(srs.new_card())
+    cur = conn.execute(
+        """INSERT OR IGNORE INTO kanji_cards (kanji, state, stability, due_ts, fsrs, created_at)
+           VALUES (?, ?, ?, ?, ?, ?)""",
+        (ch, row["state"], row["stability"], row["due_ts"], row["fsrs"], time.time()),
+    )
+    return cur.rowcount > 0
+
+
+@router.get("")
+def list_kanji():
+    if not kanji.available():
+        return {"available": False, "groups": {}}
+    with connect() as conn:
+        status = _statuses(conn)
+    return {"available": True, "groups": {
+        group: [{"kanji": e["kanji"], "meaning": (e["meanings"] or [""])[0], "strokes": e["strokes"],
+                 "in_lessons": bool(e["lesson"]), "status": status.get(e["kanji"], "locked")}
+                for e in _ordered(group)]
+        for group in kanji.GROUPS
+    }}
+
+
+# ---------- reviews (declared before /{ch} so "review" isn't read as a kanji) ----------
+
+def due_count(conn, now: float | None = None) -> int:
+    return conn.execute("SELECT COUNT(*) FROM kanji_cards WHERE due_ts <= ?", (now or time.time(),)).fetchone()[0]
+
+
+@router.get("/review")
+def kanji_review(limit: int = 50):
+    now = time.time()
+    with connect() as conn:
+        rows = conn.execute("SELECT id, kanji FROM kanji_cards WHERE due_ts <= ? ORDER BY due_ts LIMIT ?",
+                            (now, limit)).fetchall()
+        count = due_count(conn, now)
+        next_due = conn.execute("SELECT MIN(due_ts) FROM kanji_cards WHERE due_ts > ?", (now,)).fetchone()[0]
+    cards = []
+    for r in rows:
+        e = kanji.get(r["kanji"])
+        if e:
+            cards.append({"id": r["id"], "kanji": e["kanji"], "meanings": e["meanings"], "on": e["on"],
+                          "kun": e["kun"], "examples": e["examples"][:2], "strokes": kanji.strokes(e["kanji"])})
+    return {"cards": cards, "due_count": count, "next_due": next_due}
+
+
+class KanjiAnswer(BaseModel):
+    card_id: int
+    rating: str
+    elapsed_ms: int | None = Field(default=None, ge=0)
+
+
+@router.post("/review")
+def kanji_answer(ans: KanjiAnswer):
+    rating = _RATINGS.get(ans.rating)
+    if rating is None:
+        raise HTTPException(400, f"rating must be one of {list(_RATINGS)}")
+    with connect() as conn:
+        row = conn.execute("SELECT id, fsrs FROM kanji_cards WHERE id = ?", (ans.card_id,)).fetchone()
+        if row is None:
+            raise HTTPException(404, "card not found")
+        new = srs.to_row(srs.review(row["fsrs"], rating, ans.elapsed_ms))
+        conn.execute("UPDATE kanji_cards SET state = ?, stability = ?, due_ts = ?, fsrs = ? WHERE id = ?",
+                     (new["state"], new["stability"], new["due_ts"], new["fsrs"], row["id"]))
+        conn.execute("INSERT INTO kanji_reviews (card_id, rating, elapsed_ms, reviewed_at) VALUES (?, ?, ?, ?)",
+                     (row["id"], int(rating), ans.elapsed_ms, time.time()))
+    return {"next_due": new["due_ts"]}
+
+
+class LearnNext(BaseModel):
+    group: str
+    count: int = Field(default=5, ge=1, le=20)
+
+
+@router.post("/learn-next")
+def learn_next(body: LearnNext):
+    """Add the next few not-yet-studied kanji of a group to the reviews."""
+    _require_data()
+    if body.group not in kanji.GROUPS:
+        raise HTTPException(404, "unknown group")
+    with connect() as conn:
+        status = _statuses(conn)
+        todo = [e["kanji"] for e in _ordered(body.group) if e["kanji"] not in status][: body.count]
+        for ch in todo:
+            _add_card(conn, ch)
+    return {"added": todo}
+
+
+# ---------- single kanji ----------
+
+@router.get("/{ch}")
+def kanji_detail(ch: str):
+    _require_data()
+    e = kanji.get(ch)
+    if e is None:
+        raise HTTPException(404, "kanji not in the study set")
+    order = [x["kanji"] for x in _ordered(e["group"])]
+    i = order.index(ch)
+    with connect() as conn:
+        status = _statuses(conn).get(ch, "locked")
+    lesson = lessons.get(e["lesson"]) if e["lesson"] else None
+    return {
+        **e,
+        "status": status,
+        "stroke_paths": kanji.strokes(ch),
+        "examples": [{**x, "segments": furigana.annotate(x["word"])} for x in e["examples"]],
+        "lesson_label": f"{lessons.label(lesson)}: {lesson['title']}" if lesson else None,
+        "prev": order[i - 1] if i > 0 else None,
+        "next": order[i + 1] if i + 1 < len(order) else None,
+        "position": i + 1, "group_size": len(order),
+    }
+
+
+@router.post("/{ch}/learn")
+def learn(ch: str):
+    _require_data()
+    if kanji.get(ch) is None:
+        raise HTTPException(404, "kanji not in the study set")
+    with connect() as conn:
+        added = _add_card(conn, ch)
+    return {"added": added}

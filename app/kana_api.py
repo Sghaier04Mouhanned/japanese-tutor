@@ -167,11 +167,13 @@ def get_stats():
         # Due counts cover everything in the Review tab: kana, words and mistakes.
         due_count = conn.execute(
             """SELECT (SELECT COUNT(*) FROM kana_cards WHERE due_ts <= :now)
-                    + (SELECT COUNT(*) FROM deck_cards WHERE due_ts <= :now)""", {"now": now}
+                    + (SELECT COUNT(*) FROM deck_cards WHERE due_ts <= :now)
+                    + (SELECT COUNT(*) FROM kanji_cards WHERE due_ts <= :now)""", {"now": now}
         ).fetchone()[0]
         next_due = conn.execute(
             """SELECT MIN(t) FROM (SELECT MIN(due_ts) AS t FROM kana_cards WHERE due_ts > :now
-                                  UNION ALL SELECT MIN(due_ts) FROM deck_cards WHERE due_ts > :now)""",
+                                  UNION ALL SELECT MIN(due_ts) FROM deck_cards WHERE due_ts > :now
+                                  UNION ALL SELECT MIN(due_ts) FROM kanji_cards WHERE due_ts > :now)""",
             {"now": now},
         ).fetchone()[0]
         reviews_today, correct_today = conn.execute(
@@ -182,7 +184,8 @@ def get_stats():
             r[0] for r in conn.execute(
                 """SELECT DISTINCT date(reviewed_at, 'unixepoch', 'localtime') AS d FROM (
                        SELECT reviewed_at FROM kana_reviews
-                       UNION ALL SELECT reviewed_at FROM deck_reviews)
+                       UNION ALL SELECT reviewed_at FROM deck_reviews
+                       UNION ALL SELECT reviewed_at FROM kanji_reviews)
                    ORDER BY d DESC"""
             ).fetchall()
         ]

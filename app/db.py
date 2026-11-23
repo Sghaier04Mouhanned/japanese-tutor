@@ -88,6 +88,26 @@ CREATE TABLE IF NOT EXISTS deck_cards (
 );
 CREATE INDEX IF NOT EXISTS idx_deck_cards_due ON deck_cards (due_ts);
 
+-- Kanji the learner is studying (spaced repetition, like kana_cards).
+CREATE TABLE IF NOT EXISTS kanji_cards (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    kanji       TEXT    NOT NULL UNIQUE,
+    state       INTEGER NOT NULL,
+    stability   REAL,
+    due_ts      REAL    NOT NULL,
+    fsrs        TEXT    NOT NULL,
+    created_at  REAL    NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_kanji_cards_due ON kanji_cards (due_ts);
+
+CREATE TABLE IF NOT EXISTS kanji_reviews (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    card_id     INTEGER NOT NULL REFERENCES kanji_cards (id) ON DELETE CASCADE,
+    rating      INTEGER NOT NULL,
+    elapsed_ms  INTEGER,
+    reviewed_at REAL    NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS quiz_sessions (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     created_at  REAL    NOT NULL,
