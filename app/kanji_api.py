@@ -14,11 +14,15 @@ _LESSON_ORDER = {les["id"]: i for i, les in enumerate(lessons.LESSONS)}
 
 
 def _ordered(group: str) -> list[dict]:
-    """A group's kanji in study order: frequency for the JLPT lists, lesson
-    order for kanji that only come from the lessons."""
+    """A group's kanji in study order: frequency for the N5/N4 lists, lesson
+    order for kanji that only come from the lessons. The N3 list puts kanji the
+    lessons use first (in lesson order), then lower school grades, so it
+    doesn't open with newspaper kanji like 政 and 議."""
     items = [e for e in kanji.all_kanji().values() if e["group"] == group]
     if group == "lessons":
         return sorted(items, key=lambda e: (_LESSON_ORDER.get(e["lesson"], 999), e["strokes"]))
+    if group == "N3":
+        return sorted(items, key=lambda e: (_LESSON_ORDER.get(e["lesson"], 999), e["grade"] or 9, e["freq"] or 9999))
     return sorted(items, key=lambda e: (e["freq"] or 9999, e["strokes"]))
 
 

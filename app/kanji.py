@@ -29,7 +29,12 @@ STROKES_DIR = ROOT / "data" / "kanjivg" / "kanji"
 # KANJIDIC only has the pre-2010 four-level JLPT tags. Old level 4 is the closest
 # match for today's N5, old level 3 for N4. We say "closest to", not "official".
 OLD_JLPT_TO_LEVEL = {4: "N5", 3: "N4"}
-GROUPS = ("N5", "N4", "lessons")  # "lessons": in the lessons but on neither list
+# Old level 2 (~740 kanji) covers today's N3 and N2 together. Today's N3 adds about
+# 370 kanji to N4, so "closest to N3" is the 300 most frequent old level-2 kanji
+# plus the old level-2 kanji the lessons already use (371 in all).
+N3_OLD_LEVEL = 2
+N3_MOST_FREQUENT = 300
+GROUPS = ("N5", "N4", "N3", "lessons")  # "lessons": in the lessons but on none of the lists
 
 _KANJI_CHAR = re.compile(r"[一-鿿々]")
 _lock = threading.Lock()
@@ -64,8 +69,8 @@ def build() -> int:
             if elem.tag != "character":
                 continue
             literal = elem.findtext("literal")
-            jlpt = elem.findtext("misc/jlpt")
-            level = OLD_JLPT_TO_LEVEL.get(int(jlpt)) if jlpt else None
+            jlpt = int(elem.findtext("misc/jlpt") or 0)
+            level = OLD_JLPT_TO_LEVEL.get(jlpt) or ("N3" if jlpt == N3_OLD_LEVEL else None)
             if level or literal in in_lessons:
                 rm = elem.find("reading_meaning/rmgroup")
                 on = [r.text for r in rm.findall("reading[@r_type='ja_on']")] if rm is not None else []
@@ -84,6 +89,13 @@ def build() -> int:
                     "lesson": in_lessons.get(literal),
                 }
             elem.clear()
+
+    # Narrow old level 2 down to the N3 share (see N3_MOST_FREQUENT).
+    old2 = sorted((e for e in entries.values() if e["group"] == "N3"), key=lambda e: e["freq"] or 9999)
+    keep = {e["kanji"] for e in old2[:N3_MOST_FREQUENT]} | {e["kanji"] for e in old2 if e["kanji"] in in_lessons}
+    for e in old2:
+        if e["kanji"] not in keep:
+            del entries[e["kanji"]]
 
     _add_examples(entries)
     INDEX.write_text(json.dumps(entries, ensure_ascii=False), encoding="utf-8")
@@ -114,8 +126,8 @@ def _add_examples(entries: dict[str, dict]) -> None:
     ).fetchall()
     conn.close()
     # JMdict ranks by newspaper frequency (日米, 同日 rank high). For learners,
-    # first prefer words whose kanji are all on the N5/N4 lists.
-    beginner = {k for k, e in entries.items() if e["group"] in ("N5", "N4")}
+    # first prefer words whose kanji are all on the N5/N4/N3 lists.
+    beginner = {k for k, e in entries.items() if e["group"] in ("N5", "N4", "N3")}
     rows.sort(key=lambda r: (not set(_KANJI_CHAR.findall(r[0])) <= beginner, r[2], len(r[0])))
     for form, data, _priority, entry_id in rows:
         for ch in set(form) & entries.keys():
@@ -136,9 +148,11 @@ def available() -> bool:
 def _load() -> dict[str, dict]:
     with _lock:
         data = json.loads(INDEX.read_text(encoding="utf-8")) if INDEX.exists() else None
-        # Rebuild when new lessons use kanji the index doesn't have (or has under another lesson).
-        if data is None or (SOURCE.exists() and any(
-                data.get(ch, {}).get("lesson") != lid for ch, lid in _lesson_kanji().items())):
+        # Rebuild when new lessons use kanji the index doesn't have (or has under another
+        # lesson), or when the index predates a group (the N3 list).
+        if data is None or (SOURCE.exists() and (
+                {e["group"] for e in data.values()} != set(GROUPS)
+                or any(data.get(ch, {}).get("lesson") != lid for ch, lid in _lesson_kanji().items()))):
             build()
             data = json.loads(INDEX.read_text(encoding="utf-8"))
         return data

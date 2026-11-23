@@ -641,7 +641,7 @@ async function renderProgress() {
     meter("Hiragana", known(data.kana.hiragana), data.kana.hiragana.total, `${known(data.kana.hiragana)} / ${data.kana.hiragana.total}`),
     meter("Katakana", known(data.kana.katakana), data.kana.katakana.total, `${known(data.kana.katakana)} / ${data.kana.katakana.total}`),
     ...Object.entries(data.lessons).map(([lvl, l]) => meter(`${lvl} lessons`, l.done, l.total, `${l.done} / ${l.total} complete`)),
-    ...["N5", "N4"].filter(lvl => data.kanji?.[lvl]).map(lvl =>
+    ...["N5", "N4", "N3"].filter(lvl => data.kanji?.[lvl]).map(lvl =>
       meter(`Kanji (${lvl} list)`, known(data.kanji[lvl]), data.kanji[lvl].total,
         `${known(data.kanji[lvl])} known · ${data.kanji[lvl].total} total`)),
     meter("Vocabulary (≈800 for N5)", known(data.vocab), data.vocab.target, `${known(data.vocab)} known · ${data.vocab.saved} saved`),
@@ -1516,7 +1516,8 @@ async function renderLesson(body, id) {
 const KANJI_GROUPS = {
   N5: ["N5", "Closest to JLPT N5 (KANJIDIC's old level-4 list)"],
   N4: ["N4", "Closest to JLPT N4 (KANJIDIC's old level-3 list)"],
-  lessons: ["From lessons", "Kanji used in your lessons that are on neither list"],
+  N3: ["N3", "Closest to JLPT N3: the 300 most common kanji of KANJIDIC's old level-2 list (which mixes N3 and N2), plus the ones your lessons use"],
+  lessons: ["From lessons", "Kanji used in your lessons that are on none of the lists above"],
 };
 
 // Stroke-order diagram from KanjiVG paths (109×109). Strokes draw one by one;
@@ -1854,7 +1855,7 @@ async function renderWritingSession(body) {
   const results = [];
   let i = 0;
 
-  const sources = el("div", { class: "segmented" }, [["studied", "My kanji"], ["N5", "N5 list"], ["N4", "N4 list"]].map(([s, label]) =>
+  const sources = el("div", { class: "segmented" }, [["studied", "My kanji"], ["N5", "N5 list"], ["N4", "N4 list"], ["N3", "N3 list"]].map(([s, label]) =>
     el("button", { type: "button", class: s === source ? "active" : "",
       onclick: () => { prefs.set("write.source", s); renderWritingSession(body); } }, label)));
 
@@ -2023,7 +2024,7 @@ async function renderQuiz() {
       el("div", { class: "chips" }, lessonChips.filter((_, i) => opts.lessons[i].level === level))));
   const typeChips = typeEntries.map(([t, [jp, en]]) =>
     chip(t, el("span", {}, el("span", { lang: "ja" }, jp), ` ${en}`), settings.types.includes(t)));
-  const kanjiSources = [["studied", `My kanji (${opts.studied_kanji})`], ["N5", "N5 list"], ["N4", "N4 list"], ["lessons", "From lessons"]];
+  const kanjiSources = [["studied", `My kanji (${opts.studied_kanji})`], ["N5", "N5 list"], ["N4", "N4 list"], ["N3", "N3 list"], ["lessons", "From lessons"]];
   const kanjiSource = el("div", { class: "segmented" }, kanjiSources.map(([value, label]) =>
     el("button", { type: "button", class: value === settings.kanji_source ? "active" : "",
       disabled: value === "studied" && !opts.studied_kanji,

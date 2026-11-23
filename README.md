@@ -20,7 +20,7 @@ passing the JLPT (N5, then N4, then N3), powered by a free AI API or a local mod
 **JLPT-style quizzes**
 - Kanji reading (漢字読み), spelling (表記), vocabulary (語彙), particles (文法) and listening (聴解)
 - Kanji questions: a kanji's meaning, pick the kanji for a meaning (look-alike choices with similar
-  stroke counts), and the reading of a kanji word; drawn from your studied kanji or the N5/N4 lists
+  stroke counts), and the reading of a kanji word; drawn from your studied kanji or the N5/N4/N3 lists
 - Generated from verified lesson content and your saved words, never by the AI
 - Reading distractors are near misses like on the real test (がっこう / がこう / かっこう)
 - Per-type scores, explanations, and one click to add missed words to your reviews
@@ -36,8 +36,10 @@ passing the JLPT (N5, then N4, then N3), powered by a free AI API or a local mod
 - Quiz score trend; study days, total reviews and quizzes
 
 **Kanji study**
-- The lists closest to N5 and N4 (KANJIDIC's old JLPT levels 4 and 3) plus every other kanji
-  used in the lessons
+- Lists closest to N5 (103), N4 (181) and N3 (371), plus every other kanji used in the lessons.
+  KANJIDIC only has the pre-2010 JLPT levels: old levels 4 and 3 match N5 and N4; old level 2 mixes
+  N3 and N2, so the N3 list is its 300 most common kanji plus the ones the lessons use. There has
+  been no official kanji list since 2010, so these are close guides, not official lists
 - Animated stroke order (KanjiVG), on/kun readings with audio, meanings, and example words
   (lesson vocabulary first, then common dictionary words)
 - Add kanji to your reviews one by one or five at a time; they join the Review tab and the dashboard
