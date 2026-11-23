@@ -130,6 +130,9 @@ def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
     # 年 on its own (年のわりに, 年が近い) is とし "age"; after a number (2020年, 一年) it stays ねん.
     if word.surface == "年" and (prev is None or prev.feature.pos1 in {"助詞", "補助記号"}):
         return "とし"
+    # 道案内 (giving directions) is みちあんない.
+    if word.surface == "道" and nxt is not None and nxt.surface == "案内":
+        return "みち"
     # 言う is いう; the analyzer gives the spoken ゆう.
     if getattr(word.feature, "orthBase", "") == "言う":
         kana = _reading(word) or ""
@@ -159,6 +162,9 @@ def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
         kana = _reading(word) or ""
         if kana.startswith("ひら"):
             return "あ" + kana[2:]
+    # 洗濯物 せんたくもの (not ぶつ); the analyzer splits off 物 after these nouns.
+    if word.surface == "物" and prev.surface in _MONO_AFTER:
+        return "もの"
     # 富士山 is ふじさん (the analyzer splits it and reads 山 as やま). Many other
     # mountains really are 〜やま, so this stays specific.
     if word.surface == "山" and prev.surface == "富士":
@@ -174,6 +180,7 @@ def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
 
 _SPECIAL_COUNTED = {"二十歳": "はたち"}  # age 20 has its own word
 
+_MONO_AFTER = {"洗濯", "忘れ", "落とし", "預かり", "届け", "買い"}
 _WEEKDAYS = {"月": "げつ", "火": "か", "水": "すい", "木": "もく", "金": "きん", "土": "ど", "日": "にち"}
 _HONORIFIC_FAMILY = {"母": "かあ", "父": "とう", "兄": "にい", "姉": "ねえ"}
 _DIGITS = re.compile(r"^[0-9０-９]+$")
@@ -189,8 +196,15 @@ def _digit_counter(num: str, counter: str) -> dict | None:
     ruby = _COUNTERS[counter][last - 1 if last else 9]  # a final 0 sounds like 十 (じゅっぷん)
     if isinstance(ruby, tuple):
         return {"t": counter, "b": counter, "k": ruby[1], "p": "suffix", "parts": [{"t": counter, "r": ruby[1]}]}
+    if counter == "日" and value > 10:
+        # Dates past the 10th: 20日 はつか, 14日 / 24日 end in よっか, the rest are 〜にち.
+        if value == 20:
+            return {"t": num + counter, "b": num + counter, "k": "はつか", "p": "noun", "whole": True,
+                    "parts": [{"t": num + counter, "r": "はつか"}]}
+        ruby = "か" if value % 10 == 4 else "にち"
+        return {"t": counter, "b": counter, "k": ruby, "p": "suffix", "parts": [{"t": counter, "r": ruby}]}
     if ruby is None or not 1 <= value <= 10:
-        return None  # 1日 (ついたち or いちにち), 20日 (はつか): leave it to the analyzer
+        return None  # 1日 is ついたち or いちにち depending on meaning: leave it to the analyzer
     ruby = _COUNTERS[counter][value - 1]
     return {"t": num + counter, "b": num + counter, "k": ruby, "p": "noun", "whole": True,
             "parts": [{"t": num + counter, "r": ruby}]}

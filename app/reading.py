@@ -564,6 +564,514 @@ PASSAGES: list[dict] = [
             {"word": "確認", "reading": "かくにん", "meaning": "checking, confirmation"},
         ],
     },
+    {
+        "id": "n3-r11",
+        "title": "Bicycle parking notice",
+        "jp_title": "駐輪場のお知らせ",
+        "kind": "Short passage",
+        "minutes": 3,
+        "text": [
+            "みなみ駅前駐輪場をご利用の皆様へ",
+            "工事のため、5月10日から6月30日まで、駐輪場の東側が使えなくなります。この間は、西側の駐輪場をご利用ください。"
+            "西側は駅から少し遠くなりますが、料金は同じです。",
+            "なお、期間中に東側に置いてある自転車は、市が別の場所へ移動しますので、ご注意ください。",
+            "みなみ市役所",
+        ],
+        "en": [
+            "To everyone who uses the Minami Station bicycle parking,",
+            "Because of construction work, the east side of the bicycle parking cannot be used from 10 May to 30 June. "
+            "During this time, please use the west side. The west side is a little further from the station, but the price is the same.",
+            "Please note that bicycles left on the east side during this period will be moved elsewhere by the city.",
+            "Minami City Hall",
+        ],
+        "questions": [
+            {
+                "q": "このお知らせで、いちばん伝えたいことは何か。",
+                "choices": [
+                    "5月10日から、駐輪場の料金が変わる。",
+                    "工事の間は、西側の駐輪場を使ってほしい。",
+                    "西側の駐輪場は、駅に近くて便利だ。",
+                    "東側に自転車を置くと、料金が高くなる。",
+                ],
+                "answer": 1,
+                "why": "The east side is closed for construction, so the notice asks people to use the west side "
+                       "(西側の駐輪場をご利用ください). The price stays the same and the west side is further away.",
+            },
+        ],
+        "vocab": [
+            {"word": "駐輪場", "reading": "ちゅうりんじょう", "meaning": "bicycle parking"},
+            {"word": "工事", "reading": "こうじ", "meaning": "construction work"},
+            {"word": "期間", "reading": "きかん", "meaning": "period (of time)"},
+            {"word": "移動", "reading": "いどう", "meaning": "moving, relocation"},
+        ],
+    },
+    {
+        "id": "n3-r12",
+        "title": "A new deadline",
+        "jp_title": "レポートの締め切り",
+        "kind": "Short passage",
+        "minutes": 3,
+        "text": [
+            "件名：レポートについて",
+            "2年B組の皆さん",
+            "来週の月曜日までに出すことになっていたレポートですが、図書館が工事で使えないため、締め切りを一週間延ばすことにしました。"
+            "新しい締め切りは、再来週の月曜日です。",
+            "ただし、テーマは変わりませんので、もう書き終わった人は、そのまま出してもかまいません。",
+            "山本",
+        ],
+        "en": [
+            "Subject: About the report",
+            "To everyone in class 2B,",
+            "About the report that was due next Monday: because the library can't be used due to construction work, "
+            "I've decided to extend the deadline by one week. The new deadline is Monday the week after next.",
+            "However, the topic hasn't changed, so if you've already finished writing, you may hand it in as it is.",
+            "Yamamoto",
+        ],
+        "questions": [
+            {
+                "q": "このメールの内容と合うものはどれか。",
+                "choices": [
+                    "レポートのテーマが変わった。",
+                    "レポートは、来週の月曜日までに出さなければならない。",
+                    "もう書き終わったレポートは、今出してもいい。",
+                    "レポートは、図書館で書かなければならない。",
+                ],
+                "answer": 2,
+                "why": "The topic is unchanged (テーマは変わりません), so finished reports can be handed in as they are "
+                       "(そのまま出してもかまいません). The deadline moved to the week after next.",
+            },
+        ],
+        "vocab": [
+            {"word": "締め切り", "reading": "しめきり", "meaning": "deadline"},
+            {"word": "延ばす", "reading": "のばす", "meaning": "to extend, postpone"},
+            {"word": "再来週", "reading": "さらいしゅう", "meaning": "the week after next"},
+            {"word": "ただし", "reading": "ただし", "meaning": "however, but"},
+        ],
+    },
+    {
+        "id": "n3-r13",
+        "title": "A handwritten letter",
+        "jp_title": "手書きの手紙",
+        "kind": "Short passage",
+        "minutes": 3,
+        "text": [
+            "最近は、メールやSNSで簡単に連絡ができるようになった。私も、ふだんはメールばかり使っている。"
+            "ところが先日、祖母から手書きの手紙が届いた。字は少し読みにくかったが、一字一字ていねいに書かれていて、"
+            "読んでいるうちに温かい気持ちになった。",
+            "メールは便利だが、手紙には、書いた人の気持ちを伝える力があるのだと思う。今度は私も、祖母に手紙を書いてみようと思っている。",
+        ],
+        "en": [
+            "These days it has become easy to keep in touch by email and social media. I usually use nothing but email myself. "
+            "But the other day, a handwritten letter arrived from my grandmother. The writing was a little hard to read, but each "
+            "character had been written carefully, and as I read it, I felt warm inside.",
+            "Email is convenient, but I think letters have the power to convey the writer's feelings. Next time, I'm going to try "
+            "writing a letter to my grandmother too.",
+        ],
+        "questions": [
+            {
+                "q": "筆者は、手紙についてどう考えているか。",
+                "choices": [
+                    "字が読みにくいので、メールのほうがいい。",
+                    "書いた人の気持ちが伝わる。",
+                    "メールより早く連絡できる。",
+                    "家族にしか書かないほうがいい。",
+                ],
+                "answer": 1,
+                "why": "手紙には、書いた人の気持ちを伝える力がある: letters carry the writer's feelings. The writing was hard to "
+                       "read, but that isn't the writer's conclusion.",
+            },
+        ],
+        "vocab": [
+            {"word": "連絡", "reading": "れんらく", "meaning": "contact, getting in touch"},
+            {"word": "ふだん", "reading": "ふだん", "meaning": "usually, normally"},
+            {"word": "先日", "reading": "せんじつ", "meaning": "the other day"},
+            {"word": "手書き", "reading": "てがき", "meaning": "handwritten"},
+            {"word": "伝える", "reading": "つたえる", "meaning": "to convey, pass on"},
+        ],
+    },
+    {
+        "id": "n3-r14",
+        "title": "A note from my sister",
+        "jp_title": "姉からのメモ",
+        "kind": "Short passage",
+        "minutes": 3,
+        "text": [
+            "はるかへ",
+            "冷蔵庫のケーキは、明日友達が来たときに出すつもりなので、食べないでね。その代わり、テーブルの上のクッキーは食べてもいいよ。"
+            "それから、今晩は遅くなるから、洗濯物を取り込んでおいてくれると助かります。雨が降るかもしれないそうなので。",
+            "姉より",
+        ],
+        "en": [
+            "To Haruka,",
+            "I'm planning to serve the cake in the fridge when my friend comes tomorrow, so please don't eat it. Instead, you can eat "
+            "the cookies on the table. Also, I'll be late tonight, so it would be a big help if you could bring the washing in. "
+            "Apparently it might rain.",
+            "From your sister",
+        ],
+        "questions": [
+            {
+                "q": "姉が、はるかさんに頼んでいることは何か。",
+                "choices": [
+                    "ケーキを冷蔵庫に入れておくこと",
+                    "クッキーを買っておくこと",
+                    "洗濯物を家の中に入れておくこと",
+                    "明日、友達にケーキを出すこと",
+                ],
+                "answer": 2,
+                "why": "洗濯物を取り込んでおいてくれると助かります asks Haruka to bring the washing in before the rain. "
+                       "The cake and cookies are things she may or may not eat, not requests.",
+            },
+        ],
+        "vocab": [
+            {"word": "冷蔵庫", "reading": "れいぞうこ", "meaning": "fridge"},
+            {"word": "洗濯物", "reading": "せんたくもの", "meaning": "laundry, the washing"},
+            {"word": "取り込む", "reading": "とりこむ", "meaning": "to bring in (laundry)"},
+            {"word": "助かる", "reading": "たすかる", "meaning": "to be a help, be saved"},
+        ],
+    },
+    {
+        "id": "n3-r15",
+        "title": "Afraid of failing",
+        "jp_title": "失敗すること",
+        "kind": "Short passage",
+        "minutes": 3,
+        "text": [
+            "子供のころ、私は失敗するのがとても怖かった。テストで悪い点を取ると、何日も落ち込んだ。"
+            "しかし、高校で出会った先生に「失敗しない人は、何も新しいことをしていない人だ」と言われてから、考え方が変わった。",
+            "失敗は、新しいことに挑戦したしるしなのだ。今でも失敗すれば悔しいが、前ほど怖くはなくなった。",
+        ],
+        "en": [
+            "As a child, I was very afraid of failing. If I got a bad mark on a test, I'd feel down for days. But my way of thinking "
+            "changed after a teacher I met in high school told me, \"People who never fail are people who never do anything new.\"",
+            "Failure is a sign that you tried something new. Even now I feel frustrated when I fail, but it doesn't scare me as much as before.",
+        ],
+        "questions": [
+            {
+                "q": "筆者は今、失敗についてどう思っているか。",
+                "choices": [
+                    "失敗しないように、新しいことはしない。",
+                    "失敗は、挑戦したしるしだと思っている。",
+                    "失敗しても、まったく悔しくない。",
+                    "失敗すると、何日も落ち込んでしまう。",
+                ],
+                "answer": 1,
+                "why": "失敗は、新しいことに挑戦したしるし: failure shows you tried something new. The writer still feels "
+                       "frustrated (悔しい), and the days of feeling down were in childhood.",
+            },
+        ],
+        "vocab": [
+            {"word": "失敗", "reading": "しっぱい", "meaning": "failure, mistake"},
+            {"word": "落ち込む", "reading": "おちこむ", "meaning": "to feel down"},
+            {"word": "挑戦", "reading": "ちょうせん", "meaning": "challenge, attempt"},
+            {"word": "しるし", "reading": "しるし", "meaning": "sign, mark"},
+            {"word": "悔しい", "reading": "くやしい", "meaning": "frustrating, annoying (when you lose)"},
+        ],
+    },
+    {
+        "id": "n3-r16",
+        "title": "Vending machines",
+        "jp_title": "自動販売機",
+        "kind": "Medium passage",
+        "minutes": 6,
+        "text": [
+            "日本に来て驚いたことの一つに、自動販売機の多さがある。駅や道はもちろん、山の上や、いなかの小さな道にまで置いてある。"
+            "飲み物だけでなく、アイスクリームや温かいスープ、中には野菜を売っている機械もある。",
+            "私の国では、自動販売機を外に置くと、すぐに壊されたり、お金を盗まれたりしてしまう。"
+            "だから、これほど多くの機械が外に置かれているのは、日本が安全な国だからだろう。",
+            "一方で、夜中でも明るく光っている自動販売機を見ると、電気がもったいないと感じることもある。"
+            "便利さと環境のどちらを大切にするか、考えてみる必要があるかもしれない。",
+        ],
+        "en": [
+            "One of the things that surprised me in Japan is the number of vending machines. They're not only at stations and on "
+            "streets, but even on mountaintops and small country roads. Besides drinks, they sell ice cream and hot soup, and some "
+            "machines even sell vegetables.",
+            "In my country, if you put a vending machine outside, it soon gets broken or has its money stolen. So I think the reason "
+            "so many machines can be left outside is that Japan is a safe country.",
+            "On the other hand, when I see vending machines glowing brightly even in the middle of the night, I sometimes feel it's "
+            "a waste of electricity. We might need to think about which matters more: convenience or the environment.",
+        ],
+        "questions": [
+            {
+                "q": "筆者が日本に来て驚いたことは何か。",
+                "choices": [
+                    "自動販売機が多くて、いろいろな物を売っていること",
+                    "自動販売機の飲み物が安いこと",
+                    "自動販売機がよく壊れていること",
+                    "自動販売機で野菜しか売っていないこと",
+                ],
+                "answer": 0,
+                "why": "自動販売機の多さ (how many there are), in all kinds of places, selling drinks, ice cream, soup and even vegetables.",
+            },
+            {
+                "q": "筆者は、日本に自動販売機が多い理由は何だと考えているか。",
+                "choices": ["日本人は買い物が好きだから", "店が少ないから", "安全な国だから", "電気が安いから"],
+                "answer": 2,
+                "why": "これほど多くの機械が外に置かれているのは、日本が安全な国だからだろう: machines can stay outside "
+                       "because Japan is safe.",
+            },
+            {
+                "q": "筆者は、自動販売機についてどう感じているか。",
+                "choices": [
+                    "便利なので、もっと増やしたほうがいい。",
+                    "便利だが、電気の使い方を考える必要もある。",
+                    "環境に悪いので、すぐになくしたほうがいい。",
+                    "夜は使えないので、不便だ。",
+                ],
+                "answer": 1,
+                "why": "一方で (on the other hand), the writer feels the electricity is wasted and says we may need to weigh "
+                       "convenience against the environment, without calling for them to be removed.",
+            },
+        ],
+        "vocab": [
+            {"word": "自動販売機", "reading": "じどうはんばいき", "meaning": "vending machine"},
+            {"word": "機械", "reading": "きかい", "meaning": "machine"},
+            {"word": "盗む", "reading": "ぬすむ", "meaning": "to steal"},
+            {"word": "一方で", "reading": "いっぽうで", "meaning": "on the other hand"},
+            {"word": "もったいない", "reading": "もったいない", "meaning": "wasteful, a waste"},
+            {"word": "環境", "reading": "かんきょう", "meaning": "environment"},
+        ],
+    },
+    {
+        "id": "n3-r17",
+        "title": "Making friends abroad",
+        "jp_title": "留学生活",
+        "kind": "Medium passage",
+        "minutes": 6,
+        "text": [
+            "私が日本の大学に留学して、半年がたった。来る前は、日本語の授業さえ分かれば大丈夫だと思っていた。"
+            "ところが、実際に困ったのは、授業よりも友達を作ることだった。",
+            "日本人の学生はみんな親切だが、授業が終わると、すぐに帰ってしまう。話しかけても、なかなか話が続かなかった。"
+            "そこで、思い切ってサッカーのサークルに入ってみた。サッカーは子供のころから好きだったし、言葉が上手でなくても、"
+            "一緒に楽しめると思ったからだ。",
+            "これが大成功だった。練習のあとにみんなで食事に行くようになり、今では週末に一緒に旅行する友達もできた。"
+            "日本語も、教科書では習わない表現をたくさん覚えた。",
+        ],
+        "en": [
+            "Six months have passed since I came to study at a Japanese university. Before coming, I thought I'd be fine as long as "
+            "I could follow my Japanese classes. But what actually gave me trouble wasn't the classes; it was making friends.",
+            "The Japanese students are all kind, but as soon as class ends, they go home. Even when I spoke to them, the conversation "
+            "never seemed to last. So I took the plunge and joined a football club. I'd loved football since I was a child, and I "
+            "thought we could enjoy it together even if my Japanese wasn't good.",
+            "It was a great success. We started going out to eat together after practice, and now I even have friends I travel with "
+            "at weekends. I've also learned lots of expressions that textbooks don't teach.",
+        ],
+        "questions": [
+            {
+                "q": "筆者が留学して困ったことは何か。",
+                "choices": [
+                    "授業がまったく分からなかったこと",
+                    "友達がなかなかできなかったこと",
+                    "サッカーをする場所がなかったこと",
+                    "日本人の学生が親切ではなかったこと",
+                ],
+                "answer": 1,
+                "why": "実際に困ったのは、授業よりも友達を作ることだった: making friends was the real problem. "
+                       "The students were kind (みんな親切).",
+            },
+            {
+                "q": "筆者がサッカーのサークルに入ったのはなぜか。",
+                "choices": [
+                    "日本語が上手になりたかったから",
+                    "授業で先生に勧められたから",
+                    "言葉が上手でなくても、楽しめると思ったから",
+                    "子供のころから、サークルに入りたかったから",
+                ],
+                "answer": 2,
+                "why": "言葉が上手でなくても、一緒に楽しめると思ったから: the writer thought football could be enjoyed together "
+                       "even without good Japanese. Learning new expressions was a result, not the reason.",
+            },
+            {
+                "q": "サークルに入って、どうなったか。",
+                "choices": [
+                    "授業を休むことが多くなった。",
+                    "一緒に出かける友達ができた。",
+                    "教科書の日本語が分かるようになった。",
+                    "サッカーが上手になって、試合に出た。",
+                ],
+                "answer": 1,
+                "why": "They eat together after practice, and now there are friends to travel with at weekends "
+                       "(週末に一緒に旅行する友達もできた).",
+            },
+        ],
+        "vocab": [
+            {"word": "半年", "reading": "はんとし", "meaning": "half a year"},
+            {"word": "実際に", "reading": "じっさいに", "meaning": "actually, in reality"},
+            {"word": "話しかける", "reading": "はなしかける", "meaning": "to start talking to"},
+            {"word": "思い切って", "reading": "おもいきって", "meaning": "boldly, taking the plunge"},
+            {"word": "表現", "reading": "ひょうげん", "meaning": "expression"},
+        ],
+    },
+    {
+        "id": "n3-r18",
+        "title": "Taking a nap",
+        "jp_title": "昼寝の効果",
+        "kind": "Medium passage",
+        "minutes": 5,
+        "text": [
+            "昼ご飯のあと、眠くなって勉強に集中できないという経験は、だれにでもあるだろう。最近、そんなときに短い昼寝をすることが勧められている。",
+            "ある研究によると、十五分から二十分ほど昼寝をすると、頭がすっきりして、午後の作業の効率が上がるそうだ。"
+            "ただし、三十分以上寝てしまうと、かえって起きたあとに体がだるくなり、夜も眠れなくなることがあるという。",
+            "大切なのは、長く寝すぎないことだ。昼寝をするときは、目覚まし時計をかけておくといいだろう。",
+        ],
+        "en": [
+            "Everyone has probably had the experience of getting sleepy after lunch and being unable to focus on studying. Recently, "
+            "taking a short nap at times like that has been recommended.",
+            "According to one study, napping for about fifteen to twenty minutes clears your head and makes your afternoon work more "
+            "efficient. However, if you sleep for thirty minutes or more, you may actually feel sluggish after waking, and even be "
+            "unable to sleep at night.",
+            "The important thing is not to sleep too long. When you nap, it's a good idea to set an alarm clock.",
+        ],
+        "questions": [
+            {
+                "q": "この文章によると、昼寝はどのくらいがいいか。",
+                "choices": ["5分ぐらい", "15分から20分ぐらい", "30分以上", "1時間ぐらい"],
+                "answer": 1,
+                "why": "十五分から二十分ほど昼寝をすると…効率が上がる; thirty minutes or more has the opposite effect.",
+            },
+            {
+                "q": "筆者がいちばん言いたいことは何か。",
+                "choices": [
+                    "昼ご飯のあとは、必ず昼寝をするべきだ。",
+                    "昼寝をすると夜眠れなくなるので、しないほうがいい。",
+                    "昼寝は、短い時間なら、いい効果がある。",
+                    "目覚まし時計は、夜だけ使うほうがいい。",
+                ],
+                "answer": 2,
+                "why": "A short nap helps, a long one backfires, and 大切なのは、長く寝すぎないことだ (don't sleep too long).",
+            },
+        ],
+        "vocab": [
+            {"word": "昼寝", "reading": "ひるね", "meaning": "nap"},
+            {"word": "研究", "reading": "けんきゅう", "meaning": "research, study"},
+            {"word": "すっきり", "reading": "すっきり", "meaning": "refreshed, clear"},
+            {"word": "効率", "reading": "こうりつ", "meaning": "efficiency"},
+            {"word": "かえって", "reading": "かえって", "meaning": "on the contrary, instead"},
+            {"word": "目覚まし時計", "reading": "めざましどけい", "meaning": "alarm clock"},
+        ],
+    },
+    {
+        "id": "n3-r19",
+        "title": "Spring classes at the community centre",
+        "jp_title": "市民センターの教室",
+        "kind": "Information search",
+        "minutes": 5,
+        "text": [
+            "さくら市民センター　春の教室のご案内",
+            "①はじめての料理教室\n"
+            "・毎週土曜日　午前10時〜12時（全4回）\n"
+            "・料金：4,000円（材料費を含む）",
+            "②英会話（初級）\n"
+            "・毎週水曜日　午後7時〜8時半（全8回）\n"
+            "・料金：6,000円",
+            "③写真教室\n"
+            "・第1・第3日曜日　午後1時〜3時（全4回）\n"
+            "・料金：3,000円　※カメラは各自でお持ちください。",
+            "④親子ヨガ\n"
+            "・毎週金曜日　午前10時〜11時（全6回）\n"
+            "・料金：親子で5,000円",
+            "お申し込み：3月20日までに、センターの受付か電話でお申し込みください。",
+        ],
+        "en": [
+            "Sakura Community Centre: spring classes",
+            "1. Cooking for beginners\n"
+            "- Every Saturday, 10 a.m. to 12 noon (4 sessions)\n"
+            "- Fee: 4,000 yen (ingredients included)",
+            "2. English conversation (beginner)\n"
+            "- Every Wednesday, 7 to 8:30 p.m. (8 sessions)\n"
+            "- Fee: 6,000 yen",
+            "3. Photography\n"
+            "- 1st and 3rd Sundays, 1 to 3 p.m. (4 sessions)\n"
+            "- Fee: 3,000 yen. Please bring your own camera.",
+            "4. Parent-and-child yoga\n"
+            "- Every Friday, 10 to 11 a.m. (6 sessions)\n"
+            "- Fee: 5,000 yen per parent and child",
+            "How to apply: by 20 March, at the centre's reception desk or by phone.",
+        ],
+        "questions": [
+            {
+                "q": "大学生のキムさんは、平日は毎日夜9時までアルバイトがあるので、週末の教室に参加したい。"
+                     "カメラは持っていない。キムさんが参加できる教室はどれか。",
+                "choices": ["①はじめての料理教室", "②英会話（初級）", "③写真教室", "④親子ヨガ"],
+                "answer": 0,
+                "why": "Weekends only rules out English (Wednesday) and yoga (Friday). Photography is on Sundays but needs your own "
+                       "camera (各自でお持ちください). Cooking is on Saturdays with ingredients included.",
+            },
+            {
+                "q": "申し込みについて、正しいものはどれか。",
+                "choices": [
+                    "3月20日までに、受付か電話で申し込む。",
+                    "インターネットで申し込む。",
+                    "教室の初日に、受付で申し込む。",
+                    "3月20日から、申し込みが始まる。",
+                ],
+                "answer": 0,
+                "why": "3月20日までに、センターの受付か電話で: by 20 March, at reception or by phone. までに means \"by\", "
+                       "not \"from\".",
+            },
+        ],
+        "vocab": [
+            {"word": "材料費", "reading": "ざいりょうひ", "meaning": "cost of ingredients"},
+            {"word": "含む", "reading": "ふくむ", "meaning": "to include"},
+            {"word": "初級", "reading": "しょきゅう", "meaning": "beginner level"},
+            {"word": "各自", "reading": "かくじ", "meaning": "each person, individually"},
+            {"word": "親子", "reading": "おやこ", "meaning": "parent and child"},
+            {"word": "申し込み", "reading": "もうしこみ", "meaning": "application, signing up"},
+        ],
+    },
+    {
+        "id": "n3-r20",
+        "title": "Volunteering at the festival",
+        "jp_title": "お祭りのボランティア",
+        "kind": "Medium passage",
+        "minutes": 5,
+        "text": [
+            "去年の夏、町のお祭りでボランティアをした。会場の掃除や道案内など、地味な仕事ばかりだったが、思っていた以上に楽しかった。",
+            "いちばんうれしかったのは、道を教えたおばあさんが、帰りにわざわざ「ありがとう」と言いに来てくれたことだ。"
+            "だれかの役に立てたと感じた瞬間だった。",
+            "ボランティアというと、特別な人がするものだと思っていたが、そうではない。少しの時間があれば、だれにでもできることがある。"
+            "今年も参加するつもりだ。",
+        ],
+        "en": [
+            "Last summer I volunteered at our town's festival. It was all unglamorous work, like cleaning the venue and giving "
+            "directions, but it was more fun than I'd expected.",
+            "What made me happiest was when an elderly woman I'd given directions to went out of her way to come and say "
+            "\"thank you\" on her way home. It was a moment when I felt I'd been useful to someone.",
+            "I used to think volunteering was something special people do, but that's not true. If you have a little time, there's "
+            "something anyone can do. I'm planning to take part again this year.",
+        ],
+        "questions": [
+            {
+                "q": "筆者がいちばんうれしかったのは、どんなことか。",
+                "choices": [
+                    "お祭りで働いて、お金をもらったこと",
+                    "おばあさんが、お礼を言いに来てくれたこと",
+                    "会場の掃除が早く終わったこと",
+                    "お祭りで、友達がたくさんできたこと",
+                ],
+                "answer": 1,
+                "why": "いちばんうれしかったのは…おばあさんが…「ありがとう」と言いに来てくれたこと.",
+            },
+            {
+                "q": "筆者は、ボランティアについてどう考えているか。",
+                "choices": [
+                    "特別な人しかできない。",
+                    "時間がたくさんある人がするものだ。",
+                    "少しの時間でも、だれにでもできることがある。",
+                    "楽しくないので、今年は参加しない。",
+                ],
+                "answer": 2,
+                "why": "The writer used to think it was for special people, but そうではない: 少しの時間があれば、"
+                       "だれにでもできることがある. And they plan to take part again.",
+            },
+        ],
+        "vocab": [
+            {"word": "会場", "reading": "かいじょう", "meaning": "venue"},
+            {"word": "地味", "reading": "じみ", "meaning": "plain, unglamorous"},
+            {"word": "わざわざ", "reading": "わざわざ", "meaning": "going out of one's way"},
+            {"word": "役に立つ", "reading": "やくにたつ", "meaning": "to be useful"},
+            {"word": "瞬間", "reading": "しゅんかん", "meaning": "moment"},
+        ],
+    },
 ]
 
 _BY_ID = {p["id"]: p for p in PASSAGES}
