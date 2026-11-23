@@ -54,6 +54,14 @@ passing the JLPT (N5, then N4, then N3), powered by a free AI API or a local mod
   are left alone, and a kanji reviewed in the last 12 hours that isn't due yet isn't graded again.
   Turn on "Write kanji from memory" in the Review tab to answer due kanji by writing them
 
+**Reading practice (JLPT 読解)**
+- 10 hand-written N3 passages: notes, emails, notices, short essays and an information-search page,
+  with 19 JLPT-style questions in Japanese and an English explanation for every answer
+- Furigana toggle; kanji beyond the N5/N4/N3 lists keep their furigana, as on the real test
+- Tap any word to look it up; 🔊 reads each paragraph; after answering, see the translation and add
+  the key words to your reviews. Scores are saved, and the dashboard counts passages read
+- `python -m app.reading` checks the questions; add `--readings` to proofread the furigana
+
 **Dictionary, notebook and reviews**
 - Click any Japanese word (chat or lessons) to look it up in JMdict and save it
 - Sensei logs the mistakes it corrects; they come back as review cards

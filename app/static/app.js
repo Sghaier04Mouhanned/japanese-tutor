@@ -259,6 +259,7 @@ const views = {
   lessons: renderLessons,
   quiz: renderQuiz,
   kanji: renderKanji,
+  reading: renderReading,
 };
 
 function route() {
@@ -499,7 +500,7 @@ function chartTip(container) {
 const SERIES = [
   ["kana", "Kana reviews", "var(--series-1)"],
   ["deck", "Word, kanji & mistake reviews", "var(--series-2)"],
-  ["quiz", "Quiz questions", "var(--series-3)"],
+  ["quiz", "Quiz & reading questions", "var(--series-3)"],
 ];
 
 function drawActivity(container, days) {
@@ -644,6 +645,7 @@ async function renderProgress() {
     ...["N5", "N4", "N3"].filter(lvl => data.kanji?.[lvl]).map(lvl =>
       meter(`Kanji (${lvl} list)`, known(data.kanji[lvl]), data.kanji[lvl].total,
         `${known(data.kanji[lvl])} known · ${data.kanji[lvl].total} total`)),
+    ...Object.entries(data.reading || {}).map(([lvl, r]) => meter(`${lvl} reading passages`, r.done, r.total, `${r.done} / ${r.total} read`)),
     meter("Vocabulary (≈800 for N5)", known(data.vocab), data.vocab.target, `${known(data.vocab)} known · ${data.vocab.saved} saved`),
     ...quizMeters);
 
@@ -1511,6 +1513,172 @@ async function renderLesson(body, id) {
   window.scrollTo(0, 0);
 }
 
+/* ================= reading practice ================= */
+
+const READING_INTRO = {
+  N3: "Short notes, notices and essays like the JLPT N3 reading section. Read, answer every question, then check the explanations and the translation.",
+};
+
+async function renderReading() {
+  const body = $("#reading-body");
+  if (routeArg) return renderPassage(body, routeArg);
+
+  const { passages } = await api.get("/api/reading");
+  const next = passages.find(p => !p.result);
+  const levels = [...new Set(passages.map(p => p.level))];
+  body.replaceChildren(
+    el("div", { class: "panel-head" },
+      el("h2", {}, "Reading practice"),
+      el("span", { class: "muted" }, "Tap any word to look it up")),
+    ...levels.map(level => {
+      const ofLevel = passages.filter(p => p.level === level);
+      const done = ofLevel.filter(p => p.result).length;
+      return el("section", { class: "level-block", "aria-labelledby": `reading-${level}` },
+        el("div", { class: "level-head" },
+          el("h3", { id: `reading-${level}` }, `JLPT ${level}`),
+          el("span", { class: "muted" }, `${done} / ${ofLevel.length} read`)),
+        READING_INTRO[level] && el("p", { class: "muted level-intro" }, READING_INTRO[level]),
+        el("div", { class: "lesson-grid" }, ofLevel.map(p =>
+          el("a", { class: `lesson-card${p === next ? " next" : ""}`, href: `#reading/${p.id}` },
+            el("div", { class: "num" }, `${p.level} · Passage ${p.number}`,
+              p.result && el("span", { class: `status-pill ${p.result.best === p.result.total ? "done" : "started"}` },
+                `Best ${p.result.best} / ${p.result.total}`)),
+            el("div", { class: "jp", lang: "ja" }, p.jp_title),
+            el("div", { class: "title" }, p.title),
+            el("div", { class: "goal" }, `${p.kind} · ${p.questions} question${p.questions > 1 ? "s" : ""} · about ${p.minutes} min`)))));
+    }));
+}
+
+// Furigana inside an answer button: plain ruby, no clickable words, so a tap picks the answer.
+function inlineRuby(segments) {
+  const span = el("span", { class: "choice-text", lang: "ja" });
+  span.innerHTML = renderRich(segments).replace(/^<p>|<\/p>$/g, "");
+  return span;
+}
+
+async function renderPassage(body, id) {
+  const p = await api.get(`/api/reading/${id}`);
+  const startedAt = performance.now();
+  const chosen = p.questions.map(() => null);
+  let checked = false;
+
+  const furiganaOn = prefs.get("reading.furigana", true);
+  const page = el("div", { class: `reading-page${furiganaOn ? "" : " no-furigana"}` });
+  const furiganaToggle = el("label", { class: "toggle" },
+    el("input", { type: "checkbox", checked: furiganaOn, onchange: e => {
+      prefs.set("reading.furigana", e.target.checked);
+      page.classList.toggle("no-furigana", !e.target.checked);
+    } }), "Furigana");
+
+  const text = el("div", { class: "reading-text" }, p.text.map(t =>
+    el("div", { class: "reading-para" },
+      richEl("div", { class: "jp-line", lang: "ja" }, t.segments),
+      speakButton(t.jp.replace(/\n/g, "。")))));
+
+  const check = el("button", { class: "btn btn-primary", type: "button", disabled: true }, "Check answers");
+  const summary = el("div", { role: "status" });
+  const questions = p.questions.map((q, qi) => {
+    const explain = el("div");
+    const buttons = q.choices.map((c, ci) =>
+      el("button", { class: "quiz-choice jp reading-choice", type: "button", "aria-pressed": "false",
+        onclick: () => pick(qi, ci) }, el("span", { class: "key" }, ci + 1), inlineRuby(c)));
+    return { buttons, explain, node: el("div", { class: "reading-q" },
+      el("div", { class: "reading-q-head" }, el("span", { class: "reading-q-num" }, `問${qi + 1}`),
+        richEl("div", { class: "jp-line", lang: "ja" }, q.segments)),
+      el("div", { class: "quiz-choices reading-choices" }, buttons),
+      explain) };
+  });
+
+  function pick(qi, ci) {
+    if (checked) return;
+    chosen[qi] = ci;
+    questions[qi].buttons.forEach((b, i) => {
+      b.classList.toggle("picked", i === ci);
+      b.setAttribute("aria-pressed", String(i === ci));
+    });
+    check.disabled = chosen.includes(null);
+  }
+
+  check.addEventListener("click", async () => {
+    if (checked || chosen.includes(null)) return;
+    checked = true;
+    check.disabled = true;
+    const res = await api.post(`/api/reading/${id}/answers`,
+      { answers: chosen, elapsed_ms: Math.round(performance.now() - startedAt) });
+    res.results.forEach((r, qi) => {
+      const q = questions[qi];
+      q.buttons.forEach((b, i) => {
+        b.disabled = true;
+        b.classList.remove("picked");
+        if (i === r.answer) b.classList.add("ok");
+        else if (i === r.chosen) b.classList.add("bad");
+      });
+      q.explain.replaceChildren(
+        el("p", { class: `feedback ${r.correct ? "ok" : "bad"}` }, r.correct ? "✓ Correct" : `✗ The answer is ${r.answer + 1}`),
+        el("div", { class: "quiz-explain" }, r.why));
+    });
+    const minutes = Math.max(1, Math.round((performance.now() - startedAt) / 60000));
+    summary.replaceChildren(el("p", { class: "reading-score" },
+      el("strong", {}, `${res.correct} / ${res.total} correct`), ` · ${minutes} min (suggested: about ${p.minutes} min)`));
+    check.hidden = true;
+    after.replaceChildren(...afterSections(res));
+  });
+
+  function afterSections(res) {
+    const unsaved = res.vocab.filter(v => !v.saved).length;
+    const addWords = el("button", { class: "btn", type: "button", disabled: !unsaved },
+      unsaved ? `＋ Add ${unsaved} key word${unsaved > 1 ? "s" : ""} to reviews` : "Key words are in your reviews ✓");
+    addWords.addEventListener("click", async () => {
+      addWords.disabled = true;
+      const r = await api.post(`/api/reading/${id}/words`, {});
+      addWords.textContent = `${r.words_added} word${r.words_added === 1 ? "" : "s"} added ✓`;
+      refreshBadge();
+    });
+    return [
+      el("details", { class: "lesson-section reading-translation" },
+        el("summary", {}, "English translation"),
+        res.translation.map(t => el("p", { class: "reading-en" }, t))),
+      el("div", { class: "lesson-section" },
+        el("h3", {}, "Key words"),
+        el("table", { class: "vocab-table" }, el("tbody", {}, res.vocab.map(v =>
+          el("tr", {},
+            el("td", {}, richEl("div", { class: "vw", lang: "ja" }, v.segments)),
+            el("td", { class: "vr", lang: "ja" }, v.reading !== v.word ? v.reading : ""),
+            el("td", { class: "vm" }, v.meaning),
+            el("td", {}, speakButton(v.reading))))))),
+      el("div", { class: "lesson-actions" },
+        addWords,
+        el("button", { class: "btn btn-ghost", type: "button", onclick: () => renderPassage(body, id) }, "↻ Try again"),
+        p.next_id && el("a", { class: "btn btn-primary", href: `#reading/${p.next_id}` }, "Next passage →")),
+    ];
+  }
+
+  addKeyHandler(e => {
+    if (checked || e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+    if (e.key === "Enter" && !check.disabled) check.click();
+  });
+
+  const after = el("div");
+  page.append(
+    el("div", { class: "lesson-head" },
+      el("a", { class: "back", href: "#reading" }, "← All passages"),
+      el("div", { class: "lesson-level" }, `JLPT ${p.level} · Passage ${p.number} · ${p.kind}`),
+      el("h2", {}, p.title),
+      el("div", { class: "jp", lang: "ja" }, p.jp_title),
+      el("p", { class: "goal" }, `${p.questions.length} question${p.questions.length > 1 ? "s" : ""} · about ${p.minutes} minutes`)),
+    el("div", { class: "reading-toolbar" }, furiganaToggle,
+      el("span", { class: "muted" }, "Kanji beyond the study lists keep their furigana, as on the JLPT.")),
+    text,
+    el("div", { class: "lesson-section" },
+      el("h3", {}, "Questions"),
+      questions.map(q => q.node),
+      el("div", { class: "lesson-actions" }, check),
+      summary),
+    after);
+  body.replaceChildren(page);
+  window.scrollTo(0, 0);
+}
+
 /* ================= kanji ================= */
 
 const KANJI_GROUPS = {
@@ -2298,7 +2466,7 @@ function renderRich(segments) {
     ? `<ruby>${escapeHtml(p.t)}<rt>${escapeHtml(p.r)}</rt></ruby>`
     : escapeHtml(p.t)).join("");
   const html = segments.map((s, i) => s.b
-    ? `<span class="w" data-i="${i}">${s.parts ? ruby(s.parts) : escapeHtml(s.t)}</span>`
+    ? `<span class="w${s.rare ? " rare" : ""}" data-i="${i}">${s.parts ? ruby(s.parts) : escapeHtml(s.t)}</span>`
     : escapeHtml(s.t)).join("");
   return markdown(html);
 }

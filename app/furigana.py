@@ -126,8 +126,21 @@ def _context_reading(prev, word, nxt=None) -> str | None:
     # 年 on its own (年のわりに, 年が近い) is とし "age"; after a number (2020年, 一年) it stays ねん.
     if word.surface == "年" and (prev is None or prev.feature.pos1 in {"助詞", "補助記号"}):
         return "とし"
+    # 言う is いう; the analyzer gives the spoken ゆう.
+    if getattr(word.feature, "orthBase", "") == "言う":
+        kana = _reading(word) or ""
+        if kana.startswith("ゆ"):
+            return "い" + kana[1:]
     if prev is None:
         return None
+    # Weekday in brackets after a date: 8日（月） is げつ, not がつ.
+    if (word.surface in _WEEKDAYS and prev.surface in {"（", "("}
+            and nxt is not None and nxt.surface in {"）", ")"}):
+        return _WEEKDAYS[word.surface]
+    # Family with お〜さん: お母さん おかあさん, お父さん おとうさん (not おははさん).
+    if (word.surface in _HONORIFIC_FAMILY and prev.surface == "お"
+            and nxt is not None and nxt.surface in {"さん", "様", "ちゃん"}):
+        return _HONORIFIC_FAMILY[word.surface]
     # Nationality: アメリカ人, 日本人, 外国人 -> じん (not にん)
     if word.surface == "人" and word.feature.pos1 == "接尾辞" and (
             word.feature.pos3 == "一般" and prev.feature.pos3 == "地名" or prev.surface == "外国"):
@@ -141,13 +154,37 @@ def _context_reading(prev, word, nxt=None) -> str | None:
     # mountains really are 〜やま, so this stays specific.
     if word.surface == "山" and prev.surface == "富士":
         return "さん"
-    # Days: 土曜日, 何曜日 -> び; 誕生日 -> たんじょうび
-    if word.surface == "日" and (prev.surface.endswith("曜") or prev.surface == "誕生"):
+    # Days: 土曜日, 何曜日 -> び; 誕生日 -> たんじょうび; and "noun + 日" days like
+    # 収集日, 休館日, 定休日, 記念日 -> び (the analyzer reads them ひ or にち).
+    if word.surface == "日" and (prev.surface.endswith("曜") or prev.surface == "誕生" or (
+            word.feature.pos1 == "名詞" and prev.feature.pos1 == "名詞"
+            and prev.feature.pos2 == "普通名詞" and _KANJI.search(prev.surface[-1]))):
         return "び"
     return None
 
 
 _SPECIAL_COUNTED = {"二十歳": "はたち"}  # age 20 has its own word
+
+_WEEKDAYS = {"月": "げつ", "火": "か", "水": "すい", "木": "もく", "金": "きん", "土": "ど", "日": "にち"}
+_HONORIFIC_FAMILY = {"母": "かあ", "父": "とう", "兄": "にい", "姉": "ねえ"}
+_DIGITS = re.compile(r"^[0-9０-９]+$")
+
+
+def _digit_counter(num: str, counter: str) -> dict | None:
+    """The counter after Arabic digits (20分 -> ぷん, 3階 -> がい); the digits get no
+    ruby. Words read as a whole (2人 ふたり, 5日 いつか) come back as one word."""
+    if not _DIGITS.match(num) or counter not in _COUNTERS:
+        return None
+    value = int(num.translate(str.maketrans("０１２３４５６７８９", "0123456789")))
+    last = value % 10
+    ruby = _COUNTERS[counter][last - 1 if last else 9]  # a final 0 sounds like 十 (じゅっぷん)
+    if isinstance(ruby, tuple):
+        return {"t": counter, "b": counter, "k": ruby[1], "p": "suffix", "parts": [{"t": counter, "r": ruby[1]}]}
+    if ruby is None or not 1 <= value <= 10:
+        return None  # 1日 (ついたち or いちにち), 20日 (はつか): leave it to the analyzer
+    ruby = _COUNTERS[counter][value - 1]
+    return {"t": num + counter, "b": num + counter, "k": ruby, "p": "noun", "whole": True,
+            "parts": [{"t": num + counter, "r": ruby}]}
 
 
 def _counter_word(num: str, counter: str, num_reading: str | None = None) -> dict | None:
@@ -239,6 +276,13 @@ def annotate(text: str) -> list[dict]:
                     counted = _counter_word(surface, following.surface, _reading(word))
                     if counted:
                         segments.append(counted)
+                        skip = True
+                        continue
+                    counter = _digit_counter(surface, following.surface)
+                    if counter:
+                        if not counter.pop("whole", False):
+                            push_plain(surface)
+                        segments.append(counter)
                         skip = True
                         continue
                 # A number + counter the analyzer kept as one word (三本 read as the

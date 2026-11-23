@@ -122,6 +122,16 @@ CREATE TABLE IF NOT EXISTS lesson_progress (
     updated_at  REAL    NOT NULL
 );
 
+-- Answers to the reading passages (app/reading.py), one row per attempt.
+CREATE TABLE IF NOT EXISTS reading_results (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    passage_id  TEXT    NOT NULL,
+    correct     INTEGER NOT NULL,
+    total       INTEGER NOT NULL,
+    elapsed_ms  INTEGER,
+    created_at  REAL    NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS deck_reviews (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     card_id     INTEGER NOT NULL REFERENCES deck_cards (id) ON DELETE CASCADE,

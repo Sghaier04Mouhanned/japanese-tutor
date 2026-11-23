@@ -77,13 +77,14 @@ def start_practice(lesson_id: str):
     return {"chat_id": cur.lastrowid, "title": title}
 
 
-def _add_lesson_words(conn, lesson: dict) -> int:
+def add_words(conn, vocab: list[dict], source: str = "lesson") -> int:
+    """Hand-written vocabulary (lessons, reading passages) into the notebook and reviews."""
     added = 0
-    for v in lesson["vocab"]:
+    for v in vocab:
         cur = conn.execute(
             """INSERT OR IGNORE INTO vocab (entry_id, word, reading, meaning, source, created_at)
-               VALUES (NULL, ?, ?, ?, 'lesson', ?)""",
-            (v["word"], v["reading"], v["meaning"], time.time()),
+               VALUES (NULL, ?, ?, ?, ?, ?)""",
+            (v["word"], v["reading"], v["meaning"], source, time.time()),
         )
         if cur.rowcount:
             add_card(conn, "vocab", cur.lastrowid)
@@ -97,5 +98,5 @@ def complete_lesson(lesson_id: str):
     lesson = _lesson_or_404(lesson_id)
     with connect() as conn:
         _set_status(conn, lesson_id, "done")
-        added = _add_lesson_words(conn, lesson)
+        added = add_words(conn, lesson["vocab"])
     return {"ok": True, "words_added": added}

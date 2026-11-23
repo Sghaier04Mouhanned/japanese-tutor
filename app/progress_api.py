@@ -7,7 +7,7 @@ from datetime import date, timedelta
 
 from fastapi import APIRouter
 
-from . import kana, kanji, lessons, srs
+from . import kana, kanji, lessons, reading, srs
 from .db import connect
 
 router = APIRouter(prefix="/api/progress", tags=["progress"])
@@ -35,8 +35,11 @@ def progress():
                                           SELECT reviewed_at FROM deck_reviews UNION ALL
                                           SELECT reviewed_at FROM kanji_reviews)
                                       WHERE reviewed_at >= ? GROUP BY d""", since)
-        quiz_days = _per_day(conn, """SELECT date(created_at, 'unixepoch', 'localtime') d, SUM(total)
-                                      FROM quiz_sessions WHERE created_at >= ? GROUP BY d""", since)
+        # Quiz and reading questions share the chart's third series.
+        quiz_days = _per_day(conn, """SELECT date(created_at, 'unixepoch', 'localtime') d, SUM(total) FROM (
+                                          SELECT created_at, total FROM quiz_sessions UNION ALL
+                                          SELECT created_at, total FROM reading_results)
+                                      WHERE created_at >= ? GROUP BY d""", since)
 
         sessions = [dict(r) for r in conn.execute(
             "SELECT created_at, total, correct, by_type FROM quiz_sessions ORDER BY created_at DESC LIMIT 20")]
@@ -56,7 +59,9 @@ def progress():
                    SELECT reviewed_at t FROM kana_reviews UNION ALL
                    SELECT reviewed_at FROM deck_reviews UNION ALL
                    SELECT reviewed_at FROM kanji_reviews UNION ALL
-                   SELECT created_at FROM quiz_sessions)""")}
+                   SELECT created_at FROM quiz_sessions UNION ALL
+                   SELECT created_at FROM reading_results)""")}
+        read_ids = {r[0] for r in conn.execute("SELECT DISTINCT passage_id FROM reading_results")}
         total_reviews = conn.execute(
             """SELECT (SELECT COUNT(*) FROM kana_reviews) + (SELECT COUNT(*) FROM deck_reviews)
                     + (SELECT COUNT(*) FROM kanji_reviews)""").fetchone()[0]
@@ -109,5 +114,8 @@ def progress():
         "vocab": vocab,
         "mistakes": mistakes,
         "kanji": kanji_progress,
+        "reading": {lvl: {"done": sum(1 for p in reading.PASSAGES if reading.level(p) == lvl and p["id"] in read_ids),
+                          "total": sum(1 for p in reading.PASSAGES if reading.level(p) == lvl)}
+                    for lvl in sorted({reading.level(p) for p in reading.PASSAGES}, reverse=True)},
         "totals": {"study_days": len(all_days), "reviews": total_reviews, "quizzes": total_quizzes},
     }

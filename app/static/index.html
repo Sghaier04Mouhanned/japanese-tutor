@@ -22,6 +22,7 @@
     </nav>
     <nav class="topbar-end" aria-label="More">
       <a href="#kanji" data-view="kanji">Kanji</a>
+      <a href="#reading" data-view="reading">Reading</a>
       <a href="#learn" data-view="learn">Kana</a>
       <a href="#notebook" data-view="notebook">Notebook</a>
     </nav>
@@ -101,7 +102,7 @@
           <div class="legend" id="activity-legend">
             <span><i class="dot s1"></i>Kana reviews</span>
             <span><i class="dot s2"></i>Word, kanji &amp; mistake reviews</span>
-            <span><i class="dot s3"></i>Quiz questions</span>
+            <span><i class="dot s3"></i>Quiz &amp; reading questions</span>
           </div>
           <div class="chart-svg" id="activity-chart"></div>
           <div id="activity-table" hidden></div>
@@ -217,6 +218,11 @@
     <!-- KANJI -->
     <section class="view" id="view-kanji" hidden>
       <div class="panel" id="kanji-body"></div>
+    </section>
+
+    <!-- READING -->
+    <section class="view" id="view-reading" hidden>
+      <div class="panel" id="reading-body"></div>
     </section>
 
     <!-- QUIZ -->

@@ -739,6 +739,9 @@ kbd {
 
 @media (max-width: 640px) {
   .nav a { padding: .4rem .6rem; font-size: .88rem; flex: none; }
+  /* Four links on the right: tighter, and scrollable rather than widening the page. */
+  .topbar-end { gap: .8rem; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+  .topbar-end a { font-size: .85rem; flex: none; }
   .container { padding: .75rem .75rem 2.5rem; }
   .sky-box { min-height: 0; padding: 3rem 1.1rem 9rem; border-radius: 14px; }
   .hero-title { font-size: clamp(30px, 9vw, 38px); }
@@ -765,3 +768,23 @@ kbd {
   .bubble { max-width: 100%; }
   .msg-assistant .avatar { display: none; }
 }
+
+/* Reading practice */
+.reading-toolbar { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.25rem; font-size: .88rem; }
+.reading-text { margin-top: 1rem; background: var(--deep); border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem 1.25rem; }
+.reading-para { display: flex; gap: .5rem; align-items: flex-start; }
+.reading-para + .reading-para { margin-top: .9rem; }
+.reading-para .jp-line { flex: 1; font-family: var(--jp); font-size: 1.15rem; line-height: 2.1; }
+.reading-para .jp-line p, .reading-q-head .jp-line p { margin: 0; }
+.reading-page.no-furigana .w:not(.rare) rt { display: none; }
+.reading-page rt { font-size: .55em; color: var(--muted); }
+.reading-q { margin-top: 1.4rem; }
+.reading-q-head { display: flex; gap: .6rem; align-items: baseline; }
+.reading-q-head .jp-line { font-family: var(--jp); font-size: 1.1rem; line-height: 2; }
+.reading-q-num { font-family: var(--mono); font-size: .8rem; color: var(--accent); flex: none; }
+.reading-choices { width: 100%; }
+.reading-choice { font-size: 1rem; line-height: 1.9; }
+.reading-choice.picked { border-color: var(--accent); background: var(--accent-soft); }
+.reading-score { font-size: 1.05rem; margin-top: .75rem; }
+.reading-translation summary { cursor: pointer; font-weight: 600; font-size: 1.05rem; }
+.reading-en { white-space: pre-line; margin: .6rem 0 0; }
