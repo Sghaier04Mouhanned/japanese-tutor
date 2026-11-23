@@ -611,6 +611,27 @@ kbd {
   .kanji-review-answer { flex-direction: column; text-align: center; }
 }
 
+/* handwriting */
+.write-wrap { display: flex; flex-direction: column; align-items: center; gap: .5rem; }
+.write-canvas {
+  width: min(320px, 82vw); aspect-ratio: 1; height: auto;
+  background: var(--deep); border: 1px solid var(--border-strong); border-radius: 12px;
+  touch-action: none; cursor: crosshair; /* no page scrolling while drawing */
+}
+.write-status { min-height: 1.5rem; font-size: .92rem; color: var(--muted); text-align: center; max-width: 30rem; }
+.write-status.ok { color: var(--ok); }
+.write-status.bad { color: var(--bad); }
+.write-section h3 { gap: .75rem; flex-wrap: wrap; }
+.write-answer { display: flex; align-items: center; gap: 1rem; margin-top: .5rem; }
+.write-results { display: flex; flex-wrap: wrap; gap: .45rem; justify-content: center; margin: 1rem 0; }
+.write-results .kanji-tile { width: 4.6rem; }
+.session-bar .back { color: var(--muted); text-decoration: none; }
+@media (max-width: 640px) {
+  .session-bar { flex-wrap: wrap; }
+  .session-bar .segmented { order: 3; width: 100%; }
+  .session-bar .segmented button { flex: 1; }
+}
+
 /* quiz */
 .quiz-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .5rem; padding: .5rem 0; }
 .quiz-type { font-family: var(--mono); font-size: .75rem; color: var(--muted); display: flex; gap: .5rem; align-items: center; }

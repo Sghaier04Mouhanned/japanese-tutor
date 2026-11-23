@@ -1513,6 +1513,188 @@ function strokeDiagram(paths, { size = 220, numbers = true } = {}) {
   return { node: root, play };
 }
 
+/* ---------- handwriting: draw strokes, check them against KanjiVG ---------- */
+
+const PAD_POINTS = 32;   // every stroke is compared as 32 evenly spaced points
+const PAD_TOLERANCE = 18; // mean distance allowed, in KanjiVG's 109×109 units
+let samplerSvg = null;
+
+function samplePath(d, n = PAD_POINTS) {
+  if (!samplerSvg) {
+    samplerSvg = svg("svg", { width: 0, height: 0, "aria-hidden": "true",
+      style: "position:absolute;width:0;height:0;overflow:hidden" });
+    document.body.append(samplerSvg);
+  }
+  const p = svg("path", { d });
+  samplerSvg.append(p);
+  const len = p.getTotalLength();
+  const pts = Array.from({ length: n }, (_, i) => {
+    const q = p.getPointAtLength(len * i / (n - 1));
+    return [q.x, q.y];
+  });
+  p.remove();
+  return pts;
+}
+
+function resampleStroke(points, n = PAD_POINTS) {
+  if (points.length < 2) return Array.from({ length: n }, () => points[0]);
+  const dist = [0];
+  for (let i = 1; i < points.length; i++) {
+    dist.push(dist[i - 1] + Math.hypot(points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]));
+  }
+  const total = dist.at(-1) || 1;
+  const out = [];
+  let j = 0;
+  for (let i = 0; i < n; i++) {
+    const t = total * i / (n - 1);
+    while (j < dist.length - 2 && dist[j + 1] < t) j++;
+    const seg = dist[j + 1] - dist[j] || 1;
+    const f = Math.min(1, Math.max(0, (t - dist[j]) / seg));
+    out.push([points[j][0] + (points[j + 1][0] - points[j][0]) * f, points[j][1] + (points[j + 1][1] - points[j][1]) * f]);
+  }
+  return out;
+}
+
+const meanDistance = (a, b) => a.reduce((s, p, i) => s + Math.hypot(p[0] - b[i][0], p[1] - b[i][1]), 0) / a.length;
+
+const pointGap = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
+const strokeLength = pts => pts.slice(1).reduce((s, p, i) => s + pointGap(p, pts[i]), 0);
+
+// Compare one drawn stroke with the stroke expected next (index k).
+function judgeStroke(drawn, targets, k) {
+  const u = resampleStroke(drawn);
+  // Position and shape, ignoring direction (that's checked separately below).
+  const fit = t => Math.min(meanDistance(u, t), meanDistance(u, [...t].reverse()));
+  // If a later stroke fits clearly better, the learner skipped ahead.
+  let best = k, bestFit = fit(targets[k]);
+  for (let j = k + 1; j < targets.length; j++) {
+    const f = fit(targets[j]);
+    if (f < bestFit * 0.7) { best = j; bestFit = f; }
+  }
+  if (bestFit > PAD_TOLERANCE) return { ok: false, why: "shape" };
+  if (best !== k) return { ok: false, why: "order", j: best };
+  // Direction by the end points, which works even for short strokes, where the
+  // point-by-point distance can't tell forwards from backwards. Tiny dots are exempt.
+  const t = targets[k];
+  const forwards = pointGap(u[0], t[0]) + pointGap(u.at(-1), t.at(-1));
+  const backwards = pointGap(u[0], t.at(-1)) + pointGap(u.at(-1), t[0]);
+  if (strokeLength(t) > 6 && backwards < forwards) return { ok: false, why: "direction" };
+  return { ok: true };
+}
+
+// A drawing pad for one character. mode: "trace" (faint guide) or "memory".
+function writingPad(paths, { mode = "trace", onDone } = {}) {
+  const RES = 600, SCALE = RES / 109;
+  const targets = paths.map(d => samplePath(d));
+  const shapes = paths.map(d => new Path2D(d));
+  const canvas = el("canvas", { class: "write-canvas", width: RES, height: RES,
+    "aria-label": "Writing area: draw the strokes in order", role: "img" });
+  const status = el("div", { class: "write-status", role: "status", "aria-live": "polite" });
+  const ctx = canvas.getContext("2d");
+  let k, mistakes, missesHere, current, flash, hint, finished;
+
+  const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  function polyline(points, color, width) {
+    if (!points?.length) return;
+    ctx.beginPath();
+    ctx.moveTo(points[0][0] * SCALE, points[0][1] * SCALE);
+    for (const p of points.slice(1)) ctx.lineTo(p[0] * SCALE, p[1] * SCALE);
+    if (points.length === 1) ctx.lineTo(points[0][0] * SCALE + .5, points[0][1] * SCALE + .5);
+    ctx.strokeStyle = color; ctx.lineWidth = width * SCALE; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.stroke();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, RES, RES);
+    ctx.save();
+    ctx.setLineDash([6, 8]); ctx.strokeStyle = "rgba(255,255,255,.08)"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(RES / 2, 0); ctx.lineTo(RES / 2, RES); ctx.moveTo(0, RES / 2); ctx.lineTo(RES, RES / 2); ctx.stroke();
+    ctx.restore();
+    ctx.save();
+    ctx.scale(SCALE, SCALE); ctx.lineCap = "round"; ctx.lineJoin = "round";
+    if (mode === "trace") {
+      ctx.strokeStyle = "rgba(255,255,255,.13)"; ctx.lineWidth = 3.2;
+      shapes.forEach(s => ctx.stroke(s));
+    }
+    ctx.strokeStyle = css("--text"); ctx.lineWidth = 3.4;
+    shapes.slice(0, k).forEach(s => ctx.stroke(s));
+    if (hint && !finished) {
+      ctx.setLineDash([3, 3]); ctx.strokeStyle = css("--accent"); ctx.lineWidth = 3;
+      ctx.stroke(shapes[k]);
+      ctx.setLineDash([]); ctx.fillStyle = css("--accent");
+      ctx.beginPath(); ctx.arc(targets[k][0][0], targets[k][0][1], 3, 0, Math.PI * 2); ctx.fill(); // where to start
+    }
+    ctx.restore();
+    if (flash) polyline(flash, css("--bad"), 3.4);
+    if (current) polyline(current, css("--accent"), 3.4);
+  }
+
+  function say(text, kind = "") {
+    status.className = `write-status ${kind}`;
+    status.textContent = text;
+  }
+
+  function reset(newMode = mode) {
+    mode = newMode;
+    k = 0; mistakes = 0; missesHere = 0; current = null; flash = null; hint = false; finished = false;
+    say(`Stroke 1 of ${paths.length}. Start drawing.`);
+    draw();
+  }
+
+  function finishStroke() {
+    const drawn = current;
+    current = null;
+    if (!drawn || finished) return draw();
+    const verdict = judgeStroke(drawn, targets, k);
+    if (verdict.ok) {
+      k++; missesHere = 0; hint = false; flash = null;
+      if (k === paths.length) {
+        finished = true;
+        say(mistakes ? `✓ Done, with ${mistakes} mistake${mistakes > 1 ? "s" : ""}.` : "✓ Perfect! Every stroke in the right order and direction.", "ok");
+        onDone?.(mistakes);
+      } else {
+        say(`✓ Stroke ${k} correct. Now stroke ${k + 1} of ${paths.length}.`, "ok");
+      }
+    } else {
+      mistakes++; missesHere++;
+      flash = drawn;
+      later(() => { flash = null; draw(); }, 700);
+      const message = {
+        direction: `Right place, wrong direction: stroke ${k + 1} starts from the other end.`,
+        order: `That's stroke ${verdict.j + 1}. Stroke ${k + 1} comes first.`,
+        shape: `Not quite. Check where stroke ${k + 1} starts and how it moves.`,
+      }[verdict.why];
+      if (missesHere >= 2) hint = true;
+      say(message + (hint ? " The dotted line shows it." : ""), "bad");
+    }
+    draw();
+  }
+
+  const toPad = e => {
+    const r = canvas.getBoundingClientRect();
+    return [(e.clientX - r.left) / r.width * 109, (e.clientY - r.top) / r.height * 109];
+  };
+  canvas.addEventListener("pointerdown", e => {
+    if (finished) return;
+    try { canvas.setPointerCapture(e.pointerId); } catch { /* keep drawing without capture */ }
+    current = [toPad(e)];
+    draw();
+  });
+  canvas.addEventListener("pointermove", e => {
+    if (!current) return;
+    const p = toPad(e);
+    const last = current.at(-1);
+    if (Math.hypot(p[0] - last[0], p[1] - last[1]) > .6) { current.push(p); draw(); }
+  });
+  canvas.addEventListener("pointerup", finishStroke);
+  canvas.addEventListener("pointercancel", () => { current = null; draw(); });
+
+  const showHint = () => { if (!finished) { hint = true; draw(); say(`Stroke ${k + 1}: follow the dotted line from the dot.`); } };
+  reset(mode);
+  return { canvas, status, reset, showHint, get mistakes() { return mistakes; } };
+}
+
 function kanjiTile(k) {
   return el("a", { class: `kanji-tile cell ${k.status}`, href: `#kanji/${encodeURIComponent(k.kanji)}`,
     title: `${k.kanji}: ${k.meaning}` },
@@ -1522,6 +1704,7 @@ function kanjiTile(k) {
 
 async function renderKanji() {
   const body = $("#kanji-body");
+  if (routeArg === "write") return renderWritingSession(body);
   if (routeArg) return renderKanjiDetail(body, decodeURIComponent(routeArg));
   const data = await api.get("/api/kanji");
   if (!data.available) {
@@ -1557,7 +1740,9 @@ async function renderKanji() {
     el("div", { class: "progress-line" },
       el("div", { class: "progress" }, el("div", { class: "progress-fill", style: `width:${items.length ? known / items.length * 100 : 0}%` })),
       el("span", {}, `${known} / ${items.length} known · ${studying} studying`)),
-    el("div", { class: "kanji-actions" }, learnBtn, el("span", { class: "muted", id: "kanji-added", role: "status" })),
+    el("div", { class: "kanji-actions" }, learnBtn,
+      el("a", { class: "btn", href: "#kanji/write" }, "✍ Writing practice"),
+      el("span", { class: "muted", id: "kanji-added", role: "status" })),
     el("div", { class: "legend" },
       el("span", {}, el("i", { class: "dot locked" }), "Not studied"),
       el("span", {}, el("i", { class: "dot learning" }), "Learning"),
@@ -1566,6 +1751,102 @@ async function renderKanji() {
     el("div", { class: "kanji-grid" }, items.map(kanjiTile)),
     el("p", { class: "credit" }, "Readings and meanings: KANJIDIC2 (EDRDG, CC BY-SA 4.0). Stroke order: KanjiVG (Ulrich Apel, CC BY-SA 3.0)."),
   );
+}
+
+function writingSection(paths) {
+  const mode = prefs.get("write.mode", "trace");
+  const pad = writingPad(paths, { mode });
+  const modes = el("div", { class: "segmented" }, [["trace", "Trace"], ["memory", "From memory"]].map(([m, label]) =>
+    el("button", { type: "button", class: m === mode ? "active" : "", onclick: e => {
+      prefs.set("write.mode", m);
+      modes.querySelectorAll("button").forEach(b => b.classList.toggle("active", b === e.currentTarget));
+      pad.reset(m);
+    } }, label)));
+  return el("div", { class: "lesson-section write-section" },
+    el("h3", {}, "Practice writing", modes),
+    el("p", { class: "muted" }, "Draw each stroke with your mouse, finger or pen. Order and direction are checked as you go."),
+    el("div", { class: "write-wrap" },
+      pad.canvas,
+      pad.status,
+      el("div", { class: "btn-row" },
+        el("button", { class: "btn btn-ghost", type: "button", onclick: pad.showHint }, "Show hint"),
+        el("button", { class: "btn btn-ghost", type: "button", onclick: () => pad.reset() }, "↻ Start over"))));
+}
+
+// Write kanji from memory: see the meaning and reading, draw the character.
+async function renderWritingSession(body) {
+  const source = prefs.get("write.source", "studied");
+  let { items } = await api.get(`/api/kanji/writing-set?source=${source}&limit=10`);
+  let usedSource = source;
+  if (!items.length && source === "studied") {  // nothing studied yet: start with the N5 list
+    ({ items } = await api.get("/api/kanji/writing-set?source=N5&limit=10"));
+    usedSource = "N5";
+  }
+  const results = [];
+  let i = 0;
+
+  const sources = el("div", { class: "segmented" }, [["studied", "My kanji"], ["N5", "N5 list"], ["N4", "N4 list"]].map(([s, label]) =>
+    el("button", { type: "button", class: s === source ? "active" : "",
+      onclick: () => { prefs.set("write.source", s); renderWritingSession(body); } }, label)));
+
+  function show() {
+    if (i >= items.length) return summary();
+    const item = items[i];
+    const next = el("button", { class: "btn btn-primary", type: "button", hidden: true,
+      onclick: () => { i++; show(); } }, el("span", { class: "arrow" }, i + 1 < items.length ? "Next kanji" : "See results"));
+    let revealed = false;
+    const pad = writingPad(item.stroke_paths, { mode: "memory", onDone: mistakes => {
+      results.push({ kanji: item.kanji, mistakes, peeked: revealed });
+      answer.hidden = false;
+      next.hidden = false;
+      next.focus();
+    } });
+    const answer = el("div", { class: "write-answer", hidden: true },
+      el("span", { lang: "ja", class: "kanji-big", style: "font-size:2.5rem" }, item.kanji),
+      el("a", { href: `#kanji/${encodeURIComponent(item.kanji)}` }, "Open kanji page"));
+    body.replaceChildren(
+      el("div", { class: "session-bar" },
+        el("a", { class: "back", href: "#kanji" }, "← Kanji"),
+        el("span", {}, `Kanji ${i + 1} / ${items.length}`),
+        el("div", { class: "progress" }, el("div", { class: "progress-fill", style: `width:${i / items.length * 100}%` })),
+        sources),
+      el("div", { class: "card-stage" },
+        el("div", { class: "prompt-label" }, `Write the kanji for (${item.strokes} strokes):`),
+        el("div", { class: "quiz-meaning" }, `“${item.meanings.join(", ")}”`),
+        el("div", { class: "muted", lang: "ja" }, [item.kun.join("、"), item.on.join("、")].filter(Boolean).join(" ・ ")),
+        el("div", { class: "write-wrap" }, pad.canvas, pad.status,
+          el("div", { class: "btn-row" },
+            el("button", { class: "btn btn-ghost", type: "button", onclick: () => { revealed = true; pad.reset("trace"); } }, "Show the kanji"),
+            el("button", { class: "btn btn-ghost", type: "button", onclick: () => { revealed = true; pad.showHint(); } }, "Hint for this stroke"),
+            el("button", { class: "btn btn-ghost", type: "button", onclick: () => { results.push({ kanji: item.kanji, mistakes: null, peeked: true }); i++; show(); } }, "Skip"))),
+        answer,
+        next));
+  }
+
+  function summary() {
+    const clean = results.filter(r => r.mistakes === 0 && !r.peeked).length;
+    body.replaceChildren(el("div", { class: "empty" },
+      el("div", { class: "big" }, clean === results.length ? "🎉" : "✍️"),
+      el("div", { class: "score-big" }, `${clean} / ${results.length}`),
+      el("p", {}, "written from memory without mistakes"),
+      el("div", { class: "write-results" }, results.map(r =>
+        el("a", { class: `cell kanji-tile ${r.mistakes === 0 && !r.peeked ? "mastered" : r.mistakes === null ? "locked" : "learning"}`,
+          href: `#kanji/${encodeURIComponent(r.kanji)}`,
+          title: r.mistakes === null ? "skipped" : `${r.mistakes} mistake(s)${r.peeked ? ", used a hint" : ""}` },
+          el("span", { class: "k", lang: "ja" }, r.kanji),
+          el("span", { class: "r" }, r.mistakes === null ? "skipped" : r.mistakes === 0 && !r.peeked ? "perfect" : `${r.mistakes} miss${r.mistakes === 1 ? "" : "es"}${r.peeked ? " · hint" : ""}`)))),
+      el("div", { class: "btn-row" },
+        el("button", { class: "btn btn-primary", type: "button", onclick: () => renderWritingSession(body) }, "Practice again"),
+        el("a", { class: "btn", href: "#kanji" }, "Back to kanji"))));
+  }
+
+  if (!items.length) {
+    body.replaceChildren(el("div", { class: "empty" }, el("p", {}, "No kanji to practise yet."),
+      el("a", { class: "btn", href: "#kanji" }, "Back to kanji")));
+    return;
+  }
+  if (usedSource !== source) prefs.set("write.source", usedSource);
+  show();
 }
 
 async function renderKanjiDetail(body, ch) {
@@ -1603,6 +1884,7 @@ async function renderKanjiDetail(body, ch) {
         k.lesson_label && el("p", { class: "muted" }, "First used in ",
           el("a", { href: `#lessons/${k.lesson}` }, k.lesson_label)),
         el("div", { class: "btn-row", style: "justify-content:flex-start" }, add))),
+    writingSection(k.stroke_paths),
     el("div", { class: "lesson-section" },
       el("h3", {}, "Example words"),
       el("table", { class: "vocab-table" }, el("tbody", {}, k.examples.map(x =>

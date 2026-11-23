@@ -121,6 +121,31 @@ def learn_next(body: LearnNext):
     return {"added": todo}
 
 
+@router.get("/writing-set")
+def writing_set(source: str = "studied", limit: int = 10):
+    """Kanji to practise writing from memory: the learner's own kanji (most
+    overdue first), or the first not-yet-studied ones of a list."""
+    _require_data()
+    limit = max(1, min(limit, 30))
+    with connect() as conn:
+        if source == "studied":
+            chosen = [r["kanji"] for r in conn.execute("SELECT kanji FROM kanji_cards ORDER BY due_ts LIMIT ?", (limit,))]
+        elif source in kanji.GROUPS:
+            status = _statuses(conn)
+            ordered = _ordered(source)
+            chosen = ([e["kanji"] for e in ordered if e["kanji"] in status] + [e["kanji"] for e in ordered if e["kanji"] not in status])[:limit]
+        else:
+            raise HTTPException(400, "source must be 'studied' or a kanji group")
+    items = []
+    for ch in chosen:
+        e = kanji.get(ch)
+        paths = kanji.strokes(ch)
+        if e and paths:
+            items.append({"kanji": ch, "meanings": e["meanings"][:3], "on": e["on"][:2], "kun": e["kun"][:2],
+                          "strokes": len(paths), "stroke_paths": paths})
+    return {"items": items}
+
+
 # ---------- single kanji ----------
 
 @router.get("/{ch}")

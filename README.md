@@ -41,6 +41,9 @@ passing the JLPT (N5, then N4), powered by a free AI API or a local model.
 - Animated stroke order (KanjiVG), on/kun readings with audio, meanings, and example words
   (lesson vocabulary first, then common dictionary words)
 - Add kanji to your reviews one by one or five at a time; they join the Review tab and the dashboard
+- Handwriting: draw each stroke with a mouse, finger or pen; order, direction and shape are checked
+  stroke by stroke against KanjiVG, with hints after repeated misses. Trace or write from memory on
+  any kanji page, or run a writing session (see the meaning and reading, write the kanji)
 
 **Dictionary, notebook and reviews**
 - Click any Japanese word (chat or lessons) to look it up in JMdict and save it
