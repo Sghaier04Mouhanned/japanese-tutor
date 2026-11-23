@@ -166,6 +166,9 @@ def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
         kana = _reading(word) or ""
         if kana.startswith("ひら"):
             return "あ" + kana[2:]
+    # Polite plural 方 after people: 先生方 せんせいがた, あなた方 あなたがた, 皆様方 みなさまがた.
+    if word.surface == "方" and (prev.surface in {"先生", "あなた", "皆様", "様"} or prev.surface.endswith("様")):
+        return "がた"
     # 洗濯物 せんたくもの (not ぶつ); the analyzer splits off 物 after these nouns.
     if word.surface == "物" and prev.surface in _MONO_AFTER:
         return "もの"
