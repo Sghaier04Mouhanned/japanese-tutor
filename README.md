@@ -117,10 +117,12 @@ passing the JLPT (N5, then N4, N3 and N2), powered by a free AI API or a local m
 - Once you start N3, Sensei may use N3 grammar too; kanji from these lessons join the Kanji section
   automatically (the kanji index rebuilds itself when lessons add new kanji)
 
-**JLPT N2 lessons (10 so far)**
+**JLPT N2 lessons (20 so far)**
 - 〜にもかかわらず, 〜からこそ/〜こそ, 〜に違いない/〜に決まっている, 〜ものの/〜とはいえ,
   〜をきっかけに/〜を通じて, 〜に関して/〜に基づいて, 〜ばかりか/〜うえに, 〜ざるを得ない,
   〜次第/〜次第で, 〜一方だ/〜つつある
+- 〜に限らず/〜に限って, 〜にすぎない, 〜かねる/〜かねない, 〜おそれがある, 〜つつ/〜つつも,
+  〜からには/〜以上は, 〜にしては, 〜としたら/〜とすれば, 〜ようがない, 〜ものだ
 - Sensei may use grammar up to the highest level you've started a lesson in
 
 ## Setup

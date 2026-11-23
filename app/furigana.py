@@ -62,6 +62,7 @@ _EVERYDAY_READINGS = {
     "下手": "へた",
     "何時": "なんじ",  # なんどき is literary
     "富士山": "ふじさん",  # ふじやま is old-fashioned / poetic
+    "山道": "やまみち",  # さんどう is the formal reading
     "重そう": "おもそう",  # "looks heavy"; read as one noun it becomes じゅうそう (baking soda)
 }
 
@@ -130,6 +131,9 @@ def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
     # 年 on its own (年のわりに, 年が近い) is とし "age"; after a number (2020年, 一年) it stays ねん.
     if word.surface == "年" and (prev is None or prev.feature.pos1 in {"助詞", "補助記号"}):
         return "とし"
+    # 体 on its own before a particle is からだ (body); たい is for compounds like 体育.
+    if word.surface == "体" and nxt is not None and nxt.surface in {"に", "が", "を", "は", "も", "の", "で"}:
+        return "からだ"
     # 道案内 (giving directions) is みちあんない.
     if word.surface == "道" and nxt is not None and nxt.surface == "案内":
         return "みち"
