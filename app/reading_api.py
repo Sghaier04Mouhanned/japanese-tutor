@@ -17,10 +17,21 @@ def _passage_or_404(passage_id: str) -> dict:
     return passage
 
 
-def _annotate(text: str) -> list[dict]:
-    """Furigana segments, with words holding a kanji beyond the study lists marked
+_LIST_ORDER = ("N5", "N4", "N3", "N2")
+
+
+def _known_kanji(level: str) -> set[str] | None:
+    """Kanji a learner at this level is expected to read: the lists up to it, plus
+    kanji the lessons teach."""
+    if not kanji.available():
+        return None
+    upto = _LIST_ORDER[: _LIST_ORDER.index(level) + 1] if level in _LIST_ORDER else _LIST_ORDER
+    return {k for k, e in kanji.all_kanji().items() if e["group"] in upto or e["group"] == "lessons"}
+
+
+def _annotate(text: str, known: set[str] | None) -> list[dict]:
+    """Furigana segments, with words holding a kanji beyond the passage's level marked
     "rare": like the JLPT, the page keeps their readings when furigana is off."""
-    known = kanji.all_kanji() if kanji.available() else None
     segments = furigana.annotate(text)
     if known is not None:
         for seg in segments:
@@ -57,11 +68,12 @@ def get_passage(passage_id: str):
     the answers are sent)."""
     p = _passage_or_404(passage_id)
     index = reading.PASSAGES.index(p)
+    known = _known_kanji(reading.level(p))
     return {
         "id": p["id"], "title": p["title"], "jp_title": p["jp_title"], "kind": p["kind"],
         "minutes": p["minutes"], "level": reading.level(p), "number": reading.number(p),
-        "text": [{"jp": t, "segments": _annotate(t)} for t in p["text"]],
-        "questions": [{"segments": _annotate(q["q"]), "choices": [_annotate(c) for c in q["choices"]]}
+        "text": [{"jp": t, "segments": _annotate(t, known)} for t in p["text"]],
+        "questions": [{"segments": _annotate(q["q"], known), "choices": [_annotate(c, known) for c in q["choices"]]}
                       for q in p["questions"]],
         "next_id": reading.PASSAGES[index + 1]["id"] if index + 1 < len(reading.PASSAGES) else None,
     }
