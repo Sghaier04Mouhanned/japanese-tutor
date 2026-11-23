@@ -30,12 +30,12 @@ STROKES_DIR = ROOT / "data" / "kanjivg" / "kanji"
 # KANJIDIC only has the pre-2010 four-level JLPT tags. Old level 4 is the closest
 # match for today's N5, old level 3 for N4. We say "closest to", not "official".
 OLD_JLPT_TO_LEVEL = {4: "N5", 3: "N4"}
-# Old level 2 (~740 kanji) covers today's N3 and N2 together. Today's N3 adds about
-# 370 kanji to N4, so "closest to N3" is the 300 most frequent old level-2 kanji
-# plus the old level-2 kanji the lessons already use (371 in all).
+# Old level 2 (~740 kanji) covers today's N3 and N2 together, and each of those adds
+# about 370 kanji. So "closest to N3" is the 300 most frequent old level-2 kanji plus
+# the old level-2 kanji the lessons use, and "closest to N2" is the rest of old level 2.
 N3_OLD_LEVEL = 2
 N3_MOST_FREQUENT = 300
-GROUPS = ("N5", "N4", "N3", "lessons")  # "lessons": in the lessons but on none of the lists
+GROUPS = ("N5", "N4", "N3", "N2", "lessons")  # "lessons": in the lessons but on none of the lists
 
 _KANJI_CHAR = re.compile(r"[一-鿿々]")
 _lock = threading.Lock()
@@ -91,12 +91,12 @@ def build() -> int:
                 }
             elem.clear()
 
-    # Narrow old level 2 down to the N3 share (see N3_MOST_FREQUENT).
+    # Split old level 2 into the N3 share (see N3_MOST_FREQUENT) and the N2 share.
     old2 = sorted((e for e in entries.values() if e["group"] == "N3"), key=lambda e: e["freq"] or 9999)
-    keep = {e["kanji"] for e in old2[:N3_MOST_FREQUENT]} | {e["kanji"] for e in old2 if e["kanji"] in in_lessons}
+    n3 = {e["kanji"] for e in old2[:N3_MOST_FREQUENT]} | {e["kanji"] for e in old2 if e["kanji"] in in_lessons}
     for e in old2:
-        if e["kanji"] not in keep:
-            del entries[e["kanji"]]
+        if e["kanji"] not in n3:
+            e["group"] = "N2"
 
     _add_examples(entries)
     INDEX.write_text(json.dumps(entries, ensure_ascii=False), encoding="utf-8")
@@ -128,8 +128,15 @@ def _add_examples(entries: dict[str, dict]) -> None:
     conn.close()
     # JMdict ranks by newspaper frequency (日米, 同日 rank high). For learners,
     # first prefer words whose kanji are all on the N5/N4/N3 lists.
+    # Then words within N2, so N2 kanji get examples made of other study-list kanji.
     beginner = {k for k, e in entries.items() if e["group"] in ("N5", "N4", "N3")}
-    rows.sort(key=lambda r: (not set(_KANJI_CHAR.findall(r[0])) <= beginner, r[2], len(r[0])))
+    studied = beginner | {k for k, e in entries.items() if e["group"] == "N2"}
+
+    def tier(form: str) -> int:
+        chars = set(_KANJI_CHAR.findall(form))
+        return 0 if chars <= beginner else 1 if chars <= studied else 2
+
+    rows.sort(key=lambda r: (tier(r[0]), r[2], len(r[0])))
     for form, data, _priority, entry_id in rows:
         for ch in set(form) & entries.keys():
             # One example per dictionary entry (見通 and 見通し are the same word).

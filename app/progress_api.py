@@ -100,7 +100,7 @@ def progress():
     kanji_progress = {}
     if kanji.available():
         index = kanji.all_kanji()
-        for lvl in ("N5", "N4", "N3"):
+        for lvl in ("N5", "N4", "N3", "N2"):
             members = {k for k, e in index.items() if e["group"] == lvl}
             kanji_progress[lvl] = counts([r for r in kanji_rows if r["kanji"] in members]) | {"total": len(members)}
 

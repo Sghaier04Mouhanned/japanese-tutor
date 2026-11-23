@@ -20,7 +20,7 @@ passing the JLPT (N5, then N4, N3 and N2), powered by a free AI API or a local m
 **JLPT-style quizzes**
 - Kanji reading (漢字読み), spelling (表記), vocabulary (語彙), particles (文法) and listening (聴解)
 - Kanji questions: a kanji's meaning, pick the kanji for a meaning (look-alike choices with similar
-  stroke counts), and the reading of a kanji word; drawn from your studied kanji or the N5/N4/N3 lists
+  stroke counts), and the reading of a kanji word; drawn from your studied kanji or the N5/N4/N3/N2 lists
 - Generated from verified lesson content and your saved words, never by the AI
 - Reading distractors are near misses like on the real test (がっこう / がこう / かっこう)
 - Per-type scores, explanations, and one click to add missed words to your reviews
@@ -36,14 +36,15 @@ passing the JLPT (N5, then N4, N3 and N2), powered by a free AI API or a local m
 - Quiz score trend; study days, total reviews and quizzes
 
 **Kanji study**
-- Lists closest to N5 (103), N4 (181) and N3 (about 370), plus every other kanji used in the lessons.
-  KANJIDIC only has the pre-2010 JLPT levels: old levels 4 and 3 match N5 and N4; old level 2 mixes
-  N3 and N2, so the N3 list is its 300 most common kanji plus the ones the lessons use. There has
-  been no official kanji list since 2010, so these are close guides, not official lists
+- Lists closest to N5 (103), N4 (181), N3 (about 400) and N2 (about 340), plus every other kanji
+  used in the lessons. KANJIDIC only has the pre-2010 JLPT levels: old levels 4 and 3 match N5 and
+  N4; old level 2 mixes N3 and N2, so the N3 list is its 300 most common kanji plus the ones the
+  lessons use, and the N2 list is the rest. There has been no official kanji list since 2010, so
+  these are close guides, not official lists
 - Animated stroke order (KanjiVG), on/kun readings with audio, meanings, and example words
   (lesson vocabulary first, then common dictionary words)
 - Meanings put what learners actually meet first: KANJIDIC's order can mislead (緒 starts with
-  "thong", 校 with "exam"), so 168 kanji have hand-checked meanings first (緒 = together, as in
+  "thong", 校 with "exam"), so 232 kanji have hand-checked meanings first (緒 = together, as in
   一緒) in `app/kanji_meanings.py`. Quiz and writing prompts never show a note containing the answer
 - Add kanji to your reviews one by one or five at a time; they join the Review tab and the dashboard
 - Handwriting: draw each stroke with a mouse, finger or pen; order, direction and shape are checked
