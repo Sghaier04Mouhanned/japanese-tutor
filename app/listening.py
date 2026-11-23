@@ -5,23 +5,26 @@ Each item is a short dialogue or talk with a narrator, like the real test:
 - point   ポイント理解  why / what exactly? (choices printed)
 - summary 概要理解      what is the speaker's main point? (choices only heard)
 - quick   即時応答      pick the best reply to one line (replies only heard)
+- integrated 統合理解   (N2) compare options someone explains with what two people then say
 
 The audio is made with VOICEVOX, one voice per role (N narrator, F woman,
-M man). `python -m app.listening` checks the items; `--readings` prints the
+M man, S staff member). `python -m app.listening` checks the items; `--readings` prints the
 automatic furigana of the transcripts for proofreading.
 """
 
 from __future__ import annotations
 
 # Role -> (VOICEVOX speaker name, style). Missing voices fall back to the default one.
-VOICES = {"N": ("九州そら", "ノーマル"), "F": ("春日部つむぎ", "ノーマル"), "M": ("玄野武宏", "ノーマル")}
-ROLE_LABELS = {"N": "Narrator", "F": "Woman", "M": "Man"}
+VOICES = {"N": ("九州そら", "ノーマル"), "F": ("春日部つむぎ", "ノーマル"), "M": ("玄野武宏", "ノーマル"),
+          "S": ("青山龍星", "ノーマル")}
+ROLE_LABELS = {"N": "Narrator", "F": "Woman", "M": "Man", "S": "Staff"}
 
 KINDS = {
     "task": ("Task-based", "課題理解", True),
     "point": ("Key point", "ポイント理解", True),
     "summary": ("Summary", "概要理解", False),
     "quick": ("Quick response", "即時応答", False),
+    "integrated": ("Integrated", "統合理解", True),
 }  # kind -> (English, Japanese, choices printed on the page)
 
 ITEMS: list[dict] = [
@@ -551,6 +554,335 @@ ITEMS: list[dict] = [
         "vocab": [
             {"word": "荷物", "reading": "にもつ", "meaning": "luggage, bag"},
             {"word": "重そう", "reading": "おもそう", "meaning": "looks heavy"},
+        ],
+    },
+    # ------------------------------------------------------------------ N2
+    {
+        "id": "n2-l01",
+        "title": "A scholarship application",
+        "kind": "task",
+        "intro": "大学の事務室で、男の学生と職員が話しています。男の学生は、このあとまず何をしなければなりませんか。",
+        "lines": [
+            ("M", "すみません、奨学金の申請書を出しに来たんですが。", "Excuse me, I've come to hand in my scholarship application."),
+            ("F", "はい、拝見します。……あ、推薦書がまだ入っていませんね。", "Certainly, let me see... Ah, the letter of recommendation isn't included yet."),
+            ("M", "推薦書は指導教員の先生に頼んであるんですが、まだいただいていなくて。締め切りは金曜日でしたよね。",
+             "I've asked my supervisor for it, but I haven't received it yet. The deadline was Friday, wasn't it?"),
+            ("F", "ええ。推薦書は、先生から直接こちらに送っていただくこともできますので、それは大丈夫です。ただ、こちらの申請書、署名が抜けていますね。",
+             "Yes. The teacher can also send the recommendation directly to us, so that's fine. But this application form is missing your signature."),
+            ("M", "あ、本当だ。", "Oh, you're right."),
+            ("F", "それと、成績証明書は、二階の窓口で発行してもらってください。こちらは今日中にお願いします。",
+             "Also, please get your transcript issued at the counter on the second floor. We need that today."),
+            ("M", "分かりました。じゃあ、ここで署名してから、すぐ行ってきます。", "I see. Then I'll sign here and go right away."),
+        ],
+        "question": "男の学生は、このあとまず何をしなければなりませんか。",
+        "intro_en": "In a university office, a male student and a staff member are talking. What must the student do first after this?",
+        "question_en": "What must the student do first after this?",
+        "choices": ["先生に推薦書を頼む", "申請書に署名する", "成績証明書をもらいに行く", "推薦書を事務室に送る"],
+        "answer": 1,
+        "why": "He'll sign first and then go for the transcript (ここで署名してから、すぐ行ってきます). The recommendation is "
+               "already requested, and the teacher can send it directly.",
+        "vocab": [
+            {"word": "奨学金", "reading": "しょうがくきん", "meaning": "scholarship"},
+            {"word": "申請書", "reading": "しんせいしょ", "meaning": "application form"},
+            {"word": "推薦書", "reading": "すいせんしょ", "meaning": "letter of recommendation"},
+            {"word": "署名", "reading": "しょめい", "meaning": "signature"},
+            {"word": "成績証明書", "reading": "せいせきしょうめいしょ", "meaning": "transcript (of grades)"},
+            {"word": "窓口", "reading": "まどぐち", "meaning": "counter, window"},
+        ],
+    },
+    {
+        "id": "n2-l02",
+        "title": "A farewell present",
+        "kind": "task",
+        "intro": "女の人と男の人が、友達へのプレゼントについて話しています。二人は、何をプレゼントすることにしましたか。",
+        "lines": [
+            ("F", "来月、佐藤さんが国に帰っちゃうでしょう。みんなで何かプレゼントしようよ。",
+             "Sato is going back home next month, right? Let's all give something as a present."),
+            ("M", "いいね。何がいいかな。日本らしい物がいいよね。扇子とか。", "Good idea. What would be good? Something very Japanese. A folding fan, maybe."),
+            ("F", "扇子もいいけど、佐藤さん、荷物が多くて困ってるって言ってたよ。大きい物や重い物は、避けたほうがいいかも。",
+             "A fan's nice, but Sato said they're struggling with too much luggage. Maybe we should avoid anything big or heavy."),
+            ("M", "そうか。じゃあ、食べ物は？日本のお菓子とか。", "I see. Then what about food? Japanese sweets or something."),
+            ("F", "うーん、すぐなくなっちゃうし、残る物のほうがいいんじゃない？みんなで書いたメッセージカードと、写真を入れた小さいアルバムはどう？",
+             "Hmm, they'd be gone in no time. Wouldn't something that lasts be better? How about a message card we all write, and a small photo album?"),
+            ("M", "それなら軽いし、いいね。そうしよう。", "That's light too. Great, let's do that."),
+        ],
+        "question": "二人は、何をプレゼントすることにしましたか。",
+        "intro_en": "A woman and a man are talking about a present for a friend. What have they decided to give?",
+        "question_en": "What have they decided to give?",
+        "choices": ["扇子", "日本のお菓子", "メッセージカードとアルバム", "大きい置物"],
+        "answer": 2,
+        "why": "The fan is ruled out (avoid luggage), sweets don't last (すぐなくなっちゃう), and he agrees to the card and "
+               "small album: そうしよう.",
+        "vocab": [
+            {"word": "扇子", "reading": "せんす", "meaning": "folding fan"},
+            {"word": "避ける", "reading": "さける", "meaning": "to avoid"},
+            {"word": "残る", "reading": "のこる", "meaning": "to remain, last"},
+            {"word": "日本らしい", "reading": "にほんらしい", "meaning": "typically Japanese"},
+        ],
+    },
+    {
+        "id": "n2-l03",
+        "title": "Why she's moving",
+        "kind": "point",
+        "intro": "男の人と女の人が話しています。女の人が引っ越すことにした一番の理由は何ですか。",
+        "lines": [
+            ("M", "引っ越すんだって？今のマンション、駅から近くて便利だって言ってたじゃない。",
+             "I hear you're moving? You said your flat was handy, close to the station."),
+            ("F", "うん、便利なのは確かなんだけどね。", "Yes, it's definitely convenient."),
+            ("M", "家賃が上がったとか？", "Did the rent go up or something?"),
+            ("F", "それもちょっとはあるけど、それより、隣の部屋の人が夜遅くまで音楽をかけてて、全然眠れないの。"
+                  "管理会社にも何度か相談したんだけど、なかなか改善されなくて。",
+             "That's a small part of it, but more than that, the person next door plays music late at night and I can't sleep at all. "
+             "I've talked to the management company several times, but nothing really improves."),
+            ("M", "それはつらいね。", "That sounds tough."),
+            ("F", "次の部屋は、駅から少し遠くなるけど、静かな所を選んだんだ。", "My next place is a bit further from the station, but I chose somewhere quiet."),
+        ],
+        "question": "女の人が引っ越すことにした一番の理由は何ですか。",
+        "intro_en": "A man and a woman are talking. What is the main reason the woman decided to move?",
+        "question_en": "What is the main reason the woman decided to move?",
+        "choices": ["駅から遠いから", "家賃が上がったから", "隣の部屋がうるさいから", "管理会社が親切じゃないから"],
+        "answer": 2,
+        "why": "The rent is only a small part (ちょっとはある); それより (more than that) the neighbour's late-night music keeps "
+               "her awake.",
+        "vocab": [
+            {"word": "改善", "reading": "かいぜん", "meaning": "improvement"},
+            {"word": "管理会社", "reading": "かんりがいしゃ", "meaning": "property management company"},
+            {"word": "つらい", "reading": "つらい", "meaning": "hard, painful"},
+            {"word": "それより", "reading": "それより", "meaning": "more than that"},
+        ],
+    },
+    {
+        "id": "n2-l04",
+        "title": "Worried about the presentation",
+        "kind": "point",
+        "intro": "男の学生と女の学生が、発表について話しています。男の学生が一番心配していることは何ですか。",
+        "lines": [
+            ("F", "明日の発表、準備はどう？", "How's the preparation for tomorrow's presentation?"),
+            ("M", "資料はもうできてるし、練習も何回もしたんだ。", "The materials are done, and I've practised lots of times."),
+            ("F", "じゃあ、大丈夫じゃない。", "Then you'll be fine, won't you?"),
+            ("M", "うん、発表自体は何とかなると思う。ただ、そのあとの質問の時間がね。先生たち、けっこう厳しい質問をするらしいから、"
+                  "うまく答えられるか自信がなくて。",
+             "Yeah, I think the presentation itself will be OK. It's the question time afterwards. Apparently the teachers ask pretty "
+             "tough questions, so I'm not confident I can answer well."),
+            ("F", "そっか。じゃあ、聞かれそうな質問を、一緒に考えてみようか。", "I see. Then shall we think up some likely questions together?"),
+            ("M", "本当？助かるよ。", "Really? That'd be a big help."),
+        ],
+        "question": "男の学生が一番心配していることは何ですか。",
+        "intro_en": "A male student and a female student are talking about a presentation. What is the male student most worried about?",
+        "question_en": "What is the male student most worried about?",
+        "choices": ["資料がまだできていないこと", "発表の練習が足りないこと", "質問にうまく答えられるかどうか", "発表の時間が短いこと"],
+        "answer": 2,
+        "why": "The materials and practice are done, and the presentation itself will be fine (何とかなる); ただ (but) the "
+               "question time worries him.",
+        "vocab": [
+            {"word": "自体", "reading": "じたい", "meaning": "itself"},
+            {"word": "何とかなる", "reading": "なんとかなる", "meaning": "to work out somehow"},
+            {"word": "自信", "reading": "じしん", "meaning": "confidence"},
+            {"word": "けっこう", "reading": "けっこう", "meaning": "quite, fairly"},
+        ],
+    },
+    {
+        "id": "n2-l05",
+        "title": "The baker's secret",
+        "kind": "point",
+        "intro": "ラジオで、アナウンサーとパン屋の主人が話しています。パン屋の主人が、パン作りで一番大切にしていることは何ですか。",
+        "lines": [
+            ("F", "このお店のパンは、毎朝すぐに売り切れてしまうそうですね。人気の秘密は何でしょうか。",
+             "I hear the bread here sells out quickly every morning. What's the secret of its popularity?"),
+            ("M", "そうですね、材料にはこだわっています。小麦粉は、近くの農家から直接買っているんです。",
+             "Well, I'm particular about ingredients. I buy flour directly from a nearby farm."),
+            ("F", "なるほど。", "I see."),
+            ("M", "でも、一番大切にしているのは、毎日同じ味を出すことなんです。その日の気温や湿度によって生地の状態が変わりますから、"
+                  "毎朝確かめながら、水の量や焼く時間を少しずつ変えているんですよ。",
+             "But what I value most is making it taste the same every day. The dough changes with the day's temperature and humidity, "
+             "so every morning I check it and adjust the amount of water and the baking time a little."),
+            ("F", "毎日同じ味にするために、毎日やり方を変えているんですね。", "So you change your method every day in order to keep the taste the same every day."),
+        ],
+        "question": "パン屋の主人が、パン作りで一番大切にしていることは何ですか。",
+        "intro_en": "On the radio, an announcer and a baker are talking. What does the baker value most in making bread?",
+        "question_en": "What does the baker value most in making bread?",
+        "choices": ["近くの農家から材料を買うこと", "毎日同じ味のパンを作ること", "毎朝早く店を開けること", "新しいパンを次々に作ること"],
+        "answer": 1,
+        "why": "Ingredients matter, but でも、一番大切にしているのは、毎日同じ味を出すこと.",
+        "vocab": [
+            {"word": "売り切れる", "reading": "うりきれる", "meaning": "to sell out"},
+            {"word": "こだわる", "reading": "こだわる", "meaning": "to be particular about"},
+            {"word": "小麦粉", "reading": "こむぎこ", "meaning": "flour"},
+            {"word": "湿度", "reading": "しつど", "meaning": "humidity"},
+            {"word": "生地", "reading": "きじ", "meaning": "dough"},
+            {"word": "確かめる", "reading": "たしかめる", "meaning": "to check, make sure"},
+        ],
+    },
+    {
+        "id": "n2-l06",
+        "title": "Paper books and e-books",
+        "kind": "summary",
+        "intro": "テレビで、専門家が話しています。",
+        "lines": [
+            ("M", "最近は、電子書籍で本を読む人が増えています。たくさんの本を持ち歩けますし、夜でも明かりなしで読めるので、とても便利です。",
+             "More and more people read e-books these days. You can carry lots of books around and read at night without a light, "
+             "so they're very convenient."),
+            ("M", "一方で、紙の本には、ページをめくりながら、どのくらい読んだかが目で分かるという良さがあります。内容を覚えやすいという研究もあるんです。",
+             "On the other hand, paper books have the advantage that as you turn the pages, you can see how far you've read. Some "
+             "research even says the content is easier to remember."),
+            ("M", "ですから、どちらが優れているかではなく、目的に合わせて選ぶことが大切だと思います。たとえば、移動中は電子書籍、"
+                  "じっくり勉強したいときは紙の本、というようにです。",
+             "So I think the important thing isn't which is better, but choosing to suit your purpose. For example, e-books while "
+             "travelling, and paper books when you want to study properly."),
+        ],
+        "question": "専門家が、一番言いたいことは何ですか。",
+        "intro_en": "On TV, an expert is speaking.",
+        "question_en": "What does the expert most want to say?",
+        "choices": [
+            "電子書籍のほうが、紙の本より便利だ。",
+            "紙の本のほうが、内容を覚えやすい。",
+            "目的に合わせて、電子書籍と紙の本を使い分けるといい。",
+            "移動中は、本を読まないほうがいい。",
+        ],
+        "choices_en": [
+            "E-books are more convenient than paper books.",
+            "Content is easier to remember from paper books.",
+            "It's good to choose between e-books and paper books to suit your purpose.",
+            "You shouldn't read while travelling.",
+        ],
+        "answer": 2,
+        "why": "ですから introduces the conclusion: どちらが優れているかではなく、目的に合わせて選ぶことが大切. "
+               "Choices 1 and 2 are only one side each.",
+        "vocab": [
+            {"word": "専門家", "reading": "せんもんか", "meaning": "expert"},
+            {"word": "電子書籍", "reading": "でんししょせき", "meaning": "e-book"},
+            {"word": "持ち歩く", "reading": "もちあるく", "meaning": "to carry around"},
+            {"word": "めくる", "reading": "めくる", "meaning": "to turn (pages)"},
+            {"word": "優れる", "reading": "すぐれる", "meaning": "to be excellent, superior"},
+            {"word": "じっくり", "reading": "じっくり", "meaning": "carefully, taking one's time"},
+        ],
+    },
+    {
+        "id": "n2-l07",
+        "title": "Bringing the shopping street back",
+        "kind": "summary",
+        "intro": "町の集まりで、女の人が話しています。",
+        "lines": [
+            ("F", "駅前の商店街は、十年ほど前から、閉まったままの店が増えてきました。大きなショッピングセンターができて、お客さんがそちらに行ってしまったからです。",
+             "For about ten years, more and more shops on the shopping street by the station have stayed closed. A big shopping "
+             "centre opened, and customers went there instead."),
+            ("F", "そこで、私たちは去年から、空いている店を若い人に安く貸すことにしました。すると、カフェや雑貨の店が次々に開いて、"
+                  "今では週末になると、町の外からも人が来るようになりました。",
+             "So from last year, we decided to rent the empty shops cheaply to young people. Then cafés and gift shops opened one "
+             "after another, and now people come from outside the town at weekends."),
+            ("F", "まだ課題はありますが、町の人と新しい人が協力すれば、商店街はもう一度にぎやかになると信じています。",
+             "There are still problems, but I believe that if the townspeople and the newcomers work together, the shopping street "
+             "will be lively again."),
+        ],
+        "question": "女の人は、何について話していますか。",
+        "intro_en": "At a town meeting, a woman is speaking.",
+        "question_en": "What is the woman talking about?",
+        "choices": [
+            "ショッピングセンターの便利さ",
+            "商店街を元気にするための取り組み",
+            "カフェの開き方",
+            "町の外から来る人の問題",
+        ],
+        "choices_en": [
+            "How convenient the shopping centre is",
+            "The effort to bring the shopping street back to life",
+            "How to open a café",
+            "Problems with people from outside the town",
+        ],
+        "answer": 1,
+        "why": "The whole talk is about reviving the street: the problem, renting shops to young people, the results, and her hopes.",
+        "vocab": [
+            {"word": "商店街", "reading": "しょうてんがい", "meaning": "shopping street"},
+            {"word": "雑貨", "reading": "ざっか", "meaning": "miscellaneous goods, gifts"},
+            {"word": "課題", "reading": "かだい", "meaning": "issue, challenge"},
+            {"word": "取り組み", "reading": "とりくみ", "meaning": "effort, initiative"},
+            {"word": "にぎやか", "reading": "にぎやか", "meaning": "lively, busy"},
+        ],
+    },
+    {
+        "id": "n2-l08",
+        "title": "Out when you came",
+        "kind": "quick",
+        "intro": "",
+        "lines": [("F", "せっかく来てくれたのに、留守にしててごめんね。", "Sorry I was out when you went to the trouble of coming.")],
+        "question": "",
+        "intro_en": "",
+        "question_en": "",
+        "choices": [
+            "ううん、こっちこそ、連絡しないで来ちゃってごめん。",
+            "うん、留守にしてくれてありがとう。",
+            "せっかくだから、留守にしようか。",
+        ],
+        "choices_en": [
+            "No, I'm the one who should apologise for turning up without calling.",
+            "Yes, thanks for being out.",
+            "Since we have the chance, shall we go out?",
+        ],
+        "answer": 0,
+        "why": "She apologises for being out, so the natural reply apologises back: こっちこそ…ごめん (I'm the one who's sorry).",
+        "vocab": [
+            {"word": "せっかく", "reading": "せっかく", "meaning": "going to the trouble; rare chance"},
+            {"word": "留守", "reading": "るす", "meaning": "being out, away from home"},
+            {"word": "こっちこそ", "reading": "こっちこそ", "meaning": "I'm the one (who should...)"},
+        ],
+    },
+    {
+        "id": "n2-l09",
+        "title": "Looking over the materials",
+        "kind": "quick",
+        "intro": "",
+        "lines": [("M", "この資料、明日まででいいから、目を通しておいてくれる？", "Could you look over these materials? Tomorrow is fine.")],
+        "question": "",
+        "intro_en": "",
+        "question_en": "",
+        "choices": ["はい、明日までに読んでおきます。", "はい、明日、目を通してもらいます。", "いいえ、まだ読んでもらっていません。"],
+        "choices_en": ["Sure, I'll read them by tomorrow.", "Sure, I'll have someone look them over tomorrow.",
+                       "No, nobody has read them for me yet."],
+        "answer": 0,
+        "why": "目を通す means to look over, and 〜ておいてくれる？ asks the listener to do it, so 読んでおきます. "
+               "The other two replies have someone else doing the reading (〜てもらう).",
+        "vocab": [
+            {"word": "目を通す", "reading": "めをとおす", "meaning": "to look over, skim"},
+            {"word": "資料", "reading": "しりょう", "meaning": "materials, documents"},
+        ],
+    },
+    {
+        "id": "n2-l10",
+        "title": "Choosing a cooking course",
+        "kind": "integrated",
+        "intro": "料理教室の受付で、係の人が説明しています。それから、女の人と男の人が話します。",
+        "lines": [
+            ("S", "当教室には、三つのコースがございます。", "Our school offers three courses."),
+            ("S", "まず、Aコースは「和食の基本」です。だしの取り方から始めて、毎回一品ずつ家庭料理を作ります。土曜日の午前中です。",
+             "First, Course A is Japanese cooking basics. We start with making dashi stock and cook one home-style dish each time. "
+             "It's on Saturday mornings."),
+            ("S", "Bコースは「パン作り」です。少人数のクラスで、焼きたてのパンを持って帰れます。平日の夜七時からです。",
+             "Course B is bread making. It's a small class, and you can take home freshly baked bread. It's on weekday evenings from 7."),
+            ("S", "Cコースは「世界の料理」です。毎月、違う国の料理を作ります。日曜日の午後です。",
+             "Course C is world cuisine. Each month we cook food from a different country. It's on Sunday afternoons."),
+            ("F", "どれもおもしろそうだね。私、平日の夜はアルバイトがあるから、週末がいいな。",
+             "They all sound fun. I have my part-time job on weekday evenings, so the weekend would be best."),
+            ("M", "じゃあ、AかCだね。", "Then it's A or C."),
+            ("F", "うん。いろいろな国の料理も楽しそうだけど、まずは基本からちゃんと覚えたいんだよね。毎日のご飯を、自分で作れるようになりたいから。",
+             "Yes. Food from different countries sounds fun too, but I want to learn the basics properly first. I want to be able to "
+             "cook my everyday meals myself."),
+            ("M", "それなら、決まりだね。僕は、焼きたてのパンを持って帰れるのがいいな。夜なら行けるし。",
+             "Then that settles it. For me, taking home freshly baked bread sounds good. I can go in the evenings, too."),
+        ],
+        "question": "女の人は、どのコースに申し込みますか。",
+        "intro_en": "At the reception of a cooking school, a staff member is explaining. Then a woman and a man talk.",
+        "question_en": "Which course will the woman sign up for?",
+        "choices": ["Aコース", "Bコース", "Cコース", "どのコースにも申し込まない"],
+        "answer": 0,
+        "why": "She can only do weekends (A or C), and wants the basics first (まずは基本からちゃんと覚えたい): Course A. "
+               "Course B is the man's choice.",
+        "vocab": [
+            {"word": "和食", "reading": "わしょく", "meaning": "Japanese cuisine"},
+            {"word": "一品", "reading": "いっぴん", "meaning": "one dish"},
+            {"word": "少人数", "reading": "しょうにんずう", "meaning": "small number of people"},
+            {"word": "焼きたて", "reading": "やきたて", "meaning": "freshly baked"},
+            {"word": "基本", "reading": "きほん", "meaning": "basics"},
+            {"word": "決まり", "reading": "きまり", "meaning": "settled, decided"},
         ],
     },
 ]

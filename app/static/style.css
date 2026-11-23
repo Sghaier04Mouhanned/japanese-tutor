@@ -804,7 +804,7 @@ kbd {
 .listen-line.speaking { border-color: var(--accent); background: var(--accent-soft); }
 .listen-who { font-family: var(--mono); font-size: .75rem; color: var(--muted); padding-top: .45rem; }
 .listen-line.role-F .listen-who { color: var(--accent); }
-.listen-line.role-M .listen-who { color: var(--text); }
+.listen-line.role-M .listen-who, .listen-line.role-S .listen-who { color: var(--text); }
 .listen-text .jp-line { font-family: var(--jp); font-size: 1.05rem; line-height: 2; }
 .listen-text .jp-line p { margin: 0; }
 .listen-text .en { color: var(--muted); font-size: .88rem; }

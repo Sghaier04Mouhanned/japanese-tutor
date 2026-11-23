@@ -1687,12 +1687,14 @@ async function renderPassage(body, id) {
 
 const LISTENING_INTRO = {
   N3: "Conversations and short talks like the JLPT N3 listening section, read by a narrator, a woman and a man. Listen, answer, then check the transcript.",
+  N2: "Faster, longer conversations like the JLPT N2 listening section, including integrated comprehension: weigh several options against what people say.",
 };
 const LISTENING_HOWTO = {
   task: "Listen and choose what the person will do. The question is asked before and after the conversation.",
   point: "Listen for the detail the question asks about. The question is asked before and after the conversation.",
   summary: "Listen to the whole talk. On the test the question and the choices are only spoken, so they appear here as numbers.",
   quick: "Listen to one line and three replies, then choose the best reply. The replies are only spoken.",
+  integrated: "Listen to the explanation of the options, then to the conversation. Keep track of each person's conditions.",
 };
 
 // The Reading / Listening switch at the top of both lists.

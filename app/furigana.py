@@ -100,6 +100,9 @@ _COUNTERS: dict[str, list] = {
     "週間": [("いっ", "しゅうかん"), ("に", "しゅうかん"), ("さん", "しゅうかん"), ("よん", "しゅうかん"),
            ("ご", "しゅうかん"), ("ろく", "しゅうかん"), ("なな", "しゅうかん"), ("はっ", "しゅうかん"),
            ("きゅう", "しゅうかん"), ("じゅっ", "しゅうかん"), ("なん", "しゅうかん")],
+    # Dishes, items: 一品 いっぴん
+    "品": [("いっ", "ぴん"), ("に", "ひん"), ("さん", "ぴん"), ("よん", "ひん"), ("ご", "ひん"), ("ろっ", "ぴん"),
+          ("なな", "ひん"), ("はっ", "ぴん"), ("きゅう", "ひん"), ("じゅっ", "ぴん"), ("なん", "ぴん")],
     # Steps: 一歩 いっぽ, 三歩 さんぽ
     "歩": [("いっ", "ぽ"), ("に", "ほ"), ("さん", "ぽ"), ("よん", "ほ"), ("ご", "ほ"), ("ろっ", "ぽ"),
           ("なな", "ほ"), ("はっ", "ぽ"), ("きゅう", "ほ"), ("じゅっ", "ぽ"), ("なん", "ぽ")],
@@ -137,6 +140,9 @@ def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
     # 体 on its own before a particle is からだ (body); たい is for compounds like 体育.
     if word.surface == "体" and nxt is not None and nxt.surface in {"に", "が", "を", "は", "も", "の", "で"}:
         return "からだ"
+    # Flours: 小麦粉 こむぎこ, パン粉 パンこ (the analyzer reads a split-off 粉 as こな).
+    if word.surface == "粉" and prev is not None and prev.surface in {"小麦", "パン", "そば", "米"}:
+        return "こ"
     # 水道管 すいどうかん: the analyzer splits it as 水 (みず) + 道管.
     if word.surface == "水" and nxt is not None and nxt.surface == "道管":
         return "すい"
