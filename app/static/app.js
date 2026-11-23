@@ -1401,6 +1401,7 @@ async function renderLessons() {
     N5: "The basics: polite sentences, particles, verbs, adjectives and counting.",
     N4: "Builds on N5: plain forms, experience, ability, plans, obligations and conditions.",
     N3: "Everyday intermediate grammar: timing, cause and effect, viewpoints, rules and decisions.",
+    N2: "Upper-intermediate grammar for news, notices and essays: formal contrasts, reasons, trends and certainty.",
   };
   body.replaceChildren(
     el("div", { class: "panel-head" },

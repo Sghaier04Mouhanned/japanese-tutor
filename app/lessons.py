@@ -1,4 +1,4 @@
-"""The JLPT lesson path (N5, N4, N3), written by hand so the core content is reliable.
+"""The JLPT lesson path (N5 to N2), written by hand so the core content is reliable.
 
 The tutor builds practice sessions on top of this, but the explanations,
 example sentences and vocabulary here are the ground truth. Each example has
@@ -2385,10 +2385,271 @@ LESSONS: list[dict] = [
             {"word": "持ってきます", "reading": "もってきます", "meaning": "to bring"},
         ],
     },
+    # ------------------------------------------------------------------ N2
+    {
+        "id": "n2-01",
+        "title": "Despite, even though",
+        "jp_title": "〜にもかかわらず",
+        "goal": "Say that something happened despite a situation that suggests otherwise.",
+        "points": [
+            "**[noun / plain form] + にもかかわらず** = despite, even though (formal, common in writing and the news): "
+            "雨にもかかわらず、たくさんの人が集まりました。",
+            "It follows nouns and plain forms directly: 雨にもかかわらず, 何度も注意したにもかかわらず. "
+            "な-adjectives and nouns can also take **である**: 休日であるにもかかわらず.",
+            "The result is usually surprising or disappointing. It's like のに (N4), but more formal and less emotional.",
+            "Unlike のに, it can't end a sentence as a complaint: 来たのに！ works, 来たにもかかわらず！ doesn't.",
+        ],
+        "examples": [
+            {"jp": "雨にもかかわらず、たくさんの人が集まりました。", "kana": "あめにもかかわらず たくさんのひとがあつまりました", "romaji": "ame ni mo kakawarazu, takusan no hito ga atsumarimashita", "en": "Despite the rain, lots of people gathered."},
+            {"jp": "何度も注意したにもかかわらず、弟はまた遅刻した。", "kana": "なんどもちゅういしたにもかかわらず おとうとはまたちこくした", "romaji": "nando mo chuui shita ni mo kakawarazu, otouto wa mata chikoku shita", "en": "Despite being warned many times, my brother was late again."},
+            {"jp": "彼女は熱があるにもかかわらず、学校に来た。", "kana": "かのじょはねつがあるにもかかわらず がっこうにきた", "romaji": "kanojo wa netsu ga aru ni mo kakawarazu, gakkou ni kita", "en": "She came to school even though she had a fever."},
+            {"jp": "一生懸命練習したにもかかわらず、試合に負けてしまった。", "kana": "いっしょうけんめいれんしゅうしたにもかかわらず しあいにまけてしまった", "romaji": "isshoukenmei renshuu shita ni mo kakawarazu, shiai ni makete shimatta", "en": "We lost the match despite practising so hard."},
+        ],
+        "vocab": [
+            {"word": "集まる", "reading": "あつまる", "meaning": "to gather"},
+            {"word": "遅刻", "reading": "ちこく", "meaning": "being late"},
+            {"word": "一生懸命", "reading": "いっしょうけんめい", "meaning": "with all one's might"},
+            {"word": "負ける", "reading": "まける", "meaning": "to lose (a game)"},
+            {"word": "彼女", "reading": "かのじょ", "meaning": "she; girlfriend"},
+        ],
+    },
+    {
+        "id": "n2-02",
+        "title": "Precisely because",
+        "jp_title": "〜からこそ・〜こそ",
+        "goal": "Stress that a reason, or one particular thing, is exactly what matters.",
+        "points": [
+            "**[plain form] + からこそ** = precisely because (stressing the reason, often a surprising one): "
+            "大切だからこそ、厳しく言うのです。",
+            "It often explains something that seems contradictory: 忙しいからこそ、休みの日が大切だ。",
+            "**[noun] + こそ** = this very one, X (and nothing else): 今年こそ、試験に合格したい。 \"This year for sure.\"",
+            "Set phrases: **こちらこそ** \"likewise, the pleasure is mine\", **今度こそ** \"this time for sure\".",
+        ],
+        "examples": [
+            {"jp": "あなたのことが大切だからこそ、厳しく言うのです。", "kana": "あなたのことがたいせつだからこそ きびしくいうのです", "romaji": "anata no koto ga taisetsu da kara koso, kibishiku iu no desu", "en": "It's precisely because you matter to me that I'm being strict."},
+            {"jp": "忙しいからこそ、休みの日が大切だ。", "kana": "いそがしいからこそ やすみのひがたいせつだ", "romaji": "isogashii kara koso, yasumi no hi ga taisetsu da", "en": "It's because I'm busy that my days off matter."},
+            {"jp": "今年こそ、試験に合格したい。", "kana": "ことしこそ しけんにごうかくしたい", "romaji": "kotoshi koso, shiken ni goukaku shitai", "en": "This year for sure, I want to pass the exam."},
+            {"jp": "失敗したからこそ、学べたこともある。", "kana": "しっぱいしたからこそ まなべたこともある", "romaji": "shippai shita kara koso, manabeta koto mo aru", "en": "There are things I could learn only because I failed."},
+        ],
+        "vocab": [
+            {"word": "厳しい", "reading": "きびしい", "meaning": "strict, harsh"},
+            {"word": "こちらこそ", "reading": "こちらこそ", "meaning": "likewise, the pleasure is mine"},
+            {"word": "今度", "reading": "こんど", "meaning": "this time; next time"},
+            {"word": "学ぶ", "reading": "まなぶ", "meaning": "to learn, study"},
+            {"word": "今年", "reading": "ことし", "meaning": "this year"},
+        ],
+    },
+    {
+        "id": "n2-03",
+        "title": "Must be, surely",
+        "jp_title": "〜に違いない・〜に決まっている",
+        "goal": "Make a confident guess, and say something is obvious.",
+        "points": [
+            "**[plain form] + に違いない** = must be, I'm sure (a confident guess, more written): "
+            "部屋の電気が消えている。もう寝たに違いない。",
+            "Nouns and な-adjectives attach directly, without だ: うそに違いない, 静かに違いない.",
+            "**に決まっている** = it's obvious that (conversational, sometimes pushy): そんな話、うそに決まっている。",
+            "Compare **はず** (N4): はず is based on facts or reasoning; に違いない is a strong feeling of certainty.",
+        ],
+        "examples": [
+            {"jp": "部屋の電気が消えている。もう寝たに違いない。", "kana": "へやのでんきがきえている もうねたにちがいない", "romaji": "heya no denki ga kiete iru. mou neta ni chigai nai", "en": "The light in the room is off. They must have gone to bed."},
+            {"jp": "あんなに練習したのだから、合格するに違いない。", "kana": "あんなにれんしゅうしたのだから ごうかくするにちがいない", "romaji": "anna ni renshuu shita no da kara, goukaku suru ni chigai nai", "en": "After practising that much, you're sure to pass."},
+            {"jp": "そんな話、うそに決まっている。", "kana": "そんなはなし うそにきまっている", "romaji": "sonna hanashi, uso ni kimatte iru", "en": "A story like that is obviously a lie."},
+            {"jp": "この店はいつも混んでいるから、おいしいに違いない。", "kana": "このみせはいつもこんでいるから おいしいにちがいない", "romaji": "kono mise wa itsumo konde iru kara, oishii ni chigai nai", "en": "This restaurant is always crowded, so it must be good."},
+        ],
+        "vocab": [
+            {"word": "違いない", "reading": "ちがいない", "meaning": "(it) must be, no doubt"},
+            {"word": "決まっている", "reading": "きまっている", "meaning": "(it's) obvious, bound to be"},
+            {"word": "うそ", "reading": "うそ", "meaning": "lie"},
+            {"word": "あんなに", "reading": "あんなに", "meaning": "that much, so"},
+            {"word": "混む", "reading": "こむ", "meaning": "to be crowded"},
+        ],
+    },
+    {
+        "id": "n2-04",
+        "title": "Although, that said",
+        "jp_title": "〜ものの・〜とはいえ",
+        "goal": "Admit that something is true, then say the result falls short of what you'd expect.",
+        "points": [
+            "**[plain form] + ものの** = although (it's true that ..., but): 免許は取ったものの、まだ一度も運転していない。",
+            "な-adjectives take な or である, nouns take である: 便利なものの, 学生であるものの.",
+            "**とはいえ** = even so, that said: 春とはいえ、朝はまだ寒い。 It can also start a sentence: とはいえ、…",
+            "Both are more formal than けど, and the second half goes against what the first half leads you to expect.",
+        ],
+        "examples": [
+            {"jp": "免許は取ったものの、まだ一度も運転していない。", "kana": "めんきょはとったものの まだいちどもうんてんしていない", "romaji": "menkyo wa totta mono no, mada ichido mo unten shite inai", "en": "Although I got my licence, I haven't driven even once."},
+            {"jp": "本を買ったものの、忙しくてまだ読んでいない。", "kana": "ほんをかったものの いそがしくてまだよんでいない", "romaji": "hon o katta mono no, isogashikute mada yonde inai", "en": "I bought the book, but I've been too busy to read it."},
+            {"jp": "春とはいえ、朝はまだ寒い。", "kana": "はるとはいえ あさはまださむい", "romaji": "haru to wa ie, asa wa mada samui", "en": "It may be spring, but the mornings are still cold."},
+            {"jp": "安いとはいえ、毎日外食するとお金がかかる。", "kana": "やすいとはいえ まいにちがいしょくするとおかねがかかる", "romaji": "yasui to wa ie, mainichi gaishoku suru to okane ga kakaru", "en": "It may be cheap, but eating out every day costs money."},
+        ],
+        "vocab": [
+            {"word": "免許", "reading": "めんきょ", "meaning": "licence"},
+            {"word": "運転", "reading": "うんてん", "meaning": "driving"},
+            {"word": "一度も", "reading": "いちども", "meaning": "(not) even once"},
+            {"word": "外食", "reading": "がいしょく", "meaning": "eating out"},
+            {"word": "とはいえ", "reading": "とはいえ", "meaning": "even so, that said"},
+        ],
+    },
+    {
+        "id": "n2-05",
+        "title": "Triggered by, through",
+        "jp_title": "〜をきっかけに・〜を通じて",
+        "goal": "Say what started a change, and through what or whom something happened.",
+        "points": [
+            "**[noun] + をきっかけに** = triggered by, taking the opportunity of: 留学をきっかけに、料理を始めました。",
+            "With verbs, add **の**: 日本のアニメを見たのをきっかけに…",
+            "**[noun] + を通じて** = through, by way of (a person or a means): 友達を通じて知り合いました。 "
+            "Also \"throughout\": 一年を通じて暖かい。",
+            "**を通して** means almost the same and is common in speech.",
+        ],
+        "examples": [
+            {"jp": "留学をきっかけに、料理を始めました。", "kana": "りゅうがくをきっかけに りょうりをはじめました", "romaji": "ryuugaku o kikkake ni, ryouri o hajimemashita", "en": "Studying abroad got me started on cooking."},
+            {"jp": "日本のアニメを見たのをきっかけに、日本語の勉強を始めた。", "kana": "にほんのアニメをみたのをきっかけに にほんごのべんきょうをはじめた", "romaji": "nihon no anime o mita no o kikkake ni, nihongo no benkyou o hajimeta", "en": "Watching Japanese anime got me started on studying Japanese."},
+            {"jp": "友達を通じて、今の恋人と知り合いました。", "kana": "ともだちをつうじて いまのこいびととしりあいました", "romaji": "tomodachi o tsuujite, ima no koibito to shiriaimashita", "en": "I met my current partner through a friend."},
+            {"jp": "この島は、一年を通じて暖かい。", "kana": "このしまは いちねんをつうじてあたたかい", "romaji": "kono shima wa, ichinen o tsuujite atatakai", "en": "This island is warm all year round."},
+        ],
+        "vocab": [
+            {"word": "通じて", "reading": "つうじて", "meaning": "through; throughout"},
+            {"word": "知り合う", "reading": "しりあう", "meaning": "to get to know, meet"},
+            {"word": "恋人", "reading": "こいびと", "meaning": "boyfriend or girlfriend, partner"},
+            {"word": "島", "reading": "しま", "meaning": "island"},
+            {"word": "暖かい", "reading": "あたたかい", "meaning": "warm (weather)"},
+        ],
+    },
+    {
+        "id": "n2-06",
+        "title": "Regarding, based on",
+        "jp_title": "〜に関して・〜に基づいて",
+        "goal": "Name the subject of a formal statement, and what it is based on.",
+        "points": [
+            "**[noun] + に関して** = regarding, about (more formal than について): この件に関して、何か質問はありますか。",
+            "Before a noun use **に関する**: 日本の歴史に関する本.",
+            "**[noun] + に基づいて** = based on (facts, data, rules): 調査の結果に基づいて、計画を立てた。 "
+            "Before a noun: **に基づいた** or **に基づく**.",
+            "Both are common in announcements, reports and the N2 reading section.",
+        ],
+        "examples": [
+            {"jp": "この件に関して、何か質問はありますか。", "kana": "このけんにかんして なにかしつもんはありますか", "romaji": "kono ken ni kanshite, nani ka shitsumon wa arimasu ka", "en": "Are there any questions about this matter?"},
+            {"jp": "日本の歴史に関する本を探しています。", "kana": "にほんのれきしにかんするほんをさがしています", "romaji": "nihon no rekishi ni kansuru hon o sagashite imasu", "en": "I'm looking for books on Japanese history."},
+            {"jp": "調査の結果に基づいて、新しい計画を立てた。", "kana": "ちょうさのけっかにもとづいて あたらしいけいかくをたてた", "romaji": "chousa no kekka ni motozuite, atarashii keikaku o tateta", "en": "We drew up a new plan based on the survey results."},
+            {"jp": "この映画は、本当にあった話に基づいている。", "kana": "このえいがは ほんとうにあったはなしにもとづいている", "romaji": "kono eiga wa, hontou ni atta hanashi ni motozuite iru", "en": "This film is based on a true story."},
+        ],
+        "vocab": [
+            {"word": "件", "reading": "けん", "meaning": "matter, case"},
+            {"word": "関する", "reading": "かんする", "meaning": "to concern, relate to"},
+            {"word": "基づく", "reading": "もとづく", "meaning": "to be based on"},
+            {"word": "調査", "reading": "ちょうさ", "meaning": "survey, investigation"},
+            {"word": "結果", "reading": "けっか", "meaning": "result"},
+            {"word": "計画を立てる", "reading": "けいかくをたてる", "meaning": "to make a plan"},
+        ],
+    },
+    {
+        "id": "n2-07",
+        "title": "Not only..., but also",
+        "jp_title": "〜ばかりか・〜うえに",
+        "goal": "Pile up two points of the same kind, good or bad.",
+        "points": [
+            "**[plain form / noun] + ばかりか** = not only ... but even (the second part is more surprising): "
+            "彼は英語ばかりか、中国語も話せる。",
+            "The second half often has **も** or **まで**: 道に迷ったばかりか、財布までなくしてしまった。",
+            "**[plain form] + うえに** = on top of, besides (adding a similar point): この店は安いうえに、とてもおいしい。 "
+            "Nouns take の, な-adjectives take な.",
+            "Both add things of the same kind: good and good, or bad and bad.",
+        ],
+        "examples": [
+            {"jp": "彼は英語ばかりか、中国語も話せる。", "kana": "かれはえいごばかりか ちゅうごくごもはなせる", "romaji": "kare wa eigo bakari ka, chuugokugo mo hanaseru", "en": "He can speak not only English but Chinese too."},
+            {"jp": "道に迷ったばかりか、財布までなくしてしまった。", "kana": "みちにまよったばかりか さいふまでなくしてしまった", "romaji": "michi ni mayotta bakari ka, saifu made nakushite shimatta", "en": "Not only did I get lost, I even lost my wallet."},
+            {"jp": "この店は安いうえに、とてもおいしい。", "kana": "このみせはやすいうえに とてもおいしい", "romaji": "kono mise wa yasui ue ni, totemo oishii", "en": "This restaurant is cheap, and on top of that, very tasty."},
+            {"jp": "今日は寒いうえに、雨も降っている。", "kana": "きょうはさむいうえに あめもふっている", "romaji": "kyou wa samui ue ni, ame mo futte iru", "en": "It's cold today, and it's raining as well."},
+        ],
+        "vocab": [
+            {"word": "迷う", "reading": "まよう", "meaning": "to get lost; to hesitate"},
+            {"word": "財布", "reading": "さいふ", "meaning": "wallet"},
+            {"word": "なくす", "reading": "なくす", "meaning": "to lose (something)"},
+            {"word": "うえに", "reading": "うえに", "meaning": "on top of, besides"},
+        ],
+    },
+    {
+        "id": "n2-08",
+        "title": "Have no choice but to",
+        "jp_title": "〜ざるを得ない",
+        "goal": "Say you are forced to do something you'd rather not.",
+        "points": [
+            "**[ない-stem] + ざるを得ない** = have no choice but to, can't help but (formal): "
+            "台風が来るので、旅行を中止せざるを得ない。",
+            "Build it from the ない form: 帰らない → 帰らざるを得ない, 認めない → 認めざるを得ない. "
+            "する becomes **せざるを得ない**.",
+            "It sounds reluctant: you don't want to, but the situation forces you.",
+            "In speech, **〜しかない** or **〜なければならない** (N4) are more common: 中止するしかない。",
+        ],
+        "examples": [
+            {"jp": "台風が来るので、旅行を中止せざるを得ない。", "kana": "たいふうがくるので りょこうをちゅうしせざるをえない", "romaji": "taifuu ga kuru node, ryokou o chuushi sezaru o enai", "en": "A typhoon is coming, so we have no choice but to cancel the trip."},
+            {"jp": "先生に言われたら、やらざるを得ない。", "kana": "せんせいにいわれたら やらざるをえない", "romaji": "sensei ni iwaretara, yarazaru o enai", "en": "If the teacher tells me to, I'll have to do it."},
+            {"jp": "彼の言うことは正しいと認めざるを得ない。", "kana": "かれのいうことはただしいとみとめざるをえない", "romaji": "kare no iu koto wa tadashii to mitomezaru o enai", "en": "I have to admit that what he says is right."},
+            {"jp": "終電がないので、タクシーで帰らざるを得なかった。", "kana": "しゅうでんがないので タクシーでかえらざるをえなかった", "romaji": "shuuden ga nai node, takushii de kaerazaru o enakatta", "en": "There was no last train, so I had no choice but to go home by taxi."},
+        ],
+        "vocab": [
+            {"word": "得る", "reading": "える", "meaning": "to get (in ざるを得ない)"},
+            {"word": "認める", "reading": "みとめる", "meaning": "to admit, accept"},
+            {"word": "終電", "reading": "しゅうでん", "meaning": "the last train"},
+            {"word": "中止", "reading": "ちゅうし", "meaning": "cancellation"},
+            {"word": "しかない", "reading": "しかない", "meaning": "there's nothing to do but"},
+        ],
+    },
+    {
+        "id": "n2-09",
+        "title": "As soon as, depending on",
+        "jp_title": "〜次第・〜次第で",
+        "goal": "Promise to act as soon as something happens, and say what a result depends on.",
+        "points": [
+            "**[ます-stem] + 次第** = as soon as (then I'll do something; polite, for future actions): 準備ができ次第、出発します。",
+            "It isn't used for things that already happened; for those, use 〜とすぐ. A common polite phrase: 分かり次第、ご連絡します。",
+            "**[noun] + 次第だ / 次第で** = depending on, it's up to: 合格できるかどうかは、あなたの努力次第です。",
+            "天気次第で = depending on the weather: 天気次第で、予定が変わるかもしれません。",
+        ],
+        "examples": [
+            {"jp": "準備ができ次第、出発します。", "kana": "じゅんびができしだい しゅっぱつします", "romaji": "junbi ga deki shidai, shuppatsu shimasu", "en": "We'll leave as soon as we're ready."},
+            {"jp": "結果が分かり次第、ご連絡します。", "kana": "けっかがわかりしだい ごれんらくします", "romaji": "kekka ga wakari shidai, go renraku shimasu", "en": "I'll contact you as soon as I know the results."},
+            {"jp": "合格できるかどうかは、あなたの努力次第です。", "kana": "ごうかくできるかどうかは あなたのどりょくしだいです", "romaji": "goukaku dekiru ka dou ka wa, anata no doryoku shidai desu", "en": "Whether you pass depends on your own effort."},
+            {"jp": "明日の試合は、天気次第で中止になるかもしれない。", "kana": "あしたのしあいは てんきしだいでちゅうしになるかもしれない", "romaji": "ashita no shiai wa, tenki shidai de chuushi ni naru ka mo shirenai", "en": "Tomorrow's match may be called off, depending on the weather."},
+        ],
+        "vocab": [
+            {"word": "次第", "reading": "しだい", "meaning": "as soon as; depending on"},
+            {"word": "出発", "reading": "しゅっぱつ", "meaning": "departure"},
+            {"word": "努力", "reading": "どりょく", "meaning": "effort"},
+            {"word": "準備", "reading": "じゅんび", "meaning": "preparation"},
+            {"word": "かどうか", "reading": "かどうか", "meaning": "whether or not"},
+        ],
+    },
+    {
+        "id": "n2-10",
+        "title": "More and more, in the process of",
+        "jp_title": "〜一方だ・〜つつある",
+        "goal": "Describe a trend that keeps going, and a change that is happening now.",
+        "points": [
+            "**[dictionary form] + 一方だ** = keeps on (getting more and more ...), usually a bad trend: 最近、物価は上がる一方だ。",
+            "It goes with verbs of change: 増える, 減る, 悪くなる, 高くなる.",
+            "**[ます-stem] + つつある** = is in the process of (a gradual change happening now; formal): この町の人口は、減りつつある。",
+            "Don't confuse it with **〜一方で** (on the other hand), from N3 reading: 便利になった一方で、問題も増えた。",
+        ],
+        "examples": [
+            {"jp": "最近、物価は上がる一方だ。", "kana": "さいきん ぶっかはあがるいっぽうだ", "romaji": "saikin, bukka wa agaru ippou da", "en": "Prices just keep going up these days."},
+            {"jp": "祖父の病気は、悪くなる一方だった。", "kana": "そふのびょうきは わるくなるいっぽうだった", "romaji": "sofu no byouki wa, waruku naru ippou datta", "en": "My grandfather's illness kept getting worse."},
+            {"jp": "この町の人口は、減りつつある。", "kana": "このまちのじんこうは へりつつある", "romaji": "kono machi no jinkou wa, heri tsutsu aru", "en": "This town's population is gradually falling."},
+            {"jp": "外国から来る観光客は、増えつつある。", "kana": "がいこくからくるかんこうきゃくは ふえつつある", "romaji": "gaikoku kara kuru kankoukyaku wa, fue tsutsu aru", "en": "The number of tourists from abroad is steadily rising."},
+        ],
+        "vocab": [
+            {"word": "物価", "reading": "ぶっか", "meaning": "prices (cost of living)"},
+            {"word": "人口", "reading": "じんこう", "meaning": "population"},
+            {"word": "減る", "reading": "へる", "meaning": "to decrease"},
+            {"word": "観光客", "reading": "かんこうきゃく", "meaning": "tourist"},
+            {"word": "病気", "reading": "びょうき", "meaning": "illness"},
+        ],
+    },
 ]
 
 _BY_ID = {lesson["id"]: lesson for lesson in LESSONS}
-LEVELS = ("N5", "N4", "N3")
+LEVELS = ("N5", "N4", "N3", "N2")
 
 
 def get(lesson_id: str) -> dict | None:
@@ -2396,7 +2657,7 @@ def get(lesson_id: str) -> dict | None:
 
 
 def level(lesson: dict) -> str:
-    """"N5", "N4" or "N3", from the id prefix (n5-03, n4-01, n3-02)."""
+    """The JLPT level from the id prefix: n5-03 -> "N5", n2-01 -> "N2"."""
     return lesson["id"].split("-")[0].upper()
 
 
