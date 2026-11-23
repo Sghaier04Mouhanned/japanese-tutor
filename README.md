@@ -63,7 +63,7 @@ passing the JLPT (N5, then N4, then N3), powered by a free AI API or a local mod
 - `python -m app.reading` checks the questions; add `--readings` to proofread the furigana
 
 **Listening practice (JLPT 聴解)**
-- 10 hand-written N3 items in the four test formats: task-based (課題理解), key point (ポイント理解),
+- 20 hand-written N3 items in the four test formats: task-based (課題理解), key point (ポイント理解),
   summary (概要理解) and quick response (即時応答)
 - Read by VOICEVOX with a different voice per role (narrator 九州そら, woman 春日部つむぎ, man 玄野武宏);
   the clips are made before the first play so lines follow each other smoothly. Without VOICEVOX the

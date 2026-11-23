@@ -62,6 +62,7 @@ _EVERYDAY_READINGS = {
     "下手": "へた",
     "何時": "なんじ",  # なんどき is literary
     "富士山": "ふじさん",  # ふじやま is old-fashioned / poetic
+    "重そう": "おもそう",  # "looks heavy"; read as one noun it becomes じゅうそう (baking soda)
 }
 
 # The analyzer reads number + counter one character at a time (四時 as
@@ -115,7 +116,7 @@ _DIGIT_READINGS = {"一": ("いち",), "二": ("に",), "三": ("さん",), "四
                    "六": ("ろく",), "七": ("なな", "しち"), "八": ("はち",), "九": ("きゅう", "く"), "十": ("じゅう",)}
 
 
-def _context_reading(prev, word, nxt=None) -> str | None:
+def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
     """Readings that depend on the neighbouring words, where the analyzer guesses wrong."""
     # 辛い is からい (spicy) or つらい (painful). Learners meet "spicy" first, and
     # つらい is usually written in kana, so prefer から for this kanji.
@@ -148,6 +149,11 @@ def _context_reading(prev, word, nxt=None) -> str | None:
     if word.surface == "人" and word.feature.pos1 == "接尾辞" and (
             word.feature.pos3 == "一般" and prev.feature.pos3 == "地名" or prev.surface == "外国"):
         return "じん"
+    # 気に入る (to like) is きにいる, not きにはいる.
+    if getattr(word.feature, "orthBase", "") == "入る" and prev.surface == "に" and prev2 is not None and prev2.surface == "気":
+        kana = _reading(word) or ""
+        if kana.startswith("はい"):
+            return kana[1:]
     # 開く: ドアが開く is あく (the textbook pair of 開ける); 本を開く keeps ひらく.
     if getattr(word.feature, "orthBase", "") == "開く" and prev.surface == "が":
         kana = _reading(word) or ""
@@ -301,7 +307,8 @@ def annotate(text: str) -> list[dict]:
                     continue
                 base, base_kana = _base(word)
                 reading = _reading(word) if _KANJI.search(surface) else None
-                fixed = _context_reading(words[n_word - 1] if n_word else None, word, following)
+                fixed = _context_reading(words[n_word - 1] if n_word else None, word, following,
+                                         words[n_word - 2] if n_word > 1 else None)
                 if fixed:
                     reading = base_kana = fixed
                 seg = {"t": surface, "b": base, "k": base_kana, "p": pos}
