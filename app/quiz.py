@@ -3,7 +3,8 @@
 Sources are the hand-written lessons and the learner's saved words, never the
 language model, so every answer key is right. Question types follow the real
 test: kanji reading (漢字読み), spelling (表記), vocabulary meaning, particles
-(文法) and listening (聴解).
+(文法) and listening (聴解). Kanji questions use KANJIDIC2 / JMdict data
+(meaning of a kanji, pick the kanji for a meaning, reading of a kanji word).
 """
 
 from __future__ import annotations
@@ -13,7 +14,8 @@ import re
 
 from . import furigana, lessons
 
-TYPES = ("reading", "writing", "meaning", "particle", "listening")
+TYPES = ("reading", "writing", "meaning", "particle", "listening", "kanji_meaning", "kanji_pick", "kanji_word")
+KANJI_TYPES = ("kanji_meaning", "kanji_pick", "kanji_word")
 
 _KANJI = re.compile(r"[㐀-鿿々]")
 
@@ -142,8 +144,80 @@ def _listening_q(ex: dict, examples: list[dict]) -> dict | None:
                      {"example": ex["jp"], "segments": furigana.annotate(ex["jp"])})
 
 
+# ---------- kanji questions ----------
+
+def _meanings(e: dict) -> set[str]:
+    return {m.lower() for m in e["meanings"]}
+
+
+def _kanji_label(e: dict) -> str:
+    return ", ".join(e["meanings"][:2])
+
+
+def _kanji_explain(e: dict) -> str:
+    parts = [f"{e['kanji']} means \"{', '.join(e['meanings'][:3])}\"."]
+    if e["on"]:
+        parts.append(f"On: {'、'.join(e['on'])}.")
+    if e["kun"]:
+        parts.append(f"Kun: {'、'.join(e['kun'])}.")
+    return " ".join(parts)
+
+
+def _unrelated(e: dict, others: list[dict]) -> list[dict]:
+    """Kanji whose meanings don't overlap with e's, so no wrong answer is also right."""
+    mine = _meanings(e)
+    return [o for o in others if o["kanji"] != e["kanji"] and o["meanings"] and not (_meanings(o) & mine)]
+
+
+def _kanji_meaning_q(e: dict, others: list[dict]) -> dict | None:
+    if not e["meanings"]:
+        return None
+    candidates = _unrelated(e, others)
+    random.shuffle(candidates)
+    distractors = _pick_distractors(_kanji_label(e), [_kanji_label(o) for o in candidates])
+    if not distractors:
+        return None
+    return _question("kanji_meaning", {"kanji": e["kanji"], "instruction": "What does this kanji mean?"},
+                     _kanji_label(e), distractors, _kanji_explain(e), {"kanji": e["kanji"]})
+
+
+def _kanji_pick_q(e: dict, others: list[dict]) -> dict | None:
+    if not e["meanings"]:
+        return None
+    # Kanji with a similar number of strokes look most alike, which is the point.
+    candidates = sorted(_unrelated(e, others), key=lambda o: (abs(o["strokes"] - e["strokes"]), random.random()))[:8]
+    random.shuffle(candidates)
+    distractors = _pick_distractors(e["kanji"], [o["kanji"] for o in candidates])
+    if not distractors:
+        return None
+    return _question("kanji_pick", {"meaning": _kanji_label(e), "instruction": "Which kanji has this meaning?"},
+                     e["kanji"], distractors, _kanji_explain(e), {"kanji": e["kanji"]})
+
+
+_HIRAGANA_ONLY = re.compile(r"^[ぁ-ゖー]+$")
+
+
+def _kanji_word_q(e: dict, all_readings: list[str]) -> dict | None:
+    words = [x for x in e["examples"][:4] if _HIRAGANA_ONLY.match(x["reading"]) and len(x["word"]) <= 4]
+    if not words:
+        return None
+    w = random.choice(words)
+    misses = _near_misses(w["reading"])
+    random.shuffle(misses)
+    others = [r for r in all_readings if len(r) == len(w["reading"])]
+    random.shuffle(others)
+    distractors = _pick_distractors(w["reading"], misses + others)
+    if not distractors:
+        return None
+    return _question("kanji_word", {"word": w["word"], "instruction": f"How is this word with {e['kanji']} read?"},
+                     w["reading"], distractors, f"{w['word']} is read {w['reading']}: {w['meaning']}.",
+                     {"kanji": e["kanji"], "word": w["word"], "reading": w["reading"], "meaning": w["meaning"]})
+
+
 def build(lesson_ids: list[str], saved_words: list[dict], count: int = 10,
-          types: tuple[str, ...] = TYPES) -> list[dict]:
+          types: tuple[str, ...] = TYPES, kanji_items: list[dict] | None = None,
+          kanji_all: list[dict] | None = None) -> list[dict]:
+    """kanji_items: the kanji to ask about; kanji_all: every kanji, for wrong answers."""
     chosen = [les for les in lessons.LESSONS if les["id"] in lesson_ids] or lessons.LESSONS[:1]
     vocab = [v for les in chosen for v in les["vocab"]]
     vocab += [w for w in saved_words if w["word"] not in {v["word"] for v in vocab}]
@@ -159,6 +233,12 @@ def build(lesson_ids: list[str], saved_words: list[dict], count: int = 10,
         "particle": [lambda e=e: _particle_q(e) for e in examples],
         "listening": [lambda e=e: _listening_q(e, all_examples) for e in examples],
     }
+    kanji_items = kanji_items or []
+    kanji_all = kanji_all or kanji_items
+    readings = [x["reading"] for k in kanji_all for x in k["examples"] if _HIRAGANA_ONLY.match(x["reading"])]
+    makers["kanji_meaning"] = [lambda k=k: _kanji_meaning_q(k, kanji_all) for k in kanji_items]
+    makers["kanji_pick"] = [lambda k=k: _kanji_pick_q(k, kanji_all) for k in kanji_items]
+    makers["kanji_word"] = [lambda k=k: _kanji_word_q(k, readings) for k in kanji_items]
     queues = {t: random.sample(makers[t], len(makers[t])) for t in types if t in makers}
 
     # Take one question of each type in turn so the mix stays balanced.

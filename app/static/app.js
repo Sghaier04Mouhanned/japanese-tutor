@@ -1627,7 +1627,11 @@ const QUIZ_TYPES = {
   meaning: ["語彙", "Vocabulary"],
   particle: ["文法", "Particles"],
   listening: ["聴解", "Listening"],
+  kanji_meaning: ["漢字の意味", "Kanji meaning"],
+  kanji_pick: ["漢字を選ぶ", "Pick the kanji"],
+  kanji_word: ["漢字語の読み", "Kanji word reading"],
 };
+const KANJI_QUIZ_TYPES = ["kanji_meaning", "kanji_pick", "kanji_word"];
 
 async function renderQuiz() {
   const body = $("#quiz-body");
@@ -1638,6 +1642,13 @@ async function renderQuiz() {
     lessons: studied.length ? studied : opts.lessons.slice(0, 2).map(l => l.id),
     include_saved: true, count: 10, types: Object.keys(QUIZ_TYPES),
   };
+  // Settings saved before kanji questions existed: switch them on once.
+  if (!settings.typesVersion) {
+    settings.types = [...new Set([...settings.types, ...KANJI_QUIZ_TYPES])];
+    settings.typesVersion = 2;
+  }
+  settings.kanji_source ||= opts.studied_kanji >= 4 ? "studied" : "N5";
+  const typeEntries = Object.entries(QUIZ_TYPES).filter(([t]) => opts.kanji_available || !KANJI_QUIZ_TYPES.includes(t));
 
   const chip = (value, label, checked) =>
     el("label", { class: "chip" }, el("input", { type: "checkbox", value, checked }), label);
@@ -1648,8 +1659,14 @@ async function renderQuiz() {
     el("div", { class: "chip-group" },
       el("div", { class: "chip-group-label" }, `JLPT ${level}`),
       el("div", { class: "chips" }, lessonChips.filter((_, i) => opts.lessons[i].level === level))));
-  const typeChips = Object.entries(QUIZ_TYPES).map(([t, [jp, en]]) =>
+  const typeChips = typeEntries.map(([t, [jp, en]]) =>
     chip(t, el("span", {}, el("span", { lang: "ja" }, jp), ` ${en}`), settings.types.includes(t)));
+  const kanjiSources = [["studied", `My kanji (${opts.studied_kanji})`], ["N5", "N5 list"], ["N4", "N4 list"], ["lessons", "From lessons"]];
+  const kanjiSource = el("div", { class: "segmented" }, kanjiSources.map(([value, label]) =>
+    el("button", { type: "button", class: value === settings.kanji_source ? "active" : "",
+      disabled: value === "studied" && !opts.studied_kanji,
+      onclick: e => { settings.kanji_source = value; kanjiSource.querySelectorAll("button").forEach(b => b.classList.toggle("active", b === e.currentTarget)); } },
+      label)));
   const savedBox = el("input", { type: "checkbox", checked: settings.include_saved && opts.saved_words > 0,
     disabled: !opts.saved_words });
   const count = el("div", { class: "segmented" }, [10, 20].map(n =>
@@ -1661,8 +1678,8 @@ async function renderQuiz() {
 
   body.replaceChildren(
     el("div", { class: "panel-head" },
-      el("h2", {}, "JLPT N5 practice quiz"),
-      el("span", { class: "muted" }, "Questions come from verified lesson content, never from the AI")),
+      el("h2", {}, "JLPT practice quiz"),
+      el("span", { class: "muted" }, "Questions come from verified lessons and dictionaries, never from the AI")),
     el("div", { class: "field" },
       el("div", { class: "field-label" }, "Lessons",
         el("span", {},
@@ -1674,6 +1691,9 @@ async function renderQuiz() {
     el("div", { class: "field" },
       el("div", { class: "field-label" }, "Question types"),
       el("div", { class: "chips" }, typeChips)),
+    opts.kanji_available ? el("div", { class: "field" },
+      el("div", { class: "field-label" }, "Kanji questions use"),
+      kanjiSource) : "",
     el("div", { class: "field" }, count),
     error,
     el("div", { class: "btn-row" },
@@ -1712,11 +1732,13 @@ function runQuiz(body, questions) {
     if (index >= questions.length) return finish();
     const q = questions[index];
     const [jp, en] = QUIZ_TYPES[q.type];
-    const jpChoices = q.type === "reading" || q.type === "writing" || q.type === "particle";
+    const jpChoices = ["reading", "writing", "particle", "kanji_pick", "kanji_word"].includes(q.type);
     let answered = false;
 
     const prompt = [];
-    if (q.type === "reading") prompt.push(el("div", { class: "quiz-word", lang: "ja" }, q.prompt.word));
+    if (q.type === "reading" || q.type === "kanji_word") prompt.push(el("div", { class: "quiz-word", lang: "ja" }, q.prompt.word));
+    if (q.type === "kanji_meaning") prompt.push(el("div", { class: "quiz-word quiz-kanji", lang: "ja" }, q.prompt.kanji));
+    if (q.type === "kanji_pick") prompt.push(el("div", { class: "quiz-meaning" }, `“${q.prompt.meaning}”`));
     if (q.type === "writing") prompt.push(el("div", { class: "quiz-word", lang: "ja" }, q.prompt.reading));
     if (q.type === "meaning") prompt.push(richEl("div", { class: "quiz-word", lang: "ja" }, q.prompt.segments));
     if (q.type === "particle") {
@@ -1740,7 +1762,7 @@ function runQuiz(body, questions) {
     const next = el("button", { class: "btn btn-primary", type: "button", hidden: true, onclick: () => { index++; show(); } },
       index + 1 < questions.length ? "Next →" : "See results");
     const buttons = q.choices.map((c, n) =>
-      el("button", { class: `quiz-choice${jpChoices ? " jp" : ""}`, type: "button", lang: jpChoices ? "ja" : null,
+      el("button", { class: `quiz-choice${jpChoices ? " jp" : ""}${q.type === "kanji_pick" ? " big" : ""}`, type: "button", lang: jpChoices ? "ja" : null,
         onclick: () => choose(n) }, el("span", { class: "key" }, n + 1), c));
 
     function choose(n) {
@@ -1789,11 +1811,17 @@ function runQuiz(body, questions) {
     const pct = Math.round(summary.correct / summary.total * 100);
     const missedWords = results.filter(r => !r.ok && r.q.item.word).map(r => r.q.item);
     const uniqueMissed = [...new Map(missedWords.map(w => [w.word, w])).values()];
-    const addBtn = uniqueMissed.length ? el("button", { class: "btn btn-primary", type: "button" },
-      `Add ${uniqueMissed.length} missed word${uniqueMissed.length > 1 ? "s" : ""} to reviews`) : null;
+    // Kanji meaning / pick questions: offer the kanji itself for the reviews.
+    const missedKanji = [...new Set(results.filter(r => !r.ok && r.q.item.kanji && !r.q.item.word).map(r => r.q.item.kanji))];
+    const missedCount = uniqueMissed.length + missedKanji.length;
+    const addBtn = missedCount ? el("button", { class: "btn btn-primary", type: "button" },
+      `Add ${missedCount} missed item${missedCount > 1 ? "s" : ""} to reviews`) : null;
     addBtn?.addEventListener("click", async () => {
       addBtn.disabled = true;
-      const res = await api.post("/api/quiz/add-missed", { words: uniqueMissed.map(w => ({ word: w.word, reading: w.reading, meaning: w.meaning })) });
+      const res = await api.post("/api/quiz/add-missed", {
+        words: uniqueMissed.map(w => ({ word: w.word, reading: w.reading, meaning: w.meaning })),
+        kanji: missedKanji,
+      });
       addBtn.textContent = res.added ? `Added ${res.added} ✓` : "Already in your reviews ✓";
       refreshBadge();
     });

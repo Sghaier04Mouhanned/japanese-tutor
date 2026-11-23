@@ -19,6 +19,8 @@ passing the JLPT (N5, then N4), powered by a free AI API or a local model.
 
 **JLPT-style quizzes**
 - Kanji reading (漢字読み), spelling (表記), vocabulary (語彙), particles (文法) and listening (聴解)
+- Kanji questions: a kanji's meaning, pick the kanji for a meaning (look-alike choices with similar
+  stroke counts), and the reading of a kanji word; drawn from your studied kanji or the N5/N4 lists
 - Generated from verified lesson content and your saved words, never by the AI
 - Reading distractors are near misses like on the real test (がっこう / がこう / かっこう)
 - Per-type scores, explanations, and one click to add missed words to your reviews

@@ -32,7 +32,7 @@ def _require_data() -> None:
         raise HTTPException(503, "Kanji data isn't installed (data/dict/kanjidic2.xml.gz).")
 
 
-def _add_card(conn, ch: str) -> bool:
+def add_card(conn, ch: str) -> bool:
     row = srs.to_row(srs.new_card())
     cur = conn.execute(
         """INSERT OR IGNORE INTO kanji_cards (kanji, state, stability, due_ts, fsrs, created_at)
@@ -117,7 +117,7 @@ def learn_next(body: LearnNext):
         status = _statuses(conn)
         todo = [e["kanji"] for e in _ordered(body.group) if e["kanji"] not in status][: body.count]
         for ch in todo:
-            _add_card(conn, ch)
+            add_card(conn, ch)
     return {"added": todo}
 
 
@@ -152,5 +152,5 @@ def learn(ch: str):
     if kanji.get(ch) is None:
         raise HTTPException(404, "kanji not in the study set")
     with connect() as conn:
-        added = _add_card(conn, ch)
+        added = add_card(conn, ch)
     return {"added": added}
