@@ -13,6 +13,7 @@ import random
 import re
 
 from . import furigana, lessons
+from .kanji_meanings import cue
 
 TYPES = ("reading", "writing", "meaning", "particle", "listening", "kanji_meaning", "kanji_pick", "kanji_word")
 KANJI_TYPES = ("kanji_meaning", "kanji_pick", "kanji_word")
@@ -151,7 +152,8 @@ def _meanings(e: dict) -> set[str]:
 
 
 def _kanji_label(e: dict) -> str:
-    return ", ".join(e["meanings"][:2])
+    # The label is a prompt or a choice, so it mustn't contain the kanji itself.
+    return ", ".join(cue(e["kanji"], e["meanings"][:2]))
 
 
 def _kanji_explain(e: dict) -> str:

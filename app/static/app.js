@@ -963,7 +963,7 @@ async function renderReview() {
       } });
       stage.replaceChildren(
         el("div", { class: "prompt-label" }, `Write the kanji (${card.strokes.length} strokes):`),
-        el("div", { class: "quiz-meaning" }, `“${card.meanings.slice(0, 3).join(", ")}”`),
+        el("div", { class: "quiz-meaning" }, `“${card.cue.join(", ")}”`),
         el("div", { class: "muted", lang: "ja" }, [card.kun.join("、"), card.on.join("、")].filter(Boolean).join(" ・ ")),
         el("div", { class: "write-wrap" }, pad.canvas, pad.status, note, helpers),
         answer,

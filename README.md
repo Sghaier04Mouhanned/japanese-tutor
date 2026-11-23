@@ -42,6 +42,9 @@ passing the JLPT (N5, then N4, then N3), powered by a free AI API or a local mod
   been no official kanji list since 2010, so these are close guides, not official lists
 - Animated stroke order (KanjiVG), on/kun readings with audio, meanings, and example words
   (lesson vocabulary first, then common dictionary words)
+- Meanings put what learners actually meet first: KANJIDIC's order can mislead (緒 starts with
+  "thong", 校 with "exam"), so 168 kanji have hand-checked meanings first (緒 = together, as in
+  一緒) in `app/kanji_meanings.py`. Quiz and writing prompts never show a note containing the answer
 - Add kanji to your reviews one by one or five at a time; they join the Review tab and the dashboard
 - Handwriting: draw each stroke with a mouse, finger or pen; order, direction and shape are checked
   stroke by stroke against KanjiVG, with hints after repeated misses. Trace or write from memory on

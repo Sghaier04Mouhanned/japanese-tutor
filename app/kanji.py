@@ -20,6 +20,7 @@ import xml.etree.ElementTree as ET
 from functools import lru_cache
 
 from . import dictionary, lessons
+from .kanji_meanings import LEARNER_MEANINGS, learner_first
 from .config import ROOT
 
 SOURCE = ROOT / "data" / "dict" / "kanjidic2.xml.gz"
@@ -82,7 +83,7 @@ def build() -> int:
                 entries[literal] = {
                     "kanji": literal,
                     "group": level or "lessons",
-                    "on": on[:4], "kun": list(dict.fromkeys(kun))[:5], "meanings": meanings[:5],
+                    "on": on[:4], "kun": list(dict.fromkeys(kun))[:5], "meanings": learner_first(literal, meanings),
                     "strokes": int(elem.findtext("misc/stroke_count") or 0),
                     "grade": int(elem.findtext("misc/grade") or 0) or None,
                     "freq": int(freq) if freq else None,
@@ -149,10 +150,13 @@ def _load() -> dict[str, dict]:
     with _lock:
         data = json.loads(INDEX.read_text(encoding="utf-8")) if INDEX.exists() else None
         # Rebuild when new lessons use kanji the index doesn't have (or has under another
-        # lesson), or when the index predates a group (the N3 list).
+        # lesson), when the index predates a group (the N3 list), or when the learner
+        # meanings changed.
         if data is None or (SOURCE.exists() and (
                 {e["group"] for e in data.values()} != set(GROUPS)
-                or any(data.get(ch, {}).get("lesson") != lid for ch, lid in _lesson_kanji().items()))):
+                or any(data.get(ch, {}).get("lesson") != lid for ch, lid in _lesson_kanji().items())
+                or any(ch in data and data[ch]["meanings"][:1] != [m.split(", ")[0]]
+                       for ch, m in LEARNER_MEANINGS.items()))):
             build()
             data = json.loads(INDEX.read_text(encoding="utf-8"))
         return data

@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 from . import furigana, kanji, lessons, srs
 from .db import connect
+from .kanji_meanings import cue
 from .srs import Rating
 
 router = APIRouter(prefix="/api/kanji", tags=["kanji"])
@@ -78,7 +79,8 @@ def kanji_review(limit: int = 50):
     for r in rows:
         e = kanji.get(r["kanji"])
         if e:
-            cards.append({"id": r["id"], "kanji": e["kanji"], "meanings": e["meanings"], "on": e["on"],
+            cards.append({"id": r["id"], "kanji": e["kanji"], "meanings": e["meanings"],
+                          "cue": cue(e["kanji"], e["meanings"][:3]), "on": e["on"],
                           "kun": e["kun"], "examples": e["examples"][:2], "strokes": kanji.strokes(e["kanji"])})
     return {"cards": cards, "due_count": count, "next_due": next_due}
 
@@ -187,7 +189,7 @@ def writing_set(source: str = "studied", limit: int = 10):
         e = kanji.get(ch)
         paths = kanji.strokes(ch)
         if e and paths:
-            items.append({"kanji": ch, "meanings": e["meanings"][:3], "on": e["on"][:2], "kun": e["kun"][:2],
+            items.append({"kanji": ch, "meanings": cue(ch, e["meanings"][:3]), "on": e["on"][:2], "kun": e["kun"][:2],
                           "strokes": len(paths), "stroke_paths": paths})
     return {"items": items}
 
