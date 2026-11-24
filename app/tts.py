@@ -139,7 +139,8 @@ async def default_speaker() -> int | None:
 # Spellings the engine misreads, rewritten in kana before synthesis (何ですか is
 # なんですか, but the engine says なにですか).
 _SAY_FIXES = [("何ですか", "なんですか"), ("何でしょう", "なんでしょう"), ("何だろう", "なんだろう"),
-              ("何なのか", "なんなのか"),
+              ("何なのか", "なんなのか"), ("何だと", "なんだと"),
+              ("海の幸", "うみのさち"),  # the engine says うみのこう
               ("自由な分", "じゆうなぶん"),  # the engine says じゆうなわけ
               ("同じ味", "おなじあじ"),  # the engine says どうじみ
               ("日本", "にほん")]  # the engine sometimes says にっぽん; the furigana shows にほん

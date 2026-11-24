@@ -152,6 +152,9 @@ def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
     # ...except 年に一度 / 年に二回 (once a year), which is ねん.
     if word.surface == "年" and (prev is None or prev.feature.pos1 in {"助詞", "補助記号"}):
         return "ねん" if nxt is not None and nxt.surface == "に" else "とし"
+    # Native counting with つ: 四つ よっつ (the analyzer gives よん).
+    if word.surface == "四" and nxt is not None and nxt.surface == "つ":
+        return "よっ"
     # 体 on its own before a particle is からだ (body); たい is for compounds like 体育.
     if word.surface == "体" and nxt is not None and nxt.surface in {"に", "が", "を", "は", "も", "の", "で"}:
         return "からだ"
