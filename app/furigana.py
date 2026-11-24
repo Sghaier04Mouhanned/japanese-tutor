@@ -64,6 +64,7 @@ _EVERYDAY_READINGS = {
     "富士山": "ふじさん",  # ふじやま is old-fashioned / poetic
     "山道": "やまみち",  # さんどう is the formal reading
     "箱": "はこ",  # on its own the analyzer can give the compound form ばこ
+    "傷": "きず",  # しょう is only for compounds like 負傷
     "重そう": "おもそう",  # "looks heavy"; read as one noun it becomes じゅうそう (baking soda)
 }
 
@@ -142,11 +143,12 @@ def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
         if kana.startswith("つら"):
             return "から" + kana[2:]
     # 何 is なに before most particles (何が, 何を, 何も) and なん before です/の/counters.
-    if word.surface == "何" and nxt is not None and nxt.surface in {"が", "を", "も", "か", "に", "へ"}:
+    if word.surface == "何" and nxt is not None and nxt.surface in {"が", "を", "も", "か", "に", "へ", "より"}:
         return "なに"
     # 年 on its own (年のわりに, 年が近い) is とし "age"; after a number (2020年, 一年) it stays ねん.
+    # ...except 年に一度 / 年に二回 (once a year), which is ねん.
     if word.surface == "年" and (prev is None or prev.feature.pos1 in {"助詞", "補助記号"}):
-        return "とし"
+        return "ねん" if nxt is not None and nxt.surface == "に" else "とし"
     # 体 on its own before a particle is からだ (body); たい is for compounds like 体育.
     if word.surface == "体" and nxt is not None and nxt.surface in {"に", "が", "を", "は", "も", "の", "で"}:
         return "からだ"
