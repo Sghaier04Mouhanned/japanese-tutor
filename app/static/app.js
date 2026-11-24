@@ -1689,6 +1689,7 @@ async function renderPassage(body, id) {
 /* ================= listening practice ================= */
 
 const LISTENING_INTRO = {
+  N4: "Everyday conversations like the JLPT N4 listening section: what happens next, key details, what to say in a situation and quick replies.",
   N3: "Conversations and short talks like the JLPT N3 listening section, read by a narrator, a woman and a man. Listen, answer, then check the transcript.",
   N2: "Faster, longer conversations like the JLPT N2 listening section, including integrated comprehension: weigh several options against what people say.",
   N1: "Lectures, reviews and formal conversations like the JLPT N1 listening section. Listen for the speaker's real point and for subtle replies.",
@@ -1698,6 +1699,7 @@ const LISTENING_HOWTO = {
   point: "Listen for the detail the question asks about. The question is asked before and after the conversation.",
   summary: "Listen to the whole talk. On the test the question and the choices are only spoken, so they appear here as numbers.",
   quick: "Listen to one line and three replies, then choose the best reply. The replies are only spoken.",
+  utterance: "Listen to the situation and choose what you would say. On the test there is a picture; here the situation is spoken, and so are the three choices.",
   integrated: "Listen to the explanation of the options, then to the conversation. Keep track of each person's conditions.",
 };
 
@@ -1916,7 +1918,7 @@ async function renderListeningItem(body, id) {
       el("h3", {}, "Question"),
       item.choices_printed && item.question_segments.length
         ? richEl("div", { class: "jp-line listen-question", lang: "ja" }, item.question_segments)
-        : el("p", { class: "muted" }, item.kind === "quick" ? "Which reply is best?" : "Listen for the question at the end."),
+        : el("p", { class: "muted" }, item.kind === "quick" ? "Which reply is best?" : item.kind === "utterance" ? "What would you say?" : "Listen for the question at the end."),
       el("div", { class: "quiz-choices listen-choices" }, buttons),
       feedback),
     transcript,

@@ -6,6 +6,7 @@ Each item is a short dialogue or talk with a narrator, like the real test:
 - summary 概要理解      what is the speaker's main point? (choices only heard)
 - quick   即時応答      pick the best reply to one line (replies only heard)
 - integrated 統合理解   (N2) compare options someone explains with what two people then say
+- utterance 発話表現    (N4) what would you say in this situation? (replies only heard)
 
 The audio is made with VOICEVOX, one voice per role (N narrator, F woman,
 M man, S staff member). `python -m app.listening` checks the items; `--readings` prints the
@@ -25,9 +26,260 @@ KINDS = {
     "summary": ("Summary", "概要理解", False),
     "quick": ("Quick response", "即時応答", False),
     "integrated": ("Integrated", "統合理解", True),
+    "utterance": ("Utterance", "発話表現", False),
 }  # kind -> (English, Japanese, choices printed on the page)
 
 ITEMS: list[dict] = [
+    # ------------------------------------------------------------------ N4
+    {
+        "id": "n4-l01",
+        "title": "Shopping for the party",
+        "kind": "task",
+        "intro": "女の人と男の人が話しています。男の人は、これから何を買いに行きますか。",
+        "lines": [
+            ("F", "明日のパーティーの準備、もうできた？", "Are you ready for tomorrow's party?"),
+            ("M", "うん、飲み物はもう買ってあるよ。ケーキも予約した。", "Yeah, I've already bought the drinks. And I've ordered the cake."),
+            ("F", "よかった。お皿とコップは？", "Great. What about plates and cups?"),
+            ("M", "お皿は家にあるのを使うつもり。コップは足りないかもしれない。",
+             "I'm going to use the plates we have at home. We might not have enough cups."),
+            ("F", "コップなら、私が持っていくよ。あ、でも、果物がないね。", "I'll bring cups. Oh, but there's no fruit."),
+            ("M", "あ、そうだ。じゃあ、今から買ってくるよ。", "Oh, right. I'll go and buy some now, then."),
+        ],
+        "question": "男の人は、これから何を買いに行きますか。",
+        "intro_en": "A woman and a man are talking. What is the man going to buy now?",
+        "question_en": "What is the man going to buy now?",
+        "choices": ["飲み物", "ケーキ", "コップ", "果物"],
+        "answer": 3,
+        "why": "The drinks are bought (買ってある), the cake is ordered, and she'll bring cups. Only the fruit is missing: "
+               "今から買ってくるよ.",
+        "vocab": [
+            {"word": "準備", "reading": "じゅんび", "meaning": "preparation"},
+            {"word": "予約する", "reading": "よやくする", "meaning": "to book, order in advance"},
+            {"word": "足りない", "reading": "たりない", "meaning": "not enough"},
+            {"word": "果物", "reading": "くだもの", "meaning": "fruit"},
+        ],
+    },
+    {
+        "id": "n4-l02",
+        "title": "First visit to a clinic",
+        "kind": "task",
+        "intro": "病院で、受付の女の人と男の人が話しています。男の人は、このあとまず何をしますか。",
+        "lines": [
+            ("M", "すみません、この病院は初めてなんですが。", "Excuse me, this is my first time at this clinic."),
+            ("F", "では、保険証を見せてください。……はい、ありがとうございます。", "Then please show me your health insurance card... Yes, thank you."),
+            ("F", "それから、この紙に名前と住所を書いてください。", "Next, please write your name and address on this form."),
+            ("M", "はい。", "OK."),
+            ("F", "書いたら、熱を測ってから、こちらに持ってきてください。",
+             "When you've written them, take your temperature and then bring it here."),
+            ("M", "分かりました。体温計はどこですか。", "I see. Where is the thermometer?"),
+            ("F", "あちらの机の上にあります。", "It's on that desk over there."),
+        ],
+        "question": "男の人は、このあとまず何をしますか。",
+        "intro_en": "At a clinic, a woman at reception and a man are talking. What will the man do first after this?",
+        "question_en": "What will the man do first after this?",
+        "choices": ["保険証を見せる", "紙に名前と住所を書く", "熱を測る", "紙を受付に持っていく"],
+        "answer": 1,
+        "why": "He has already shown his card. The order is: write the form (書いたら), then take his temperature, then bring "
+               "the form back. So first he writes.",
+        "vocab": [
+            {"word": "受付", "reading": "うけつけ", "meaning": "reception"},
+            {"word": "保険証", "reading": "ほけんしょう", "meaning": "health insurance card"},
+            {"word": "住所", "reading": "じゅうしょ", "meaning": "address"},
+            {"word": "熱を測る", "reading": "ねつをはかる", "meaning": "to take one's temperature"},
+            {"word": "体温計", "reading": "たいおんけい", "meaning": "thermometer"},
+        ],
+    },
+    {
+        "id": "n4-l03",
+        "title": "Next week's class",
+        "kind": "task",
+        "intro": "教室で、先生が話しています。学生は、来週の授業までに何をしなければなりませんか。",
+        "lines": [
+            ("F", "皆さん、今日の授業はここまでです。", "Everyone, that's all for today's class."),
+            ("F", "来週はテストの予定でしたが、再来週になりました。", "We were going to have a test next week, but it's moved to the week after."),
+            ("F", "来週の授業では、作文を書きます。テーマは「私の好きな場所」です。",
+             "In next week's class you'll write an essay. The theme is \"My favourite place\"."),
+            ("F", "教科書の三十ページの言葉を使いますから、来週までに覚えてきてください。",
+             "You'll use the words on page thirty of the textbook, so please learn them by next week."),
+            ("F", "作文は授業中に書きますから、家で書かなくてもいいですよ。",
+             "You'll write the essay during class, so you don't need to write it at home."),
+        ],
+        "question": "学生は、来週の授業までに何をしなければなりませんか。",
+        "intro_en": "In a classroom, the teacher is speaking. What must the students do before next week's class?",
+        "question_en": "What must the students do before next week's class?",
+        "choices": ["テストの勉強をする", "作文を書く", "教科書の言葉を覚える", "好きな場所に行く"],
+        "answer": 2,
+        "why": "The test moved to the week after next, and the essay is written in class (家で書かなくてもいい). "
+               "The homework is the words on page 30: 来週までに覚えてきてください.",
+        "vocab": [
+            {"word": "授業", "reading": "じゅぎょう", "meaning": "class, lesson"},
+            {"word": "予定", "reading": "よてい", "meaning": "plan, schedule"},
+            {"word": "再来週", "reading": "さらいしゅう", "meaning": "the week after next"},
+            {"word": "作文", "reading": "さくぶん", "meaning": "essay, composition"},
+            {"word": "教科書", "reading": "きょうかしょ", "meaning": "textbook"},
+        ],
+    },
+    {
+        "id": "n4-l04",
+        "title": "Why were you late?",
+        "kind": "point",
+        "intro": "会社で、男の人と女の人が話しています。男の人は、どうして遅れましたか。",
+        "lines": [
+            ("M", "すみません、遅くなりました。", "Sorry I'm late."),
+            ("F", "大丈夫ですよ。電車が遅れたんですか。", "That's all right. Was the train late?"),
+            ("M", "いいえ、電車はいつもどおりでした。でも、家を出るとき、かぎが見つからなくて。",
+             "No, the train was on time. But when I was leaving the house, I couldn't find my key."),
+            ("F", "ああ、それは困りましたね。", "Oh, that's annoying."),
+            ("M", "ええ。結局、かばんの中にあったんですけど。", "Yes. In the end it was in my bag."),
+        ],
+        "question": "男の人は、どうして遅れましたか。",
+        "intro_en": "At an office, a man and a woman are talking. Why was the man late?",
+        "question_en": "Why was the man late?",
+        "choices": ["電車が遅れたから", "朝、起きられなかったから", "かぎを探していたから", "かばんを忘れたから"],
+        "answer": 2,
+        "why": "The train was on time (いつもどおり). He couldn't find his key when leaving: かぎが見つからなくて. "
+               "The bag is where the key turned up, not something he forgot.",
+        "vocab": [
+            {"word": "遅れる", "reading": "おくれる", "meaning": "to be late"},
+            {"word": "いつもどおり", "reading": "いつもどおり", "meaning": "as usual"},
+            {"word": "見つかる", "reading": "みつかる", "meaning": "to be found"},
+            {"word": "結局", "reading": "けっきょく", "meaning": "in the end"},
+        ],
+    },
+    {
+        "id": "n4-l05",
+        "title": "When shall we see a film?",
+        "kind": "point",
+        "intro": "男の人と女の人が話しています。二人は、いつ映画を見に行きますか。",
+        "lines": [
+            ("M", "今度の土曜日、映画を見に行かない？", "Do you want to go and see a film this Saturday?"),
+            ("F", "土曜日はアルバイトがあるの。日曜日はどう？", "I've got my part-time job on Saturday. How about Sunday?"),
+            ("M", "日曜日は弟の誕生日だから、家族で食事をするんだ。", "Sunday is my little brother's birthday, so we're having a family meal."),
+            ("F", "そうか。じゃあ、来週の金曜日の夜は？", "I see. Then how about next Friday evening?"),
+            ("M", "金曜日は、仕事が遅くまであるかもしれないな。あ、でも、木曜日なら大丈夫だよ。",
+             "I might be working late on Friday. Oh, but Thursday is fine."),
+            ("F", "木曜日は私も早く終わるから、いいよ。", "I finish early on Thursday too, so that works."),
+        ],
+        "question": "二人は、いつ映画を見に行きますか。",
+        "intro_en": "A man and a woman are talking. When will they go to see a film?",
+        "question_en": "When will they go to see a film?",
+        "choices": ["木曜日", "金曜日", "土曜日", "日曜日"],
+        "answer": 0,
+        "why": "Saturday she works, Sunday is his brother's birthday, Friday he may work late. He offers Thursday and she "
+               "agrees: いいよ.",
+        "vocab": [
+            {"word": "今度", "reading": "こんど", "meaning": "this coming, next"},
+            {"word": "アルバイト", "reading": "アルバイト", "meaning": "part-time job"},
+            {"word": "誕生日", "reading": "たんじょうび", "meaning": "birthday"},
+            {"word": "遅くまで", "reading": "おそくまで", "meaning": "until late"},
+        ],
+    },
+    {
+        "id": "n4-l06",
+        "title": "Where are the umbrellas?",
+        "kind": "point",
+        "intro": "デパートで、女の人と店の人が話しています。女の人は、まず何階に行きますか。",
+        "lines": [
+            ("F", "すみません、傘を売っているところはどこですか。", "Excuse me, where do you sell umbrellas?"),
+            ("S", "傘は三階です。", "Umbrellas are on the third floor."),
+            ("S", "でも、今日は二階の入り口の近くでも、安く売っていますよ。",
+             "But today they're also on sale cheaply near the entrance on the second floor."),
+            ("F", "そうですか。じゃあ、先にそちらを見てみます。", "Really? Then I'll have a look there first."),
+            ("S", "エスカレーターはあちらです。", "The escalator is over there."),
+        ],
+        "question": "女の人は、まず何階に行きますか。",
+        "intro_en": "In a department store, a woman and a staff member are talking. Which floor will the woman go to first?",
+        "question_en": "Which floor will the woman go to first?",
+        "choices": ["一階", "二階", "三階", "四階"],
+        "answer": 1,
+        "why": "Umbrellas are usually on the 3rd floor, but there's a cheap sale near the 2nd-floor entrance, and she says "
+               "先にそちらを見てみます (I'll look there first).",
+        "vocab": [
+            {"word": "傘", "reading": "かさ", "meaning": "umbrella"},
+            {"word": "売る", "reading": "うる", "meaning": "to sell"},
+            {"word": "入り口", "reading": "いりぐち", "meaning": "entrance"},
+            {"word": "先に", "reading": "さきに", "meaning": "first, before that"},
+        ],
+    },
+    {
+        "id": "n4-l07",
+        "title": "Borrowing a pen",
+        "kind": "utterance",
+        "voice": "F",
+        "intro": "友達のペンを使いたいです。何と言いますか。",
+        "lines": [],
+        "question": "",
+        "intro_en": "You want to use your friend's pen. What do you say?",
+        "question_en": "",
+        "choices_en": ["Can I lend you a pen?", "Can I borrow your pen?", "Shall I borrow a pen for you?"],
+        "choices": ["ペン、貸してもいい？", "ペン、借りてもいい？", "ペン、借りてあげようか。"],
+        "answer": 1,
+        "why": "借りる is to borrow, 貸す is to lend. 借りてもいい？ asks permission to borrow. 貸してもいい？ offers to lend "
+               "your own pen, and 〜てあげようか offers to do something for the other person.",
+        "vocab": [
+            {"word": "借りる", "reading": "かりる", "meaning": "to borrow"},
+            {"word": "貸す", "reading": "かす", "meaning": "to lend"},
+        ],
+    },
+    {
+        "id": "n4-l08",
+        "title": "Leaving work first",
+        "kind": "utterance",
+        "voice": "M",
+        "intro": "仕事が終わりました。会社の人より先に帰ります。何と言いますか。",
+        "lines": [],
+        "question": "",
+        "intro_en": "Work is over. You're going home before your colleagues. What do you say?",
+        "question_en": "",
+        "choices_en": ["I'm off now (and coming back).", "Excuse me for leaving first.", "Sorry to intrude."],
+        "choices": ["いってきます。", "お先に失礼します。", "おじゃまします。"],
+        "answer": 1,
+        "why": "お先に失礼します is the set phrase for leaving work before others. いってきます means you'll come back "
+               "(leaving home), and おじゃまします is said when entering someone's home.",
+        "vocab": [
+            {"word": "お先に失礼します", "reading": "おさきにしつれいします", "meaning": "excuse me for leaving first"},
+            {"word": "おじゃまします", "reading": "おじゃまします", "meaning": "sorry to intrude (entering a home)"},
+        ],
+    },
+    {
+        "id": "n4-l09",
+        "title": "Is there a post office?",
+        "kind": "quick",
+        "intro": "",
+        "lines": [("M", "すみません、この近くに郵便局はありますか。", "Excuse me, is there a post office near here?")],
+        "question": "",
+        "intro_en": "",
+        "question_en": "",
+        "choices_en": ["Yes, it's next to that bank.", "Yes, I'm going to the post office.", "No, I sent a letter."],
+        "choices": ["ええ、あの銀行の隣にありますよ。", "はい、郵便局へ行きます。", "いいえ、手紙を出しました。"],
+        "answer": 0,
+        "why": "He asks where a post office is, so the reply says where: あの銀行の隣. The other two talk about "
+               "the speaker's own plans.",
+        "vocab": [
+            {"word": "郵便局", "reading": "ゆうびんきょく", "meaning": "post office"},
+            {"word": "隣", "reading": "となり", "meaning": "next to"},
+        ],
+    },
+    {
+        "id": "n4-l10",
+        "title": "Tea or coffee?",
+        "kind": "quick",
+        "intro": "",
+        "lines": [("F", "お茶とコーヒーと、どちらがいいですか。", "Which would you like, tea or coffee?")],
+        "question": "",
+        "intro_en": "",
+        "question_en": "",
+        "choices_en": ["Yes, that's fine.", "Then coffee, please.", "There's neither."],
+        "choices": ["はい、いいです。", "じゃあ、コーヒーをお願いします。", "どちらもありません。"],
+        "answer": 1,
+        "why": "どちらがいいですか asks you to choose, so you name one: コーヒーをお願いします. はい doesn't answer a "
+               "which-question, and どちらもありません would be the host's line.",
+        "vocab": [
+            {"word": "どちら", "reading": "どちら", "meaning": "which (of two)"},
+            {"word": "お願いします", "reading": "おねがいします", "meaning": "please"},
+        ],
+    },
+    # ------------------------------------------------------------------ N3
     {
         "id": "n3-l01",
         "title": "Preparing a presentation",
@@ -1536,8 +1788,14 @@ def script(item: dict) -> list[dict]:
     if item["question"]:
         out.append({"who": "N", "text": item["question"], "en": item["question_en"]})
     if not KINDS[item["kind"]][2]:
-        # Quick replies are spoken by the other person; summary choices by the narrator.
-        replier = "N" if item["kind"] == "summary" else ("F" if item["lines"][-1][0] == "M" else "M")
+        # Quick replies are spoken by the other person, summary choices by the narrator and
+        # utterance choices by the person in the situation (the arrow in the test's picture).
+        if item["kind"] == "summary":
+            replier = "N"
+        elif item["kind"] == "utterance":
+            replier = item["voice"]
+        else:
+            replier = "F" if item["lines"][-1][0] == "M" else "M"
         out += [{"who": replier, "text": f"{n}。{c}", "en": f"{n}. {en}"}
                 for n, (c, en) in enumerate(zip(item["choices"], item["choices_en"]), 1)]
     return out
@@ -1550,7 +1808,7 @@ if __name__ == "__main__":
 
     problems = 0
     for item in ITEMS:
-        expected = 4 if item["kind"] != "quick" else 3
+        expected = 3 if item["kind"] in ("quick", "utterance") else 4
         if len(item["choices"]) != expected or len(set(item["choices"])) != expected:
             print(f"{item['id']}: needs {expected} different choices")
             problems += 1
@@ -1559,6 +1817,9 @@ if __name__ == "__main__":
             problems += 1
         if item["kind"] not in KINDS or any(who not in VOICES for who, _jp, _en in item["lines"]):
             print(f"{item['id']}: unknown kind or role")
+            problems += 1
+        if item["kind"] == "utterance" and item.get("voice") not in VOICES:
+            print(f"{item['id']}: utterance items need a voice for the choices")
             problems += 1
         if not KINDS[item["kind"]][2] and len(item.get("choices_en", [])) != len(item["choices"]):
             print(f"{item['id']}: spoken choices need translations (choices_en)")

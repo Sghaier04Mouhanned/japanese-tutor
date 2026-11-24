@@ -58,7 +58,7 @@ def list_items():
 @router.get("/{item_id}")
 async def get_item(item_id: str):
     """What to play and what to show before answering. Choices only heard on the
-    test (summary, quick) come back as numbers; the answer comes with the check."""
+    test (summary, quick, utterance) come back as numbers; the answer comes with the check."""
     item = _item_or_404(item_id)
     index = listening.ITEMS.index(item)
     printed = listening.KINDS[item["kind"]][2]

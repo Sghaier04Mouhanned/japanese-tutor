@@ -68,7 +68,9 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
   the key words to your reviews. Scores are saved, and the dashboard counts passages read
 - `python -m app.reading` checks the questions; add `--readings` to proofread the furigana
 
-**Listening practice (JLPT 聴解, N3 to N1)**
+**Listening practice (JLPT 聴解, N4 to N1)**
+- 10 N4 items: shopping for a party, a first clinic visit, a teacher's homework notice, picking a day,
+  plus utterance expressions (発話表現: what would you say in this situation?) and quick responses
 - 20 hand-written N3 items in the four test formats: task-based (課題理解), key point (ポイント理解),
   summary (概要理解) and quick response (即時応答)
 - 20 N2 items, adding integrated comprehension (統合理解): a staff member explains three options, two
@@ -79,7 +81,7 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
   staff 青山龍星);
   the clips are made before the first play so lines follow each other smoothly. Without VOICEVOX the
   browser's voice is used at a different pitch per role
-- As on the test, summary and quick-response choices are only spoken; after answering you get the
+- As on the test, summary, utterance and quick-response choices are only spoken; after answering you get the
   transcript with furigana, a translation of every line, and the key words
 - Under "Read & listen" in the top bar, next to reading practice; `python -m app.listening` checks the
   items (`--readings` prints the transcripts' furigana)
