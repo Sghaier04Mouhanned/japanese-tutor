@@ -1,4 +1,4 @@
-"""The JLPT lesson path (N5 to N2), written by hand so the core content is reliable.
+"""The JLPT lesson path (N5 to N1), written by hand so the core content is reliable.
 
 The tutor builds practice sessions on top of this, but the explanations,
 example sentences and vocabulary here are the ground truth. Each example has
@@ -3140,10 +3140,264 @@ LESSONS: list[dict] = [
             {"word": "おかしい", "reading": "おかしい", "meaning": "funny; strange"},
         ],
     },
+    # ------------------------------------------------------------------ N1
+    {
+        "id": "n1-01",
+        "title": "Unique to",
+        "jp_title": "〜ならではの",
+        "goal": "Praise something that only a particular place, person or season can offer.",
+        "points": [
+            "**[noun] + ならではの** = unique to, that only X can offer (praise): 京都ならではの景色.",
+            "At the end of a sentence, **ならではだ**: この丁寧な仕上がりは、手作りならではだ。",
+            "Often with people, places and seasons: 子供ならではの発想, 冬ならではの楽しみ.",
+            "ならでは is always positive. For a neutral \"typical of\", use らしい (N3).",
+        ],
+        "examples": [
+            {"jp": "これは、京都ならではの景色ですね。", "kana": "これは きょうとならではのけしきですね", "romaji": "kore wa, kyouto nara de wa no keshiki desu ne", "en": "This is scenery you can only find in Kyoto."},
+            {"jp": "子供ならではの自由な発想に、驚かされた。", "kana": "こどもならではのじゆうなはっそうに おどろかされた", "romaji": "kodomo nara de wa no jiyuu na hassou ni, odorokasareta", "en": "I was amazed by the free thinking only a child could have."},
+            {"jp": "雪の中で入る温泉は、冬ならではの楽しみだ。", "kana": "ゆきのなかではいるおんせんは ふゆならではのたのしみだ", "romaji": "yuki no naka de hairu onsen wa, fuyu nara de wa no tanoshimi da", "en": "Bathing in a hot spring in the snow is a pleasure only winter offers."},
+            {"jp": "この丁寧な仕上がりは、手作りならではだ。", "kana": "このていねいなしあがりは てづくりならではだ", "romaji": "kono teinei na shiagari wa, tezukuri nara de wa da", "en": "This careful finish is something only handmade work has."},
+        ],
+        "vocab": [
+            {"word": "発想", "reading": "はっそう", "meaning": "idea, way of thinking"},
+            {"word": "温泉", "reading": "おんせん", "meaning": "hot spring"},
+            {"word": "仕上がり", "reading": "しあがり", "meaning": "finish, result"},
+            {"word": "手作り", "reading": "てづくり", "meaning": "handmade"},
+            {"word": "丁寧", "reading": "ていねい", "meaning": "careful, polite"},
+        ],
+    },
+    {
+        "id": "n1-02",
+        "title": "Once it comes to",
+        "jp_title": "〜ともなると・〜ともなれば",
+        "goal": "Say that reaching a higher stage naturally brings certain changes or expectations.",
+        "points": [
+            "**[noun / dictionary form] + ともなると / ともなれば** = once it comes to, when it reaches (a higher stage): "
+            "大学生ともなると、自分で考えて行動しなければならない。",
+            "It's used for a stage, position or time that brings natural expectations: 週末ともなると, プロともなれば, 十二月ともなれば.",
+            "The second half says what is natural at that stage: 〜なければならない, 〜ものだ, 混む, にぎやかになる.",
+            "Compare **になると**: ともなると stresses that it's a special or higher level.",
+        ],
+        "examples": [
+            {"jp": "大学生ともなると、自分で考えて行動しなければならない。", "kana": "だいがくせいともなると じぶんでかんがえてこうどうしなければならない", "romaji": "daigakusei to mo naru to, jibun de kangaete koudou shinakereba naranai", "en": "Once you're a university student, you have to think and act for yourself."},
+            {"jp": "週末ともなると、この公園は親子でいっぱいになる。", "kana": "しゅうまつともなると このこうえんはおやこでいっぱいになる", "romaji": "shuumatsu to mo naru to, kono kouen wa oyako de ippai ni naru", "en": "At weekends, this park fills up with parents and children."},
+            {"jp": "十二月ともなれば、町はどこもにぎやかになる。", "kana": "じゅうにがつともなれば まちはどこもにぎやかになる", "romaji": "juunigatsu to mo nareba, machi wa doko mo nigiyaka ni naru", "en": "Once December comes, the whole town gets lively."},
+            {"jp": "プロともなれば、練習の量も違う。", "kana": "プロともなれば れんしゅうのりょうもちがう", "romaji": "puro to mo nareba, renshuu no ryou mo chigau", "en": "At the professional level, even the amount of practice is different."},
+        ],
+        "vocab": [
+            {"word": "行動", "reading": "こうどう", "meaning": "action, behaviour"},
+            {"word": "親子", "reading": "おやこ", "meaning": "parent and child"},
+            {"word": "量", "reading": "りょう", "meaning": "amount, quantity"},
+            {"word": "プロ", "reading": "プロ", "meaning": "professional"},
+        ],
+    },
+    {
+        "id": "n1-03",
+        "title": "Ignoring, regardless of",
+        "jp_title": "〜をよそに",
+        "goal": "Describe someone acting without regard for others' worries or the situation.",
+        "points": [
+            "**[noun] + をよそに** = ignoring, regardless of (other people's feelings or a situation): "
+            "親の心配をよそに、彼は一人で旅に出た。",
+            "The first part is usually something others care about: 心配, 期待, 反対, 不安.",
+            "It has a nuance of not caring and is often a little critical, but it can be neutral: 住民の不安をよそに、工事が始まった。",
+            "Compare **にもかかわらず** (N2): をよそに stresses ignoring something.",
+        ],
+        "examples": [
+            {"jp": "親の心配をよそに、彼は一人で旅に出た。", "kana": "おやのしんぱいをよそに かれはひとりでたびにでた", "romaji": "oya no shinpai o yoso ni, kare wa hitori de tabi ni deta", "en": "Ignoring his parents' worries, he set off on a journey alone."},
+            {"jp": "周りの反対をよそに、姉は留学を決めた。", "kana": "まわりのはんたいをよそに あねはりゅうがくをきめた", "romaji": "mawari no hantai o yoso ni, ane wa ryuugaku o kimeta", "en": "Despite everyone's opposition, my sister decided to study abroad."},
+            {"jp": "試験が近いのをよそに、弟は毎日遊んでいる。", "kana": "しけんがちかいのをよそに おとうとはまいにちあそんでいる", "romaji": "shiken ga chikai no o yoso ni, otouto wa mainichi asonde iru", "en": "Paying no attention to the approaching exam, my brother plays every day."},
+            {"jp": "住民の不安をよそに、工事が始まった。", "kana": "じゅうみんのふあんをよそに こうじがはじまった", "romaji": "juumin no fuan o yoso ni, kouji ga hajimatta", "en": "The construction started regardless of the residents' anxiety."},
+        ],
+        "vocab": [
+            {"word": "よそ", "reading": "よそ", "meaning": "elsewhere; (をよそに) ignoring"},
+            {"word": "周り", "reading": "まわり", "meaning": "the people around, surroundings"},
+            {"word": "不安", "reading": "ふあん", "meaning": "anxiety, unease"},
+            {"word": "旅に出る", "reading": "たびにでる", "meaning": "to set out on a journey"},
+        ],
+    },
+    {
+        "id": "n1-04",
+        "title": "Even though, even",
+        "jp_title": "〜といえども",
+        "goal": "Say that even a special case doesn't change what follows, formally.",
+        "points": [
+            "**[noun / plain form] + といえども** = even though, even (it's X, but still ...): "
+            "子供といえども、ルールは守らなければならない。",
+            "It often goes with たとえ: たとえ親友といえども、言っていいことと悪いことがある。",
+            "With 一 + counter it means \"not even\": 一円といえども、無駄にはできない。",
+            "It's like とはいえ (N2) and ても (N4), but more formal and written.",
+        ],
+        "examples": [
+            {"jp": "子供といえども、ルールは守らなければならない。", "kana": "こどもといえども ルールはまもらなければならない", "romaji": "kodomo to iedomo, ruuru wa mamoranakereba naranai", "en": "Even children must follow the rules."},
+            {"jp": "たとえ親友といえども、言っていいことと悪いことがある。", "kana": "たとえしんゆうといえども いっていいこととわるいことがある", "romaji": "tatoe shinyuu to iedomo, itte ii koto to warui koto ga aru", "en": "Even with a best friend, there are things you can and can't say."},
+            {"jp": "冬といえども、この地方はあまり寒くない。", "kana": "ふゆといえども このちほうはあまりさむくない", "romaji": "fuyu to iedomo, kono chihou wa amari samukunai", "en": "Even in winter, this region isn't very cold."},
+            {"jp": "一円といえども、無駄にはできない。", "kana": "いちえんといえども むだにはできない", "romaji": "ichien to iedomo, muda ni wa dekinai", "en": "Not even a single yen can be wasted."},
+        ],
+        "vocab": [
+            {"word": "親友", "reading": "しんゆう", "meaning": "best friend"},
+            {"word": "地方", "reading": "ちほう", "meaning": "region, area"},
+            {"word": "無駄", "reading": "むだ", "meaning": "waste"},
+            {"word": "たとえ", "reading": "たとえ", "meaning": "even if, even"},
+        ],
+    },
+    {
+        "id": "n1-05",
+        "title": "The moment, as soon as",
+        "jp_title": "〜や否や・〜なり",
+        "goal": "Describe something that happened the instant something else did.",
+        "points": [
+            "**[dictionary form] + や否や** = the moment, as soon as (written): ベルが鳴るや否や、生徒たちは教室を飛び出した。",
+            "**[dictionary form] + なり** = as soon as; the subject is usually someone other than the speaker: "
+            "彼は家に帰るなり、寝てしまった。",
+            "The second half is something that happened, often surprising; it isn't a request or a plan.",
+            "Compare **次第** (N2): 次第 is for future plans, while や否や and なり describe past events.",
+        ],
+        "examples": [
+            {"jp": "ベルが鳴るや否や、生徒たちは教室を飛び出した。", "kana": "ベルがなるやいなや せいとたちはきょうしつをとびだした", "romaji": "beru ga naru ya ina ya, seitotachi wa kyoushitsu o tobidashita", "en": "The moment the bell rang, the students rushed out of the classroom."},
+            {"jp": "彼は家に帰るなり、寝てしまった。", "kana": "かれはいえにかえるなり ねてしまった", "romaji": "kare wa ie ni kaeru nari, nete shimatta", "en": "He fell asleep as soon as he got home."},
+            {"jp": "店が開くや否や、客が一斉に入ってきた。", "kana": "みせがあくやいなや きゃくがいっせいにはいってきた", "romaji": "mise ga aku ya ina ya, kyaku ga issei ni haitte kita", "en": "As soon as the shop opened, the customers all rushed in."},
+            {"jp": "母は私の顔を見るなり、泣き出した。", "kana": "はははわたしのかおをみるなり なきだした", "romaji": "haha wa watashi no kao o miru nari, nakidashita", "en": "My mother burst into tears the moment she saw my face."},
+        ],
+        "vocab": [
+            {"word": "飛び出す", "reading": "とびだす", "meaning": "to rush out"},
+            {"word": "一斉に", "reading": "いっせいに", "meaning": "all at once"},
+            {"word": "泣き出す", "reading": "なきだす", "meaning": "to burst into tears"},
+            {"word": "生徒", "reading": "せいと", "meaning": "pupil, student"},
+        ],
+    },
+    {
+        "id": "n1-06",
+        "title": "In order to",
+        "jp_title": "〜べく",
+        "goal": "State a purpose formally, as in writing and speeches.",
+        "points": [
+            "**[dictionary form] + べく** = in order to (formal, written): 夢をかなえるべく、毎日努力している。",
+            "する becomes **すべく** (or するべく): 問題を解決すべく、話し合いが行われた。",
+            "It's like ために, but more formal; there's usually a clear goal behind it.",
+            "Don't confuse it with **べきだ** (N2, should): べく is about purpose.",
+        ],
+        "examples": [
+            {"jp": "夢をかなえるべく、毎日努力している。", "kana": "ゆめをかなえるべく まいにちどりょくしている", "romaji": "yume o kanaeru beku, mainichi doryoku shite iru", "en": "I'm working hard every day to make my dream come true."},
+            {"jp": "問題を解決すべく、話し合いが行われた。", "kana": "もんだいをかいけつすべく はなしあいがおこなわれた", "romaji": "mondai o kaiketsu subeku, hanashiai ga okonawareta", "en": "Talks were held to solve the problem."},
+            {"jp": "試験に合格すべく、彼女は一年間必死に勉強した。", "kana": "しけんにごうかくすべく かのじょはいちねんかんひっしにべんきょうした", "romaji": "shiken ni goukaku subeku, kanojo wa ichinenkan hisshi ni benkyou shita", "en": "To pass the exam, she studied desperately for a whole year."},
+            {"jp": "家族に会うべく、彼は十年ぶりに故郷へ帰った。", "kana": "かぞくにあうべく かれはじゅうねんぶりにこきょうへかえった", "romaji": "kazoku ni au beku, kare wa juunen buri ni kokyou e kaetta", "en": "He returned to his hometown for the first time in ten years to see his family."},
+        ],
+        "vocab": [
+            {"word": "かなえる", "reading": "かなえる", "meaning": "to make (a dream) come true"},
+            {"word": "解決", "reading": "かいけつ", "meaning": "solution, solving"},
+            {"word": "話し合い", "reading": "はなしあい", "meaning": "discussion, talks"},
+            {"word": "必死", "reading": "ひっし", "meaning": "desperate, frantic"},
+            {"word": "故郷", "reading": "こきょう", "meaning": "hometown"},
+        ],
+    },
+    {
+        "id": "n1-07",
+        "title": "Has a tendency to",
+        "jp_title": "〜きらいがある",
+        "goal": "Point out an undesirable habit or tendency.",
+        "points": [
+            "**[dictionary form / noun の] + きらいがある** = has a (bad) tendency to: 彼は、物事を悪い方に考えるきらいがある。",
+            "It's for undesirable habits or tendencies of people or groups, and it's formal.",
+            "Compare **〜がちだ** and **〜傾向がある**: きらいがある sounds more critical.",
+            "It's usually written in hiragana, although it comes from 嫌い.",
+        ],
+        "examples": [
+            {"jp": "彼は、物事を悪い方に考えるきらいがある。", "kana": "かれは ものごとをわるいほうにかんがえるきらいがある", "romaji": "kare wa, monogoto o warui hou ni kangaeru kirai ga aru", "en": "He has a tendency to look on the dark side of things."},
+            {"jp": "最近の若者は、すぐに答えを求めるきらいがある。", "kana": "さいきんのわかものは すぐにこたえをもとめるきらいがある", "romaji": "saikin no wakamono wa, sugu ni kotae o motomeru kirai ga aru", "en": "Young people these days tend to want answers right away."},
+            {"jp": "私は、何でも一人で抱え込むきらいがある。", "kana": "わたしは なんでもひとりでかかえこむきらいがある", "romaji": "watashi wa, nan demo hitori de kakaekomu kirai ga aru", "en": "I tend to take everything on by myself."},
+            {"jp": "この店は、値段の割に量が少ないきらいがある。", "kana": "このみせは ねだんのわりにりょうがすくないきらいがある", "romaji": "kono mise wa, nedan no wari ni ryou ga sukunai kirai ga aru", "en": "This restaurant tends to give small portions for the price."},
+        ],
+        "vocab": [
+            {"word": "物事", "reading": "ものごと", "meaning": "things, matters"},
+            {"word": "求める", "reading": "もとめる", "meaning": "to seek, want"},
+            {"word": "抱え込む", "reading": "かかえこむ", "meaning": "to take on (alone)"},
+            {"word": "若者", "reading": "わかもの", "meaning": "young people"},
+            {"word": "傾向", "reading": "けいこう", "meaning": "tendency"},
+        ],
+    },
+    {
+        "id": "n1-08",
+        "title": "Undaunted by",
+        "jp_title": "〜をものともせず",
+        "goal": "Praise someone who carries on in spite of a difficulty.",
+        "points": [
+            "**[noun] + をものともせず(に)** = undaunted by, braving (a difficulty): "
+            "彼は足のけがをものともせず、最後まで走り続けた。",
+            "It praises someone who overcomes hardship; the noun is a difficulty: 困難, 危険, 激しい雪, 反対.",
+            "It's about other people; you don't normally use it to praise yourself.",
+            "Compare **にもかかわらず** (N2): をものともせず adds admiration for the person's courage.",
+        ],
+        "examples": [
+            {"jp": "彼は足のけがをものともせず、最後まで走り続けた。", "kana": "かれはあしのけがをものともせず さいごまではしりつづけた", "romaji": "kare wa ashi no kega o mono to mo sezu, saigo made hashiritsuzuketa", "en": "Undaunted by his leg injury, he kept running to the end."},
+            {"jp": "彼女は周囲の反対をものともせず、自分の店を開いた。", "kana": "かのじょはしゅういのはんたいをものともせず じぶんのみせをひらいた", "romaji": "kanojo wa shuui no hantai o mono to mo sezu, jibun no mise o hiraita", "en": "Brushing aside everyone's opposition, she opened her own shop."},
+            {"jp": "彼らは、激しい雪をものともせず、山頂を目指した。", "kana": "かれらは はげしいゆきをものともせず さんちょうをめざした", "romaji": "karera wa, hageshii yuki o mono to mo sezu, sanchou o mezashita", "en": "Braving the heavy snow, they headed for the summit."},
+            {"jp": "その選手は、年齢をものともせず、若い選手に勝った。", "kana": "そのせんしゅは ねんれいをものともせず わかいせんしゅにかった", "romaji": "sono senshu wa, nenrei o mono to mo sezu, wakai senshu ni katta", "en": "That athlete beat the younger players, undaunted by age."},
+        ],
+        "vocab": [
+            {"word": "けが", "reading": "けが", "meaning": "injury"},
+            {"word": "周囲", "reading": "しゅうい", "meaning": "the people around, surroundings"},
+            {"word": "激しい", "reading": "はげしい", "meaning": "fierce, heavy"},
+            {"word": "山頂", "reading": "さんちょう", "meaning": "summit"},
+            {"word": "年齢", "reading": "ねんれい", "meaning": "age"},
+            {"word": "選手", "reading": "せんしゅ", "meaning": "athlete, player"},
+        ],
+    },
+    {
+        "id": "n1-09",
+        "title": "Not even one",
+        "jp_title": "〜たりとも",
+        "goal": "Stress strongly that not even the smallest amount is allowed or happened.",
+        "points": [
+            "**一 + counter + たりとも + negative** = not even one (strong emphasis): 一秒たりとも気を抜けない。",
+            "Common pairs: 一日たりとも, 一円たりとも, 一秒たりとも, 一瞬たりとも, 一人たりとも.",
+            "It's formal and dramatic. In everyday speech, 一日も〜ない says the same more plainly.",
+            "The verb is always negative: 〜ない, 〜てはいけない, 〜できない.",
+        ],
+        "examples": [
+            {"jp": "彼は三年間、一日たりとも練習を休まなかった。", "kana": "かれはさんねんかん いちにちたりともれんしゅうをやすまなかった", "romaji": "kare wa sannenkan, ichinichi taritomo renshuu o yasumanakatta", "en": "In three years, he didn't miss practice even once."},
+            {"jp": "試験中は、一秒たりとも気を抜けない。", "kana": "しけんちゅうは いちびょうたりともきをぬけない", "romaji": "shikenchuu wa, ichibyou taritomo ki o nukenai", "en": "During the exam, you can't relax for even a second."},
+            {"jp": "税金は、一円たりとも無駄にしてはいけない。", "kana": "ぜいきんは いちえんたりとも むだにしてはいけない", "romaji": "zeikin wa, ichien taritomo muda ni shite wa ikenai", "en": "Not a single yen of tax money should be wasted."},
+            {"jp": "この試合は、一瞬たりとも目が離せない。", "kana": "このしあいは いっしゅんたりともめがはなせない", "romaji": "kono shiai wa, isshun taritomo me ga hanasenai", "en": "You can't take your eyes off this match for even a moment."},
+        ],
+        "vocab": [
+            {"word": "秒", "reading": "びょう", "meaning": "second (of time)"},
+            {"word": "気を抜く", "reading": "きをぬく", "meaning": "to let your attention slip"},
+            {"word": "税金", "reading": "ぜいきん", "meaning": "tax"},
+            {"word": "一瞬", "reading": "いっしゅん", "meaning": "an instant, a moment"},
+            {"word": "目が離せない", "reading": "めがはなせない", "meaning": "can't take your eyes off"},
+        ],
+    },
+    {
+        "id": "n1-10",
+        "title": "Can't help feeling",
+        "jp_title": "〜を禁じ得ない",
+        "goal": "Express a strong emotion you can't hold back, in formal language.",
+        "points": [
+            "**[noun] + を禁じ得ない** = can't help feeling (a strong emotion; very formal): その話を聞いて、涙を禁じ得なかった。",
+            "Typical nouns: 涙, 怒り, 同情, 驚き, 失望.",
+            "It's for the speaker's own feelings, mostly in speeches, the news and writing.",
+            "Compare **〜ずにはいられない** (N2): を禁じ得ない takes a noun and is more formal.",
+        ],
+        "examples": [
+            {"jp": "その話を聞いて、涙を禁じ得なかった。", "kana": "そのはなしをきいて なみだをきんじえなかった", "romaji": "sono hanashi o kiite, namida o kinjienakatta", "en": "Hearing that story, I couldn't hold back my tears."},
+            {"jp": "突然の事故の知らせに、驚きを禁じ得ない。", "kana": "とつぜんのじこのしらせに おどろきをきんじえない", "romaji": "totsuzen no jiko no shirase ni, odoroki o kinjienai", "en": "I can't help being shocked by the news of the sudden accident."},
+            {"jp": "子供たちの苦しい生活に、同情を禁じ得ない。", "kana": "こどもたちのくるしいせいかつに どうじょうをきんじえない", "romaji": "kodomotachi no kurushii seikatsu ni, doujou o kinjienai", "en": "I can't help feeling sympathy for the children's hard lives."},
+            {"jp": "約束を何度も破る彼の態度には、怒りを禁じ得ない。", "kana": "やくそくをなんどもやぶるかれのたいどには いかりをきんじえない", "romaji": "yakusoku o nando mo yaburu kare no taido ni wa, ikari o kinjienai", "en": "I can't help feeling angry at the way he keeps breaking promises."},
+        ],
+        "vocab": [
+            {"word": "涙", "reading": "なみだ", "meaning": "tears"},
+            {"word": "突然", "reading": "とつぜん", "meaning": "sudden(ly)"},
+            {"word": "同情", "reading": "どうじょう", "meaning": "sympathy"},
+            {"word": "怒り", "reading": "いかり", "meaning": "anger"},
+            {"word": "態度", "reading": "たいど", "meaning": "attitude"},
+            {"word": "禁じる", "reading": "きんじる", "meaning": "to forbid"},
+        ],
+    },
 ]
 
 _BY_ID = {lesson["id"]: lesson for lesson in LESSONS}
-LEVELS = ("N5", "N4", "N3", "N2")
+LEVELS = ("N5", "N4", "N3", "N2", "N1")
 
 
 def get(lesson_id: str) -> dict | None:

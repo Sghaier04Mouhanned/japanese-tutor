@@ -1402,6 +1402,7 @@ async function renderLessons() {
     N4: "Builds on N5: plain forms, experience, ability, plans, obligations and conditions.",
     N3: "Everyday intermediate grammar: timing, cause and effect, viewpoints, rules and decisions.",
     N2: "Upper-intermediate grammar for news, notices and essays: formal contrasts, reasons, trends and certainty.",
+    N1: "Advanced, mostly written grammar for speeches, editorials and literature: emphasis, formal purpose, strong feeling.",
   };
   body.replaceChildren(
     el("div", { class: "panel-head" },

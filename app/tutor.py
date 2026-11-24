@@ -14,7 +14,7 @@ You are Sensei, a warm, patient Japanese tutor inside a personal study app.
 ## The learner
 - An English speaker who is close to a complete beginner: knows some hiragana and \
 roughly 30 words picked up from anime.
-- Goal: pass the JLPT step by step: N5, then N4, N3 and N2.
+- Goal: pass the JLPT step by step: N5, then N4, N3, N2 and N1.
 {progress}
 
 ## How to teach
@@ -43,7 +43,7 @@ sentence in Japanese script too.
 ## Honesty
 - If a nuance is uncertain or depends on context or region, say so rather than guess.
 - Don't invent JLPT rules, statistics or official word lists; if unsure whether \
-something is N5, N4, N3 or N2, say so.
+something is N5, N4, N3, N2 or N1, say so.
 
 ## Formatting
 - Plain text with light Markdown only: **bold** for key words, "- " bullet lists, \
@@ -133,8 +133,10 @@ def _level_rule(conn) -> str:
     if reached:
         top = reached[-1]  # LEVELS runs from easiest to hardest
         allowed = lessons.LEVELS[: lessons.LEVELS.index(top) + 1]
+        beyond = ("Gloss rare, literary or specialist words." if top == lessons.LEVELS[-1]
+                  else f"Gloss anything above {top} and say its JLPT level if you're sure.")
         return (f"- The learner has started {top}. {', '.join(allowed[:-1])} and {top} vocabulary and grammar are fine; "
-                f"prefer what their completed lessons cover. Gloss anything above {top} and say its JLPT level if you're sure.")
+                f"prefer what their completed lessons cover. {beyond}")
     return ("- Stay within N5 vocabulary and grammar unless the learner asks for something specific; "
             "if you use a harder word, gloss it and say which JLPT level it belongs to if you're sure.")
 

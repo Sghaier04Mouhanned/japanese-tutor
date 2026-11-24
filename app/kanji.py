@@ -32,7 +32,7 @@ STROKES_DIR = ROOT / "data" / "kanjivg" / "kanji"
 OLD_JLPT_TO_LEVEL = {4: "N5", 3: "N4"}
 # Old level 2 (~740 kanji) covers today's N3 and N2 together, and each of those adds
 # about 370 kanji. So "closest to N3" is the 300 most frequent old level-2 kanji plus
-# the old level-2 kanji the lessons use, and "closest to N2" is the rest of old level 2.
+# the old level-2 kanji the N5-N3 lessons use, and "closest to N2" is the rest of old level 2.
 N3_OLD_LEVEL = 2
 N3_MOST_FREQUENT = 300
 GROUPS = ("N5", "N4", "N3", "N2", "lessons")  # "lessons": in the lessons but on none of the lists
@@ -93,7 +93,9 @@ def build() -> int:
 
     # Split old level 2 into the N3 share (see N3_MOST_FREQUENT) and the N2 share.
     old2 = sorted((e for e in entries.values() if e["group"] == "N3"), key=lambda e: e["freq"] or 9999)
-    n3 = {e["kanji"] for e in old2[:N3_MOST_FREQUENT]} | {e["kanji"] for e in old2 if e["kanji"] in in_lessons}
+    # Kanji the N5-N3 lessons use count as N3; ones first met in N2/N1 lessons stay in N2.
+    early = {ch for ch, lid in in_lessons.items() if lid.split("-")[0] in ("n5", "n4", "n3")}
+    n3 = {e["kanji"] for e in old2[:N3_MOST_FREQUENT]} | {e["kanji"] for e in old2 if e["kanji"] in early}
     for e in old2:
         if e["kanji"] not in n3:
             e["group"] = "N2"

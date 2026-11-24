@@ -1,7 +1,7 @@
 # 日本語 Tutor
 
 A personal Japanese tutor that runs in the browser, built for going from zero to
-passing the JLPT (N5, then N4, N3 and N2), powered by a free AI API or a local model.
+passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a local model.
 
 ## Features
 
@@ -36,10 +36,10 @@ passing the JLPT (N5, then N4, N3 and N2), powered by a free AI API or a local m
 - Quiz score trend; study days, total reviews and quizzes
 
 **Kanji study**
-- Lists closest to N5 (103), N4 (181), N3 (about 400) and N2 (about 340), plus every other kanji
+- Lists closest to N5 (103), N4 (181), N3 (about 370) and N2 (about 370), plus every other kanji
   used in the lessons. KANJIDIC only has the pre-2010 JLPT levels: old levels 4 and 3 match N5 and
   N4; old level 2 mixes N3 and N2, so the N3 list is its 300 most common kanji plus the ones the
-  lessons use, and the N2 list is the rest. There has been no official kanji list since 2010, so
+  N5-N3 lessons use, and the N2 list is the rest. There has been no official kanji list since 2010, so
   these are close guides, not official lists
 - Animated stroke order (KanjiVG), on/kun readings with audio, meanings, and example words
   (lesson vocabulary first, then common dictionary words)
@@ -132,6 +132,10 @@ passing the JLPT (N5, then N4, N3 and N2), powered by a free AI API or a local m
 - 〜に応じて/〜に沿って, 〜をはじめ, 〜反面, 〜とともに, 〜ないことはない, 〜にかけては, 〜ことに,
   〜ことから, 〜上で/〜上, 〜ずにはいられない
 - Sensei may use grammar up to the highest level you've started a lesson in
+
+**JLPT N1 lessons (10 so far)**
+- 〜ならではの, 〜ともなると, 〜をよそに, 〜といえども, 〜や否や/〜なり, 〜べく, 〜きらいがある,
+  〜をものともせず, 〜たりとも, 〜を禁じ得ない
 
 ## Setup
 
