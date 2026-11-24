@@ -133,11 +133,13 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
   〜ことから, 〜上で/〜上, 〜ずにはいられない
 - Sensei may use grammar up to the highest level you've started a lesson in
 
-**JLPT N1 lessons (20 so far)**
+**JLPT N1 lessons (30)**
 - 〜ならではの, 〜ともなると, 〜をよそに, 〜といえども, 〜や否や/〜なり, 〜べく, 〜きらいがある,
   〜をものともせず, 〜たりとも, 〜を禁じ得ない
 - 〜であれ, 〜とあって, 〜ずにはおかない/〜ずにはすまない, 〜まじき, 〜をもって, 〜ながらも,
   〜がてら/〜かたがた, 〜ずくめ, 〜に至るまで/〜に至っては, 〜までもない
+- 〜と相まって, 〜ものを, 〜んがため, 〜てやまない, 〜をおいて, 〜にかこつけて, 〜ともなく,
+  〜ばこそ, 〜にひきかえ, 〜を皮切りに
 
 ## Setup
 
