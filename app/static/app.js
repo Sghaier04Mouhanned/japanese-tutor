@@ -1523,6 +1523,7 @@ async function renderLesson(body, id) {
 const READING_INTRO = {
   N3: "Short notes, notices and essays like the JLPT N3 reading section. Read, answer every question, then check the explanations and the translation.",
   N2: "Longer essays, formal notices and A/B opinion pieces like the JLPT N2 reading section. Look for the writer's main point.",
+  N1: "Dense, abstract essays, formal notices and a long passage like the JLPT N1 reading section. Follow the argument and watch for choices that go too far.",
 };
 
 async function renderReading() {

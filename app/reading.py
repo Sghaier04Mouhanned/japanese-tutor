@@ -2207,6 +2207,604 @@ PASSAGES: list[dict] = [
             {"word": "ふと", "reading": "ふと", "meaning": "suddenly, by chance"},
         ],
     },
+    # ------------------------------------------------------------------ N1
+    {
+        "id": "n1-r01",
+        "title": "Library closure notice",
+        "jp_title": "システム更新に伴う休館のお知らせ",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "市立図書館をご利用の皆様へ",
+            "このたび、蔵書管理システムの更新に伴い、下記の期間、全館を休館いたします。休館中は、返却ポストのご利用も停止いたしますので、ご了承ください。",
+            "休館期間：2月10日（月）〜2月16日（日）",
+            "なお、休館期間中に返却期限を迎える資料につきましては、期限を自動的に2月23日まで延長いたします。延長の手続きは不要です。"
+            "予約資料の受け取り期限も同様に延長されますが、新たな予約の受け付けは、休館明けの2月17日からとなります。",
+            "市立中央図書館",
+        ],
+        "en": [
+            "To all users of the city library,",
+            "Because the library's catalogue system is being updated, all branches will be closed during the period below. "
+            "The return box will also be out of use while we are closed. We appreciate your understanding.",
+            "Closed: Monday 10 February to Sunday 16 February",
+            "Please note that items due back during the closure will automatically have their due date extended to 23 February. "
+            "You do not need to do anything. Pick-up deadlines for reserved items will be extended in the same way, but new "
+            "reservations will only be accepted from 17 February, when we reopen.",
+            "City Central Library",
+        ],
+        "questions": [
+            {
+                "q": "このお知らせの内容と合っているものはどれか。",
+                "choices": [
+                    "休館中も、返却ポストは利用できる。",
+                    "返却期限が休館中の本は、手続きをしなくても期限が延びる。",
+                    "休館中も、新しい予約をすることができる。",
+                    "予約していた本は、2月16日までに受け取らなければならない。",
+                ],
+                "answer": 1,
+                "why": "期限を自動的に…延長いたします。延長の手続きは不要です. The return box is closed, new reservations start on "
+                       "the 17th, and pick-up deadlines are extended too.",
+            },
+        ],
+        "vocab": [
+            {"word": "蔵書", "reading": "ぞうしょ", "meaning": "library holdings, book collection"},
+            {"word": "伴う", "reading": "ともなう", "meaning": "to accompany, come with (〜に伴い = due to)"},
+            {"word": "了承", "reading": "りょうしょう", "meaning": "understanding, acknowledgement"},
+            {"word": "期限", "reading": "きげん", "meaning": "deadline, time limit"},
+            {"word": "延長", "reading": "えんちょう", "meaning": "extension"},
+            {"word": "同様", "reading": "どうよう", "meaning": "the same way, likewise"},
+        ],
+    },
+    {
+        "id": "n1-r02",
+        "title": "The value of the long way round",
+        "jp_title": "効率と遠回り",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "効率を重んじる現代社会では、最短距離で目的地にたどり着くことが良しとされる。無駄を省き、成果を早く出すことが求められるのは、"
+            "ある意味で当然であろう。",
+            "しかし、遠回りの中にこそ、思いがけない発見が潜んでいることも少なくない。寄り道をしたからこそ出会えた人や、"
+            "失敗を重ねたからこそ得られた知恵は、効率だけを追い求めていては決して手に入らないものだ。",
+        ],
+        "en": [
+            "In modern society, which values efficiency, reaching your destination by the shortest route is considered good. "
+            "In a sense it's only natural that we're expected to cut out waste and produce results quickly.",
+            "But surprising discoveries are often hidden precisely in the long way round. The people you meet because you took a "
+            "detour, and the wisdom you gain because you failed again and again, are things you could never get by chasing "
+            "efficiency alone.",
+        ],
+        "questions": [
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "現代社会では、効率を重んじるべきではない。",
+                    "遠回りや失敗にも、効率では得られない価値がある。",
+                    "寄り道をすれば、必ず新しい発見がある。",
+                    "成果を早く出すことが、何より大切だ。",
+                ],
+                "answer": 1,
+                "why": "効率だけを追い求めていては決して手に入らないもの: detours and failures give things efficiency can't. "
+                       "The writer calls efficiency natural (当然), so 1 goes too far, and 3 says 必ず (always) where the text says 少なくない.",
+            },
+        ],
+        "vocab": [
+            {"word": "重んじる", "reading": "おもんじる", "meaning": "to value, attach importance to"},
+            {"word": "省く", "reading": "はぶく", "meaning": "to cut out, omit"},
+            {"word": "成果", "reading": "せいか", "meaning": "result, outcome"},
+            {"word": "潜む", "reading": "ひそむ", "meaning": "to lie hidden"},
+            {"word": "寄り道", "reading": "よりみち", "meaning": "detour, stopping off on the way"},
+            {"word": "知恵", "reading": "ちえ", "meaning": "wisdom"},
+        ],
+    },
+    {
+        "id": "n1-r03",
+        "title": "A cancelled lecture",
+        "jp_title": "講演会中止のお知らせ",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "件名：講演会中止のお知らせとお詫び",
+            "講演会にお申し込みいただいた皆様",
+            "3月8日（土）に予定しておりました「これからの地域づくり」講演会は、講師の急病により、誠に勝手ながら中止とさせていただくこととなりました。"
+            "楽しみにしてくださっていた皆様には、心よりお詫び申し上げます。",
+            "お支払いいただいた参加費につきましては、全額を返金いたします。お手数ですが、3月20日までに、添付の用紙に振込先をご記入のうえ、"
+            "メールでご返送ください。なお、講演会は日程を改めて開催する予定です。決まり次第、改めてご案内いたします。",
+            "さくら市文化センター",
+        ],
+        "en": [
+            "Subject: Cancellation of the lecture, with our apologies",
+            "To everyone who signed up for the lecture,",
+            "We regret to announce that the lecture \"Building our community\", scheduled for Saturday 8 March, has been cancelled "
+            "because the speaker has suddenly fallen ill. We sincerely apologise to everyone who was looking forward to it.",
+            "We will refund your entry fee in full. We're sorry for the trouble, but please fill in your bank details on the attached "
+            "form and send it back by email by 20 March. We plan to hold the lecture on a new date and will let you know as soon as "
+            "it's decided.",
+            "Sakura City Culture Centre",
+        ],
+        "questions": [
+            {
+                "q": "このメールを受け取った人が、しなければならないことは何か。",
+                "choices": [
+                    "新しい日程の講演会に申し込む。",
+                    "3月20日までに、振込先を書いた用紙を送る。",
+                    "文化センターへ、参加費を受け取りに行く。",
+                    "講師に、お見舞いのメールを送る。",
+                ],
+                "answer": 1,
+                "why": "To get the refund: 3月20日までに、添付の用紙に振込先をご記入のうえ、メールでご返送ください. The new date "
+                       "hasn't been decided yet.",
+            },
+        ],
+        "vocab": [
+            {"word": "講演会", "reading": "こうえんかい", "meaning": "lecture (event)"},
+            {"word": "講師", "reading": "こうし", "meaning": "speaker, lecturer"},
+            {"word": "お詫び", "reading": "おわび", "meaning": "apology"},
+            {"word": "全額", "reading": "ぜんがく", "meaning": "the full amount"},
+            {"word": "振込先", "reading": "ふりこみさき", "meaning": "account to transfer money to"},
+            {"word": "添付", "reading": "てんぷ", "meaning": "attachment"},
+        ],
+    },
+    {
+        "id": "n1-r04",
+        "title": "Saying things in words",
+        "jp_title": "察することと伝えること",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "日本語には、相手に察してもらうことを前提とした表現が多い。「ちょっと考えておきます」が、実際には断りの意味であることは、"
+            "日本で暮らした経験のある人なら一度は耳にしたことがあるだろう。",
+            "こうした言い方は、相手を傷つけまいとする配慮から生まれたものに違いない。だが、価値観の異なる人々が共に暮らす社会においては、"
+            "察することを相手に求めすぎず、伝えるべきことははっきり言葉にする姿勢もまた、もう一つの思いやりと言えるのではないか。",
+        ],
+        "en": [
+            "Japanese has many expressions that assume the listener will read between the lines. Anyone who has lived in Japan has "
+            "probably heard at least once that \"I'll think about it\" actually means no.",
+            "Such expressions surely come from a wish not to hurt the other person. But in a society where people with different "
+            "values live together, couldn't an attitude of not expecting others to read between the lines too much, and putting "
+            "what needs saying clearly into words, also be called another kind of consideration?",
+        ],
+        "questions": [
+            {
+                "q": "筆者が最も言いたいことは何か。",
+                "choices": [
+                    "日本語の遠回しな表現は、なくすべきだ。",
+                    "相手に察してもらう表現は、相手を傷つけやすい。",
+                    "はっきり言葉にして伝えることも、相手への思いやりになりうる。",
+                    "日本で暮らすには、相手の気持ちを察する力が必要だ。",
+                ],
+                "answer": 2,
+                "why": "伝えるべきことははっきり言葉にする姿勢もまた、もう一つの思いやり. The writer respects indirect expressions "
+                       "as consideration (配慮) and doesn't call for removing them.",
+            },
+        ],
+        "vocab": [
+            {"word": "察する", "reading": "さっする", "meaning": "to sense, read between the lines"},
+            {"word": "前提", "reading": "ぜんてい", "meaning": "premise, assumption"},
+            {"word": "断り", "reading": "ことわり", "meaning": "refusal"},
+            {"word": "配慮", "reading": "はいりょ", "meaning": "consideration, care"},
+            {"word": "価値観", "reading": "かちかん", "meaning": "values, sense of values"},
+            {"word": "思いやり", "reading": "おもいやり", "meaning": "thoughtfulness, consideration"},
+        ],
+    },
+    {
+        "id": "n1-r05",
+        "title": "What wealth means",
+        "jp_title": "豊かさとは",
+        "kind": "Medium passage",
+        "minutes": 8,
+        "text": [
+            "かつて豊かさとは、物をたくさん持つことであった。冷蔵庫、洗濯機、テレビといった電化製品を手に入れることが、"
+            "生活が良くなったことの証だったのである。",
+            "ところが、物があふれる今日、人々の関心は「持つこと」から「体験すること」へと移りつつある。高価な品物を買うよりも、"
+            "旅行や習い事など、心に残る経験にお金を使いたいと考える人が増えているという。物はいずれ古びるが、体験から得た喜びや学びは、"
+            "その人の中に残り続けるからだろう。",
+            "とはいえ、体験の価値を他人と比べ、SNSで見せることが目的となってしまえば、それは物を持つことを競っていた時代と何ら変わらない。"
+            "豊かさとは、他人の目を気にすることなく、自分にとって何が大切かを知っていることなのかもしれない。",
+        ],
+        "en": [
+            "Wealth once meant owning lots of things. Getting electrical appliances such as a fridge, a washing machine and a TV was "
+            "proof that life had improved.",
+            "But today, with things everywhere, people's interest is shifting from \"having\" to \"experiencing\". More and more "
+            "people reportedly prefer to spend money on memorable experiences, like travel or lessons, rather than expensive goods. "
+            "Probably because things eventually grow old, while the joy and learning gained from experience stay with a person.",
+            "Even so, if comparing the value of experiences with others and showing them off on social media becomes the goal, "
+            "that's no different from the days when people competed over possessions. Perhaps wealth means knowing what matters "
+            "to you, without worrying about how others see you.",
+        ],
+        "questions": [
+            {
+                "q": "かつて、豊かさとはどのようなことだと考えられていたか。",
+                "choices": ["物をたくさん持つこと", "旅行にたくさん行くこと", "心に残る経験をすること", "他人と比べないこと"],
+                "answer": 0,
+                "why": "かつて豊かさとは、物をたくさん持つことであった.",
+            },
+            {
+                "q": "筆者によると、体験にお金を使う人が増えているのはなぜか。",
+                "choices": [
+                    "物の値段が高くなったから",
+                    "体験から得たものは、その人の中に残り続けるから",
+                    "SNSで他人に見せられるから",
+                    "電化製品が必要なくなったから",
+                ],
+                "answer": 1,
+                "why": "物はいずれ古びるが、体験から得た喜びや学びは、その人の中に残り続けるからだろう. Showing off on social media "
+                       "is what the writer warns against.",
+            },
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "物を持つより、体験をするほうが必ず豊かだ。",
+                    "体験を他人に見せることが、豊かさにつながる。",
+                    "自分にとって何が大切かを知っていることが、豊かさなのかもしれない。",
+                    "豊かさは、時代とともに失われつつある。",
+                ],
+                "answer": 2,
+                "why": "The last sentence is the conclusion. Choice 1 goes too far: experiences shown off for others are no better "
+                       "than possessions (何ら変わらない).",
+            },
+        ],
+        "vocab": [
+            {"word": "証", "reading": "あかし", "meaning": "proof, evidence"},
+            {"word": "電化製品", "reading": "でんかせいひん", "meaning": "electrical appliances"},
+            {"word": "あふれる", "reading": "あふれる", "meaning": "to overflow, be everywhere"},
+            {"word": "関心", "reading": "かんしん", "meaning": "interest, concern"},
+            {"word": "古びる", "reading": "ふるびる", "meaning": "to grow old, become worn"},
+            {"word": "競う", "reading": "きそう", "meaning": "to compete"},
+        ],
+    },
+    {
+        "id": "n1-r06",
+        "title": "AI and creative work",
+        "jp_title": "人工知能と創作",
+        "kind": "Medium passage",
+        "minutes": 8,
+        "text": [
+            "近年、人工知能が文章や絵、音楽までも作り出せるようになった。わずか数秒で、プロが描いたかのような絵が完成するのだから、驚くほかない。",
+            "こうした技術に対し、「人間の創作は不要になるのではないか」という不安の声も聞かれる。しかし私は、そうは思わない。"
+            "人が作品に心を動かされるのは、完成度の高さだけによるのではない。そこに込められた作り手の迷いや苦しみ、"
+            "そしてそれを乗り越えた喜びを、無意識のうちに感じ取っているからではないだろうか。",
+            "もっとも、人工知能を道具として使いこなす作り手も、今後ますます増えていくだろう。大切なのは、技術を拒むことでも、"
+            "技術に頼り切ることでもなく、自分は何を表現したいのかを問い続けることである。",
+        ],
+        "en": [
+            "In recent years, AI has become able to produce writing, pictures and even music. A picture that looks as if a "
+            "professional drew it can be finished in just a few seconds, which is nothing short of astonishing.",
+            "In response to such technology, some people worry that \"human creative work may become unnecessary\". But I don't "
+            "think so. People are moved by a work not only because of how polished it is. Isn't it because they unconsciously sense "
+            "the creator's doubts and struggles that went into it, and the joy of overcoming them?",
+            "That said, more and more creators will probably use AI skilfully as a tool. What matters is neither rejecting the "
+            "technology nor relying on it entirely, but continuing to ask yourself what you want to express.",
+        ],
+        "questions": [
+            {
+                "q": "「不安の声」とは、どのような不安か。",
+                "choices": [
+                    "人工知能の作品は質が低いという不安",
+                    "人間が作品を作る必要がなくなるのではないかという不安",
+                    "プロの絵が売れなくなるという不安",
+                    "人工知能は使い方が難しいという不安",
+                ],
+                "answer": 1,
+                "why": "The worry is quoted just before: 「人間の創作は不要になるのではないか」.",
+            },
+            {
+                "q": "筆者によると、人が作品に心を動かされるのはなぜか。",
+                "choices": [
+                    "作品の完成度が高いから",
+                    "短い時間で作られたから",
+                    "作り手の迷いや喜びを感じ取るから",
+                    "有名なプロが作ったから",
+                ],
+                "answer": 2,
+                "why": "完成度の高さだけによるのではない; people sense 作り手の迷いや苦しみ…喜び.",
+            },
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "人工知能は、創作に使うべきではない。",
+                    "これからは、創作を人工知能にすべて任せたほうがいい。",
+                    "自分が何を表現したいのかを、問い続けることが大切だ。",
+                    "人間の創作は、いずれなくなるだろう。",
+                ],
+                "answer": 2,
+                "why": "技術を拒むことでも、技術に頼り切ることでもなく、自分は何を表現したいのかを問い続けること. "
+                       "Choices 1 and 2 are the two extremes the writer rejects.",
+            },
+        ],
+        "vocab": [
+            {"word": "人工知能", "reading": "じんこうちのう", "meaning": "artificial intelligence"},
+            {"word": "創作", "reading": "そうさく", "meaning": "creative work, creation"},
+            {"word": "完成度", "reading": "かんせいど", "meaning": "degree of polish, completeness"},
+            {"word": "込める", "reading": "こめる", "meaning": "to put into (feelings, effort)"},
+            {"word": "乗り越える", "reading": "のりこえる", "meaning": "to overcome"},
+            {"word": "拒む", "reading": "こばむ", "meaning": "to refuse, reject"},
+        ],
+    },
+    {
+        "id": "n1-r07",
+        "title": "Questions without answers",
+        "jp_title": "答えのない問い",
+        "kind": "Long passage",
+        "minutes": 12,
+        "text": [
+            "学校の試験では、たいてい一つの正しい答えが用意されている。私たちは子供のころから、その正解をいかに早く、正確に見つけるかを競ってきた。",
+            "ところが、社会に出てから直面する問題の多くには、あらかじめ決まった答えなどない。環境問題にせよ、高齢化にせよ、"
+            "立場によって望ましい解決策は異なり、どれか一つを選べば、別の誰かが不利益を被ることもある。",
+            "そうした問いに向き合うには、正解を探す力よりも、異なる意見に耳を傾け、自分なりの考えを組み立てていく力が求められる。"
+            "にもかかわらず、学校教育は依然として、正解を覚えさせることに重きを置いているように見える。",
+            "もちろん、基礎的な知識が不要だというわけではない。知識がなければ、考えることすらできないからだ。ただ、知識はあくまで"
+            "考えるための材料にすぎない。これからの教育に必要なのは、答えを教えることではなく、答えのない問いを前にしても"
+            "立ち止まらずに考え続ける姿勢を育てることではないだろうか。",
+        ],
+        "en": [
+            "School exams usually have a single correct answer prepared. Since childhood, we have competed over how quickly and "
+            "accurately we can find it.",
+            "But many of the problems we face once we're out in the world have no answer decided in advance. Whether it's the "
+            "environment or the ageing population, the best solution differs depending on where you stand, and choosing any one of "
+            "them can leave someone else worse off.",
+            "To face questions like these, what's needed is less the ability to find the right answer than the ability to listen to "
+            "different opinions and build up your own thinking. Even so, school education still seems to put its weight on making "
+            "students memorise correct answers.",
+            "Of course, that doesn't mean basic knowledge is unnecessary. Without knowledge, you can't even think. But knowledge is "
+            "only material for thinking. Isn't what education needs from now on not teaching answers, but nurturing the attitude of "
+            "continuing to think without stopping, even in front of a question with no answer?",
+        ],
+        "questions": [
+            {
+                "q": "社会に出てから直面する問題について、筆者はどのように述べているか。",
+                "choices": [
+                    "学校で習った答えで、ほとんど解決できる。",
+                    "決まった答えがなく、立場によって望ましい解決策が違う。",
+                    "一つの解決策を選べば、誰も困らない。",
+                    "早く正確に答えを見つけることが、最も大切だ。",
+                ],
+                "answer": 1,
+                "why": "あらかじめ決まった答えなどない…立場によって望ましい解決策は異なり. Choosing one can even harm someone (不利益を被る).",
+            },
+            {
+                "q": "「そうした問い」とは、どのような問いか。",
+                "choices": [
+                    "試験で出される問い",
+                    "正しい答えが一つだけある問い",
+                    "決まった答えがない問い",
+                    "子供のころに習った問い",
+                ],
+                "answer": 2,
+                "why": "そうした points back to the previous paragraph: problems with no answer decided in advance.",
+            },
+            {
+                "q": "筆者は、知識についてどのように考えているか。",
+                "choices": [
+                    "考えるための材料として、必要だ。",
+                    "これからの教育には、必要ない。",
+                    "知識さえあれば、どんな問題も解決できる。",
+                    "知識を覚えることが、教育の最大の目的だ。",
+                ],
+                "answer": 0,
+                "why": "基礎的な知識が不要だというわけではない…知識はあくまで考えるための材料にすぎない.",
+            },
+            {
+                "q": "筆者が最も言いたいことは何か。",
+                "choices": [
+                    "学校の試験を、なくすべきだ。",
+                    "基礎的な知識を、もっと教えるべきだ。",
+                    "答えのない問いに向き合い、考え続ける姿勢を育てるべきだ。",
+                    "社会問題については、専門家に任せるべきだ。",
+                ],
+                "answer": 2,
+                "why": "The final sentence is the main point: 答えのない問いを前にしても立ち止まらずに考え続ける姿勢を育てること.",
+            },
+        ],
+        "vocab": [
+            {"word": "直面", "reading": "ちょくめん", "meaning": "facing, confronting"},
+            {"word": "あらかじめ", "reading": "あらかじめ", "meaning": "in advance"},
+            {"word": "高齢化", "reading": "こうれいか", "meaning": "ageing (of the population)"},
+            {"word": "不利益", "reading": "ふりえき", "meaning": "disadvantage, loss"},
+            {"word": "被る", "reading": "こうむる", "meaning": "to suffer (damage, loss)"},
+            {"word": "依然として", "reading": "いぜんとして", "meaning": "still, as before"},
+            {"word": "姿勢", "reading": "しせい", "meaning": "attitude, stance"},
+        ],
+    },
+    {
+        "id": "n1-r08",
+        "title": "Going cashless",
+        "jp_title": "キャッシュレス決済",
+        "kind": "Comparison (A/B)",
+        "minutes": 7,
+        "text": [
+            "A\n現金を使わない支払いは、今後さらに広げていくべきだ。会計にかかる時間が短くなり、店側も現金を数えたり管理したりする手間が省ける。"
+            "また、支出の記録が自動的に残るため、家計の管理もしやすくなる。お金の流れが見えることは、社会全体にとっても利点が大きいだろう。",
+            "B\nキャッシュレス化の便利さは認めるが、急ぎすぎることには懸念がある。機械の操作に不慣れな高齢者が取り残されかねないし、"
+            "災害で停電が起きれば、支払いそのものができなくなるおそれもある。何より、お金を使っている実感が薄れ、"
+            "つい使いすぎてしまう人も少なくない。現金という選択肢は、残しておくべきではないか。",
+        ],
+        "en": [
+            "A\nPaying without cash should spread even further. Checkout takes less time, and shops are spared the trouble of "
+            "counting and managing cash. Spending is also recorded automatically, which makes household budgeting easier. Being "
+            "able to see the flow of money is probably a big advantage for society as a whole.",
+            "B\nI accept that going cashless is convenient, but I'm concerned about rushing it. Older people who aren't used to "
+            "operating machines could be left behind, and if a disaster causes a power cut, paying at all may become impossible. "
+            "Above all, many people lose the sense that they're spending money and end up spending too much. Shouldn't cash be "
+            "kept as an option?",
+        ],
+        "questions": [
+            {
+                "q": "AとBのどちらも触れている点は何か。",
+                "choices": [
+                    "キャッシュレス決済の便利さ",
+                    "災害のときの問題",
+                    "高齢者への影響",
+                    "店の手間が省けること",
+                ],
+                "answer": 0,
+                "why": "A lists the conveniences, and B begins by accepting them (便利さは認める). Disasters and older people appear "
+                       "only in B; the shop's workload only in A.",
+            },
+            {
+                "q": "キャッシュレス決済について、AとBはどのような立場か。",
+                "choices": [
+                    "AもBも、すぐに現金をなくすべきだと考えている。",
+                    "Aはさらに広げるべきだとし、Bは現金も残すべきだとしている。",
+                    "Aは慎重な立場で、Bは積極的な立場だ。",
+                    "AもBも、高齢者のために現金を残すべきだとしている。",
+                ],
+                "answer": 1,
+                "why": "A: さらに広げていくべきだ. B: 現金という選択肢は、残しておくべきではないか.",
+            },
+        ],
+        "vocab": [
+            {"word": "決済", "reading": "けっさい", "meaning": "payment, settlement"},
+            {"word": "手間", "reading": "てま", "meaning": "trouble, effort"},
+            {"word": "支出", "reading": "ししゅつ", "meaning": "spending, expenditure"},
+            {"word": "懸念", "reading": "けねん", "meaning": "concern, worry"},
+            {"word": "不慣れ", "reading": "ふなれ", "meaning": "unfamiliar, not used to"},
+            {"word": "選択肢", "reading": "せんたくし", "meaning": "option, choice"},
+        ],
+    },
+    {
+        "id": "n1-r09",
+        "title": "A scholarship for international students",
+        "jp_title": "留学生奨学金　募集要項",
+        "kind": "Information search",
+        "minutes": 7,
+        "text": [
+            "さくら国際交流財団　留学生奨学金　募集要項",
+            "◆対象\n"
+            "・日本の大学または大学院に在籍する外国人留学生\n"
+            "・申請時に30歳以下であること\n"
+            "・他の奨学金を受けていないこと",
+            "◆支給額・期間\n"
+            "・月額5万円\n"
+            "・4月から1年間（返済不要）",
+            "◆応募方法\n"
+            "・応募用紙、成績証明書、指導教員の推薦書を、在籍する大学の留学生担当窓口に提出すること。\n"
+            "・個人での直接応募は受け付けない。",
+            "◆締め切り\n"
+            "・12月15日（大学窓口必着）",
+            "◆その他\n"
+            "・採用者は、年に2回、財団主催の交流行事に参加しなければならない。",
+        ],
+        "en": [
+            "Sakura International Exchange Foundation: scholarship for international students, application guidelines",
+            "Eligibility\n"
+            "- International students enrolled at a Japanese university or graduate school\n"
+            "- Aged 30 or under when applying\n"
+            "- Not receiving any other scholarship",
+            "Amount and period\n"
+            "- 50,000 yen a month\n"
+            "- For one year from April (no repayment needed)",
+            "How to apply\n"
+            "- Submit the application form, a transcript and a recommendation from your supervisor to the international student "
+            "office at your university.\n"
+            "- Applications from individuals directly to the foundation are not accepted.",
+            "Deadline\n"
+            "- 15 December (must reach the university office by then)",
+            "Other\n"
+            "- Scholarship holders must take part in foundation exchange events twice a year.",
+        ],
+        "questions": [
+            {
+                "q": "次の留学生のうち、この奨学金に応募できるのは誰か。",
+                "choices": [
+                    "大学院で学んでいる、32歳のリーさん",
+                    "ほかの財団から奨学金を受けている、大学3年のキムさん",
+                    "日本語学校で学んでいる、20歳のアンナさん",
+                    "ほかの奨学金を受けていない、大学2年で25歳のトムさん",
+                ],
+                "answer": 3,
+                "why": "Lee is over 30, Kim already has a scholarship, and Anna is at a language school, not a university. "
+                       "Tom meets all three conditions.",
+            },
+            {
+                "q": "応募の方法について、正しいものはどれか。",
+                "choices": [
+                    "必要な書類を、財団に直接郵送する。",
+                    "必要な書類を、在籍する大学の担当窓口に出す。",
+                    "応募用紙だけを、12月15日までに出せばよい。",
+                    "指導教員が、財団に推薦書を直接送る。",
+                ],
+                "answer": 1,
+                "why": "在籍する大学の留学生担当窓口に提出すること. Direct applications aren't accepted, and all three documents are needed.",
+            },
+        ],
+        "vocab": [
+            {"word": "財団", "reading": "ざいだん", "meaning": "foundation"},
+            {"word": "募集要項", "reading": "ぼしゅうようこう", "meaning": "application guidelines"},
+            {"word": "在籍", "reading": "ざいせき", "meaning": "being enrolled"},
+            {"word": "支給", "reading": "しきゅう", "meaning": "payment, provision"},
+            {"word": "返済", "reading": "へんさい", "meaning": "repayment"},
+            {"word": "主催", "reading": "しゅさい", "meaning": "hosting, sponsorship (of an event)"},
+        ],
+    },
+    {
+        "id": "n1-r10",
+        "title": "Reading fast and reading deep",
+        "jp_title": "速く読むことと深く読むこと",
+        "kind": "Medium passage",
+        "minutes": 8,
+        "text": [
+            "インターネットの普及により、私たちは毎日膨大な量の文字を目にするようになった。ニュースの見出しをざっと眺め、"
+            "気になった記事だけを拾い読みする。そうした読み方が、すっかり習慣になっている人も多いだろう。",
+            "確かに、限られた時間で多くの情報を得るには、それも一つの方法である。しかし、拾い読みに慣れてしまうと、長い文章をじっくり読み、"
+            "書き手の考えをたどる力が衰えていくおそれがある。一冊の本と何日もかけて向き合い、立ち止まっては考える。"
+            "そうした経験を通してしか育たない思考の深さがあるはずだ。",
+            "速く読むことと、深く読むこと。どちらか一方を捨てる必要はない。目的に応じて読み方を使い分けることこそ、"
+            "情報があふれる時代を生きる私たちに求められている力なのだろう。",
+        ],
+        "en": [
+            "With the spread of the internet, we now see an enormous amount of text every day. We glance over news headlines and "
+            "skim only the articles that catch our eye. For many people, that way of reading has probably become a firm habit.",
+            "It's true that to get a lot of information in limited time, it's one way to do it. But once you get used to skimming, "
+            "your ability to read long texts carefully and follow the writer's thinking may decline. Spending days with one book, "
+            "stopping to think now and then: there must be a depth of thought that only grows through experiences like that.",
+            "Reading fast and reading deeply. There's no need to throw either away. Using different ways of reading to suit your "
+            "purpose is surely the skill we need, living in an age overflowing with information.",
+        ],
+        "questions": [
+            {
+                "q": "「そうした読み方」とは、どのような読み方か。",
+                "choices": [
+                    "一冊の本を、何日もかけて読む読み方",
+                    "見出しを見て、気になった記事だけを読む読み方",
+                    "書き手の考えをたどりながら読む読み方",
+                    "声に出して読む読み方",
+                ],
+                "answer": 1,
+                "why": "そうした points back to the previous sentence: 見出しをざっと眺め、気になった記事だけを拾い読みする.",
+            },
+            {
+                "q": "筆者は、拾い読みに慣れるとどうなるおそれがあると述べているか。",
+                "choices": [
+                    "情報を速く得られなくなる。",
+                    "長い文章をじっくり読む力が衰える。",
+                    "インターネットが使えなくなる。",
+                    "本を買わなくなる。",
+                ],
+                "answer": 1,
+                "why": "長い文章をじっくり読み、書き手の考えをたどる力が衰えていくおそれがある.",
+            },
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "拾い読みは、やめるべきだ。",
+                    "本は、速く読むほうがいい。",
+                    "目的に応じて、速く読むことと深く読むことを使い分けるべきだ。",
+                    "インターネットの記事は、読まないほうがいい。",
+                ],
+                "answer": 2,
+                "why": "どちらか一方を捨てる必要はない; 目的に応じて読み方を使い分けることこそ…求められている力.",
+            },
+        ],
+        "vocab": [
+            {"word": "普及", "reading": "ふきゅう", "meaning": "spread, becoming common"},
+            {"word": "膨大", "reading": "ぼうだい", "meaning": "enormous, vast"},
+            {"word": "見出し", "reading": "みだし", "meaning": "headline"},
+            {"word": "拾い読み", "reading": "ひろいよみ", "meaning": "skimming, reading bits"},
+            {"word": "衰える", "reading": "おとろえる", "meaning": "to decline, weaken"},
+            {"word": "思考", "reading": "しこう", "meaning": "thinking, thought"},
+        ],
+    },
 ]
 
 _BY_ID = {p["id"]: p for p in PASSAGES}

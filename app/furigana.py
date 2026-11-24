@@ -114,6 +114,9 @@ _COUNTERS: dict[str, list] = {
     # Dishes, items: 一品 いっぴん
     "品": [("いっ", "ぴん"), ("に", "ひん"), ("さん", "ぴん"), ("よん", "ひん"), ("ご", "ひん"), ("ろっ", "ぴん"),
           ("なな", "ひん"), ("はっ", "ぴん"), ("きゅう", "ひん"), ("じゅっ", "ぴん"), ("なん", "ぴん")],
+    # Books: 一冊 いっさつ, 八冊 はっさつ
+    "冊": [("いっ", "さつ"), ("に", "さつ"), ("さん", "さつ"), ("よん", "さつ"), ("ご", "さつ"), ("ろく", "さつ"),
+          ("なな", "さつ"), ("はっ", "さつ"), ("きゅう", "さつ"), ("じゅっ", "さつ"), ("なん", "さつ")],
     # Steps: 一歩 いっぽ, 三歩 さんぽ
     "歩": [("いっ", "ぽ"), ("に", "ほ"), ("さん", "ぽ"), ("よん", "ほ"), ("ご", "ほ"), ("ろっ", "ぽ"),
           ("なな", "ほ"), ("はっ", "ぽ"), ("きゅう", "ほ"), ("じゅっ", "ぽ"), ("なん", "ぽ")],
@@ -187,6 +190,14 @@ def _context_reading(prev, word, nxt=None, prev2=None) -> str | None:
     if word.surface == "人" and word.feature.pos1 == "接尾辞" and (
             word.feature.pos3 == "一般" and prev.feature.pos3 == "地名" or prev.surface == "外国"):
         return "じん"
+    # 今日 modified by a verb or adjective (物があふれる今日) means "nowadays": こんにち.
+    if word.surface == "今日" and prev.feature.pos1 in {"動詞", "形容詞"}:
+        return "こんにち"
+    # 得る as a main verb after a particle (情報を得る) is える; あり得る keeps うる.
+    if getattr(word.feature, "orthBase", "") == "得る" and prev.feature.pos1 == "助詞":
+        kana = _reading(word) or ""
+        if kana.startswith("う"):
+            return "え" + kana[1:]
     # 気に入る (to like) is きにいる, not きにはいる.
     if getattr(word.feature, "orthBase", "") == "入る" and prev.surface == "に" and prev2 is not None and prev2.surface == "気":
         kana = _reading(word) or ""

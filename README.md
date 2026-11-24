@@ -55,11 +55,13 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
   are left alone, and a kanji reviewed in the last 12 hours that isn't due yet isn't graded again.
   Turn on "Write kanji from memory" in the Review tab to answer due kanji by writing them
 
-**Reading practice (JLPT 読解, N3 and N2)**
+**Reading practice (JLPT 読解, N3 to N1)**
 - 20 hand-written N3 passages: notes, emails, notices, short essays and information-search pages,
   with 36 JLPT-style questions in Japanese and an English explanation for every answer
 - 20 N2 passages (40 questions): formal notices and emails, opinion essays, information-search pages,
   and A/B comparisons where two writers argue opposite sides, as in the N2 test
+- 10 N1 passages (21 questions): formal notices, dense opinion essays, a long passage with four
+  questions, an A/B comparison and an information-search page
 - Furigana toggle; kanji beyond the passage's level keep their furigana, as on the real test
 - Tap any word to look it up; 🔊 reads each paragraph; after answering, see the translation and add
   the key words to your reviews. Scores are saved, and the dashboard counts passages read
