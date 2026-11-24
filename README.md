@@ -55,7 +55,8 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
   are left alone, and a kanji reviewed in the last 12 hours that isn't due yet isn't graded again.
   Turn on "Write kanji from memory" in the Review tab to answer due kanji by writing them
 
-**Reading practice (JLPT 読解, N3 to N1)**
+**Reading practice (JLPT 読解, N4 to N1)**
+- 10 N4 passages (14 questions): memos, emails, notices, a diary entry, simple essays and a timetable
 - 20 hand-written N3 passages: notes, emails, notices, short essays and information-search pages,
   with 36 JLPT-style questions in Japanese and an English explanation for every answer
 - 20 N2 passages (40 questions): formal notices and emails, opinion essays, information-search pages,

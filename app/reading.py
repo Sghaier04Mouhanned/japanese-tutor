@@ -9,6 +9,423 @@ the automatic furigana so the readings can be proofread.
 from __future__ import annotations
 
 PASSAGES: list[dict] = [
+    # ------------------------------------------------------------------ N4
+    {
+        "id": "n4-r01",
+        "title": "A note from Mum",
+        "jp_title": "母からのメモ",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "たけしへ",
+            "お母さんは、今日は帰りが遅くなります。冷蔵庫にカレーが入っているので、温めて食べてください。食べ終わったら、お皿を洗っておいてね。"
+            "それから、雨が降りそうなので、洗濯物を中に入れてくれると助かります。",
+            "母より",
+        ],
+        "en": [
+            "To Takeshi,",
+            "I'll be home late today. There's curry in the fridge, so please heat it up and eat it. When you've finished, please "
+            "wash the dishes. Also, it looks like rain, so it would help if you brought the washing in.",
+            "Mum",
+        ],
+        "questions": [
+            {
+                "q": "たけしさんがすることは何ですか。",
+                "choices": [
+                    "カレーを作る。",
+                    "カレーを食べてから、お皿を洗う。",
+                    "お母さんを迎えに行く。",
+                    "雨の中で、洗濯をする。",
+                ],
+                "answer": 1,
+                "why": "The curry is already made (冷蔵庫にカレーが入っている); he heats it up, eats, then 食べ終わったら、お皿を洗っておいて.",
+            },
+        ],
+        "vocab": [
+            {"word": "冷蔵庫", "reading": "れいぞうこ", "meaning": "fridge"},
+            {"word": "温める", "reading": "あたためる", "meaning": "to heat up"},
+            {"word": "洗濯物", "reading": "せんたくもの", "meaning": "laundry, the washing"},
+            {"word": "助かる", "reading": "たすかる", "meaning": "to be a help"},
+        ],
+    },
+    {
+        "id": "n4-r02",
+        "title": "A party time change",
+        "jp_title": "パーティーの時間",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "件名：土曜日のパーティー",
+            "マリアさん",
+            "土曜日のパーティーですが、時間が変わりました。6時からの予定でしたが、7時からになりました。場所は同じで、駅の前のレストランです。"
+            "飲み物はレストランにあるので、何も持ってこなくていいですよ。会えるのを楽しみにしています。",
+            "けん",
+        ],
+        "en": [
+            "Subject: Saturday's party",
+            "Dear Maria,",
+            "About Saturday's party: the time has changed. It was going to start at 6, but now it starts at 7. The place is the same, "
+            "the restaurant in front of the station. The restaurant has drinks, so you don't need to bring anything. I'm looking "
+            "forward to seeing you.",
+            "Ken",
+        ],
+        "questions": [
+            {
+                "q": "マリアさんは、土曜日にどうしますか。",
+                "choices": [
+                    "6時に、レストランへ行く。",
+                    "7時に、レストランへ行く。",
+                    "飲み物を持って、レストランへ行く。",
+                    "けんさんの家へ行く。",
+                ],
+                "answer": 1,
+                "why": "6時からの予定でしたが、7時からになりました. The place is the same restaurant, and no drinks are needed.",
+            },
+        ],
+        "vocab": [
+            {"word": "件名", "reading": "けんめい", "meaning": "subject (of an email)"},
+            {"word": "予定", "reading": "よてい", "meaning": "plan, schedule"},
+            {"word": "場所", "reading": "ばしょ", "meaning": "place"},
+            {"word": "楽しみ", "reading": "たのしみ", "meaning": "something to look forward to"},
+        ],
+    },
+    {
+        "id": "n4-r03",
+        "title": "The library is closed",
+        "jp_title": "図書館からのお知らせ",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "図書館からのお知らせ",
+            "来週の月曜日から水曜日まで、図書館の中を掃除するので、休みになります。本を返したい人は、入口の前にある箱に入れてください。"
+            "木曜日からは、いつもどおり利用できます。",
+        ],
+        "en": [
+            "Notice from the library",
+            "From Monday to Wednesday next week, the library will be closed because we are cleaning inside. If you want to return "
+            "books, please put them in the box in front of the entrance. From Thursday, you can use the library as usual.",
+        ],
+        "questions": [
+            {
+                "q": "来週の月曜日に本を返したい人は、どうしますか。",
+                "choices": [
+                    "図書館の中のカウンターに持っていく。",
+                    "入口の前の箱に入れる。",
+                    "木曜日まで、返してはいけない。",
+                    "図書館に電話する。",
+                ],
+                "answer": 1,
+                "why": "The library is closed Monday to Wednesday, but 本を返したい人は、入口の前にある箱に入れてください.",
+            },
+        ],
+        "vocab": [
+            {"word": "掃除", "reading": "そうじ", "meaning": "cleaning"},
+            {"word": "入口", "reading": "いりぐち", "meaning": "entrance"},
+            {"word": "箱", "reading": "はこ", "meaning": "box"},
+            {"word": "いつもどおり", "reading": "いつもどおり", "meaning": "as usual"},
+        ],
+    },
+    {
+        "id": "n4-r04",
+        "title": "My town",
+        "jp_title": "私の町",
+        "kind": "Short passage",
+        "minutes": 3,
+        "text": [
+            "私は去年、日本に来ました。今住んでいる町は、東京から電車で一時間ぐらいのところにあります。大きなデパートはありませんが、"
+            "小さい店がたくさんあって、店の人がとても親切です。",
+            "初めは日本語があまり話せなかったので、買い物をするのが大変でした。でも、店の人がゆっくり話してくれたので、だんだん話せるようになりました。"
+            "今では、この町が大好きです。",
+        ],
+        "en": [
+            "I came to Japan last year. The town I live in now is about an hour from Tokyo by train. There's no big department store, "
+            "but there are lots of small shops, and the people who work in them are very kind.",
+            "At first I couldn't speak much Japanese, so shopping was hard. But the shopkeepers spoke slowly for me, so I gradually "
+            "became able to speak. Now I love this town.",
+        ],
+        "questions": [
+            {
+                "q": "この人は、どうしてこの町が好きになりましたか。",
+                "choices": [
+                    "大きなデパートがあるから",
+                    "東京に近いから",
+                    "店の人が親切で、日本語が話せるようになったから",
+                    "買い物が安いから",
+                ],
+                "answer": 2,
+                "why": "The kind shopkeepers spoke slowly (ゆっくり話してくれた), so the writer learned to speak, and now loves the town. "
+                       "There's no department store.",
+            },
+        ],
+        "vocab": [
+            {"word": "去年", "reading": "きょねん", "meaning": "last year"},
+            {"word": "親切", "reading": "しんせつ", "meaning": "kind"},
+            {"word": "初め", "reading": "はじめ", "meaning": "the beginning, at first"},
+            {"word": "だんだん", "reading": "だんだん", "meaning": "gradually"},
+        ],
+    },
+    {
+        "id": "n4-r05",
+        "title": "If it rains on the school trip",
+        "jp_title": "遠足のお知らせ",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "三年二組のみなさんへ",
+            "明日の遠足は、雨が降ったら、来週の金曜日になります。雨が降るかどうか分からないときは、朝七時に学校のホームページを見てください。"
+            "遠足に行く日は、お弁当と水を忘れないでください。",
+            "山田",
+        ],
+        "en": [
+            "To everyone in class 3-2,",
+            "If it rains, tomorrow's school trip will move to next Friday. If you're not sure whether it will rain, please check the "
+            "school website at 7 in the morning. On the day of the trip, don't forget your packed lunch and water.",
+            "Yamada",
+        ],
+        "questions": [
+            {
+                "q": "明日の朝、雨が降るかどうか分からないとき、どうしますか。",
+                "choices": [
+                    "学校に電話する。",
+                    "七時に、学校のホームページを見る。",
+                    "お弁当を持って、学校へ行く。",
+                    "来週の金曜日まで待つ。",
+                ],
+                "answer": 1,
+                "why": "雨が降るかどうか分からないときは、朝七時に学校のホームページを見てください.",
+            },
+        ],
+        "vocab": [
+            {"word": "遠足", "reading": "えんそく", "meaning": "school trip, outing"},
+            {"word": "かどうか", "reading": "かどうか", "meaning": "whether or not"},
+            {"word": "お弁当", "reading": "おべんとう", "meaning": "packed lunch"},
+            {"word": "忘れる", "reading": "わすれる", "meaning": "to forget"},
+        ],
+    },
+    {
+        "id": "n4-r06",
+        "title": "Climbing a mountain",
+        "jp_title": "山に登った日",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "今日は、友達と山に登りました。朝早く出発したので、とても眠かったです。山の上は、思っていたより寒かったですが、景色がとてもきれいでした。"
+            "帰りに温泉に入ったので、疲れが取れました。また行きたいと思います。",
+        ],
+        "en": [
+            "Today I climbed a mountain with a friend. We set off early in the morning, so I was very sleepy. The top of the mountain "
+            "was colder than I'd expected, but the view was really beautiful. On the way back we went to a hot spring, so my "
+            "tiredness went away. I'd like to go again.",
+        ],
+        "questions": [
+            {
+                "q": "この人について、正しいものはどれですか。",
+                "choices": [
+                    "山の上は、暖かかった。",
+                    "朝遅く出発した。",
+                    "帰りに温泉に入った。",
+                    "景色は、あまりきれいではなかった。",
+                ],
+                "answer": 2,
+                "why": "帰りに温泉に入った. The top was colder than expected, they left early, and the view was beautiful.",
+            },
+        ],
+        "vocab": [
+            {"word": "登る", "reading": "のぼる", "meaning": "to climb"},
+            {"word": "出発", "reading": "しゅっぱつ", "meaning": "departure"},
+            {"word": "景色", "reading": "けしき", "meaning": "view, scenery"},
+            {"word": "温泉", "reading": "おんせん", "meaning": "hot spring"},
+            {"word": "疲れ", "reading": "つかれ", "meaning": "tiredness"},
+        ],
+    },
+    {
+        "id": "n4-r07",
+        "title": "Trains in Japan",
+        "jp_title": "日本の電車",
+        "kind": "Medium passage",
+        "minutes": 4,
+        "text": [
+            "日本の電車は、時間どおりに来るので、とても便利です。私の国では、電車が遅れるのは普通なので、初めは驚きました。",
+            "でも、朝の電車はとても込んでいて、大変です。人が多すぎて、電車の中で動けないこともあります。それで、私は毎朝少し早く家を出て、"
+            "込んでいない電車に乗るようにしています。早く学校に着いたら、図書館で勉強しています。",
+        ],
+        "en": [
+            "Trains in Japan come on time, so they're very convenient. In my country it's normal for trains to be late, so at first "
+            "I was surprised.",
+            "But morning trains are very crowded, which is hard. There are so many people that sometimes you can't move inside the "
+            "train. So every morning I leave home a little early and try to take a train that isn't crowded. When I get to school "
+            "early, I study in the library.",
+        ],
+        "questions": [
+            {
+                "q": "この人は、どうして日本の電車に驚きましたか。",
+                "choices": ["電車が時間どおりに来たから", "電車がとても遅れたから", "電車が込んでいなかったから", "電車が高かったから"],
+                "answer": 0,
+                "why": "時間どおりに来る; in the writer's country, late trains are normal.",
+            },
+            {
+                "q": "この人は、毎朝どうしていますか。",
+                "choices": [
+                    "込んでいる電車に乗っている。",
+                    "早く家を出て、込んでいない電車に乗っている。",
+                    "学校まで歩いている。",
+                    "図書館で寝ている。",
+                ],
+                "answer": 1,
+                "why": "毎朝少し早く家を出て、込んでいない電車に乗るようにしています.",
+            },
+        ],
+        "vocab": [
+            {"word": "時間どおり", "reading": "じかんどおり", "meaning": "on time"},
+            {"word": "驚く", "reading": "おどろく", "meaning": "to be surprised"},
+            {"word": "込む", "reading": "こむ", "meaning": "to be crowded"},
+            {"word": "動く", "reading": "うごく", "meaning": "to move"},
+        ],
+    },
+    {
+        "id": "n4-r08",
+        "title": "Why I started cooking",
+        "jp_title": "料理を始めた理由",
+        "kind": "Medium passage",
+        "minutes": 4,
+        "text": [
+            "私は大学に入ってから、一人で住んでいます。初めのころは、毎日コンビニでお弁当を買っていました。料理をしたことがなかったし、時間もなかったからです。",
+            "でも、ある日、体の調子が悪くなって、病院へ行きました。医者に「野菜をもっと食べたほうがいいですよ」と言われたので、自分で料理を始めることにしました。",
+            "最初は失敗ばかりでしたが、今では簡単な料理なら作れるようになりました。自分で作ると、お金もあまりかからないので、とてもいいと思います。",
+        ],
+        "en": [
+            "I've lived on my own since I started university. At first I bought a packed lunch at a convenience store every day, "
+            "because I'd never cooked and I didn't have time.",
+            "But one day I felt unwell and went to the hospital. The doctor told me, \"You should eat more vegetables,\" so I decided "
+            "to start cooking for myself.",
+            "At first I failed all the time, but now I can make simple dishes. Cooking for yourself doesn't cost much either, so I "
+            "think it's great.",
+        ],
+        "questions": [
+            {
+                "q": "この人が料理を始めたのは、どうしてですか。",
+                "choices": [
+                    "コンビニのお弁当が高かったから",
+                    "医者に、野菜をもっと食べたほうがいいと言われたから",
+                    "料理が好きだったから",
+                    "友達に教えてもらったから",
+                ],
+                "answer": 1,
+                "why": "医者に「野菜をもっと食べたほうがいいですよ」と言われたので、自分で料理を始めることにしました.",
+            },
+            {
+                "q": "この人は、今どうですか。",
+                "choices": [
+                    "まだ、全然料理ができない。",
+                    "簡単な料理なら、作れる。",
+                    "毎日コンビニで、お弁当を買っている。",
+                    "難しい料理も、作れる。",
+                ],
+                "answer": 1,
+                "why": "今では簡単な料理なら作れるようになりました.",
+            },
+        ],
+        "vocab": [
+            {"word": "調子", "reading": "ちょうし", "meaning": "condition (of health)"},
+            {"word": "医者", "reading": "いしゃ", "meaning": "doctor"},
+            {"word": "失敗", "reading": "しっぱい", "meaning": "failure, mistake"},
+            {"word": "簡単", "reading": "かんたん", "meaning": "simple, easy"},
+        ],
+    },
+    {
+        "id": "n4-r09",
+        "title": "A present for Mum",
+        "jp_title": "母へのプレゼント",
+        "kind": "Medium passage",
+        "minutes": 4,
+        "text": [
+            "先週は、母の誕生日でした。毎年、花を贈っていますが、今年は何か違う物をあげたいと思いました。",
+            "姉に相談したら、「お母さんは最近、目が疲れると言っていたから、明るい電気スタンドはどう？」と言われました。"
+            "いい考えだと思って、二人でお金を出して買いました。",
+            "母はとても喜んで、毎晩そのスタンドを使って本を読んでいるそうです。",
+        ],
+        "en": [
+            "Last week was my mother's birthday. I give her flowers every year, but this year I wanted to give her something different.",
+            "When I asked my older sister for advice, she said, \"Mum's been saying her eyes get tired lately, so how about a bright "
+            "desk lamp?\" I thought it was a good idea, so the two of us chipped in and bought one.",
+            "Mum was really pleased, and apparently she uses the lamp to read every night.",
+        ],
+        "questions": [
+            {
+                "q": "今年のプレゼントは、どうやって選びましたか。",
+                "choices": ["母が自分で選んだ。", "この人が一人で選んだ。", "姉と相談して選んだ。", "店の人が選んだ。"],
+                "answer": 2,
+                "why": "姉に相談したら…と言われました, and the two of them bought it together (二人でお金を出して).",
+            },
+            {
+                "q": "母は、プレゼントをもらって、どうしていますか。",
+                "choices": [
+                    "花をかざっている。",
+                    "毎晩、スタンドを使って本を読んでいる。",
+                    "目が疲れると言っている。",
+                    "あまり使っていない。",
+                ],
+                "answer": 1,
+                "why": "毎晩そのスタンドを使って本を読んでいるそうです.",
+            },
+        ],
+        "vocab": [
+            {"word": "贈る", "reading": "おくる", "meaning": "to give (a present)"},
+            {"word": "相談", "reading": "そうだん", "meaning": "asking for advice"},
+            {"word": "電気スタンド", "reading": "でんきスタンド", "meaning": "desk lamp"},
+            {"word": "喜ぶ", "reading": "よろこぶ", "meaning": "to be pleased"},
+        ],
+    },
+    {
+        "id": "n4-r10",
+        "title": "Classes at the sports centre",
+        "jp_title": "スポーツセンターの教室",
+        "kind": "Information search",
+        "minutes": 4,
+        "text": [
+            "みどりスポーツセンター　教室のご案内",
+            "①水泳教室（子ども）\n・毎週土曜日　10時〜11時\n・1か月　3,000円",
+            "②水泳教室（大人）\n・毎週水曜日　19時〜20時\n・1か月　4,000円",
+            "③テニス教室\n・毎週日曜日　9時〜11時\n・1か月　5,000円\n※ラケットは、貸します。",
+            "④ヨガ教室\n・毎週金曜日　18時〜19時\n・1か月　3,500円",
+            "申し込みは、センターの受付でしてください。",
+        ],
+        "en": [
+            "Midori Sports Centre: classes",
+            "1. Swimming (children)\n- Saturdays, 10 to 11\n- 3,000 yen a month",
+            "2. Swimming (adults)\n- Wednesdays, 19:00 to 20:00\n- 4,000 yen a month",
+            "3. Tennis\n- Sundays, 9 to 11\n- 5,000 yen a month\n* Rackets can be borrowed.",
+            "4. Yoga\n- Fridays, 18:00 to 19:00\n- 3,500 yen a month",
+            "Please sign up at the centre's reception desk.",
+        ],
+        "questions": [
+            {
+                "q": "大学生のリンさんは、平日は毎日、夜8時までアルバイトがあります。リンさんが行ける教室はどれですか。",
+                "choices": ["①と③", "③だけ", "②と④", "④だけ"],
+                "answer": 1,
+                "why": "Weekday classes (② Wednesday, ④ Friday) clash with the job, and ① is for children. Only ③ tennis on Sunday works.",
+            },
+            {
+                "q": "このお知らせについて、正しいものはどれですか。",
+                "choices": [
+                    "テニス教室には、自分のラケットが必要だ。",
+                    "大人の水泳教室は、土曜日にある。",
+                    "申し込みは、センターの受付でする。",
+                    "ヨガ教室が、いちばん安い。",
+                ],
+                "answer": 2,
+                "why": "申し込みは、センターの受付でしてください. Rackets are lent, adult swimming is on Wednesday, and children's "
+                       "swimming (3,000 yen) is cheaper than yoga.",
+            },
+        ],
+        "vocab": [
+            {"word": "水泳", "reading": "すいえい", "meaning": "swimming"},
+            {"word": "毎週", "reading": "まいしゅう", "meaning": "every week"},
+            {"word": "貸す", "reading": "かす", "meaning": "to lend"},
+            {"word": "申し込み", "reading": "もうしこみ", "meaning": "signing up, application"},
+            {"word": "受付", "reading": "うけつけ", "meaning": "reception desk"},
+        ],
+    },
     {
         "id": "n3-r01",
         "title": "A note on the table",
