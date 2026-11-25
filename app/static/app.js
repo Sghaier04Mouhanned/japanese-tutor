@@ -1690,6 +1690,7 @@ async function renderPassage(body, id) {
 /* ================= listening practice ================= */
 
 const LISTENING_INTRO = {
+  N5: "Short, slow conversations like the JLPT N5 listening section: plans, shopping, times and numbers, greetings and simple replies.",
   N4: "Everyday conversations like the JLPT N4 listening section: what happens next, key details, what to say in a situation and quick replies.",
   N3: "Conversations and short talks like the JLPT N3 listening section, read by a narrator, a woman and a man. Listen, answer, then check the transcript.",
   N2: "Faster, longer conversations like the JLPT N2 listening section, including integrated comprehension: weigh several options against what people say.",

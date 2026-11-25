@@ -70,7 +70,9 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
   the key words to your reviews. Scores are saved, and the dashboard counts passages read
 - `python -m app.reading` checks the questions; add `--readings` to proofread the furigana
 
-**Listening practice (JLPT 聴解, N4 to N1)**
+**Listening practice (JLPT 聴解, N5 to N1)**
+- 10 N5 items: what to bring, buying fruit, a family's size, a meeting time, asking for water, greetings
+  and simple replies, in the same four formats as N4
 - 10 N4 items: shopping for a party, a first clinic visit, a teacher's homework notice, picking a day,
   plus utterance expressions (発話表現: what would you say in this situation?) and quick responses
 - 20 hand-written N3 items in the four test formats: task-based (課題理解), key point (ポイント理解),
