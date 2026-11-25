@@ -9,6 +9,412 @@ the automatic furigana so the readings can be proofread.
 from __future__ import annotations
 
 PASSAGES: list[dict] = [
+    # ------------------------------------------------------------------ N5
+    {
+        "id": "n5-r01",
+        "title": "A note from my sister",
+        "jp_title": "テーブルのメモ",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "ゆみへ",
+            "わたしは、今から友だちと買い物に行きます。7時ごろ帰ります。テーブルの上にパンがありますから、食べてください。"
+            "それから、6時に母から電話があります。母に「まりは7時に帰ります」と言ってください。",
+            "まり",
+        ],
+        "en": [
+            "To Yumi,",
+            "I'm going shopping with a friend now. I'll be back around 7. There's bread on the table, so please eat it. "
+            "Also, Mum will call at 6. Please tell her \"Mari will be home at 7\".",
+            "Mari",
+        ],
+        "questions": [
+            {
+                "q": "ゆみさんは、6時に何をしますか。",
+                "choices": [
+                    "友だちと買い物に行きます。",
+                    "テーブルでパンを作ります。",
+                    "電話で母と話します。",
+                    "母と家に帰ります。",
+                ],
+                "answer": 2,
+                "why": "Mum calls at 6 (6時に母から電話があります), and Yumi passes on the message. Mari is the one shopping, "
+                       "and the bread is already on the table.",
+            },
+        ],
+        "vocab": [
+            {"word": "買い物", "reading": "かいもの", "meaning": "shopping"},
+            {"word": "ごろ", "reading": "ごろ", "meaning": "around (a time)"},
+            {"word": "電話", "reading": "でんわ", "meaning": "phone call, telephone"},
+        ],
+    },
+    {
+        "id": "n5-r02",
+        "title": "Tomorrow's trip",
+        "jp_title": "あしたの山",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "クラスのみなさんへ",
+            "あしたは、みんなで山へ行きます。朝8時半に、学校の前に来てください。おべんとうと飲み物を持ってきてください。"
+            "雨のときは、山へ行きません。いつもの教室で勉強します。",
+            "先生",
+        ],
+        "en": [
+            "To everyone in the class,",
+            "Tomorrow we're all going to the mountains. Please come to the front of the school at 8:30 in the morning. "
+            "Please bring a packed lunch and something to drink. If it rains, we won't go to the mountains. "
+            "We'll study in our usual classroom.",
+            "Your teacher",
+        ],
+        "questions": [
+            {
+                "q": "雨のとき、学生はどうしますか。",
+                "choices": [
+                    "8時半に山へ行きます。",
+                    "学校の前で待ちます。",
+                    "いつもの教室で勉強します。",
+                    "家で休みます。",
+                ],
+                "answer": 2,
+                "why": "雨のときは、山へ行きません。いつもの教室で勉強します. There's still school, so they don't stay home.",
+            },
+        ],
+        "vocab": [
+            {"word": "おべんとう", "reading": "おべんとう", "meaning": "packed lunch"},
+            {"word": "飲み物", "reading": "のみもの", "meaning": "drink"},
+            {"word": "いつもの", "reading": "いつもの", "meaning": "the usual"},
+            {"word": "教室", "reading": "きょうしつ", "meaning": "classroom"},
+        ],
+    },
+    {
+        "id": "n5-r03",
+        "title": "A day at the sea",
+        "jp_title": "日曜日の日記",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "きのうは日曜日でした。朝、友だちと駅で会って、いっしょに電車で海へ行きました。海はとてもきれいでしたが、少し寒かったです。"
+            "昼ごはんは、駅の近くの店で魚を食べました。おいしかったです。夜は、つかれて、早くねました。",
+        ],
+        "en": [
+            "Yesterday was Sunday. In the morning I met a friend at the station, and we went to the sea together by train. "
+            "The sea was very beautiful, but it was a little cold. For lunch we ate fish at a shop near the station. "
+            "It was delicious. In the evening I was tired and went to bed early.",
+        ],
+        "questions": [
+            {
+                "q": "この人は、きのう何をしましたか。",
+                "choices": [
+                    "一人で電車に乗りました。",
+                    "友だちと店で魚を食べました。",
+                    "家で魚を料理しました。",
+                    "夜おそくまで友だちと話しました。",
+                ],
+                "answer": 1,
+                "why": "駅の近くの店で魚を食べました, with the friend they went with. They didn't go alone, and they went to bed early.",
+            },
+        ],
+        "vocab": [
+            {"word": "いっしょに", "reading": "いっしょに", "meaning": "together"},
+            {"word": "寒い", "reading": "さむい", "meaning": "cold (weather)"},
+            {"word": "魚", "reading": "さかな", "meaning": "fish"},
+            {"word": "つかれる", "reading": "つかれる", "meaning": "to get tired"},
+        ],
+    },
+    {
+        "id": "n5-r04",
+        "title": "An invitation",
+        "jp_title": "山田さんからのメール",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "マリアさん",
+            "来週の土曜日、わたしの家でパーティーをします。いっしょに日本の料理を作りませんか。"
+            "11時に来てください。何も持ってこなくてもいいですよ。",
+            "山田",
+        ],
+        "en": [
+            "Maria,",
+            "Next Saturday I'm having a party at my home. Would you like to make Japanese food together? "
+            "Please come at 11. You don't need to bring anything.",
+            "Yamada",
+        ],
+        "questions": [
+            {
+                "q": "マリアさんは、土曜日に何をしますか。",
+                "choices": [
+                    "山田さんの家で、料理を作ります。",
+                    "山田さんを、自分の家によびます。",
+                    "料理を買って、山田さんの家へ持っていきます。",
+                    "11時に、山田さんと店で会います。",
+                ],
+                "answer": 0,
+                "why": "The party is at Yamada's home (わたしの家で), and they'll cook together (いっしょに…作りませんか). "
+                       "何も持ってこなくてもいい: she doesn't need to bring anything.",
+            },
+        ],
+        "vocab": [
+            {"word": "来週", "reading": "らいしゅう", "meaning": "next week"},
+            {"word": "料理", "reading": "りょうり", "meaning": "cooking, food"},
+            {"word": "何も", "reading": "なにも", "meaning": "nothing, (not) anything"},
+        ],
+    },
+    {
+        "id": "n5-r05",
+        "title": "Library rules",
+        "jp_title": "としょかんのお知らせ",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "としょかんのお知らせ",
+            "本は、2週間かりることができます。一度に5さつまでです。"
+            "じしょは、かりることができません。としょかんの中で読んでください。",
+        ],
+        "en": [
+            "Library notice",
+            "You can borrow books for two weeks. Up to five books at a time. Dictionaries can't be borrowed. "
+            "Please read them inside the library.",
+        ],
+        "questions": [
+            {
+                "q": "正しいものはどれですか。",
+                "choices": [
+                    "本は、1か月かりることができます。",
+                    "本を、一度に6さつかりることができます。",
+                    "じしょは、家へ持って帰ることができません。",
+                    "じしょは、読むことができません。",
+                ],
+                "answer": 2,
+                "why": "Dictionaries can't be borrowed (かりることができません), so they can't go home: you read them in the library. "
+                       "Books are for two weeks, up to five at a time.",
+            },
+        ],
+        "vocab": [
+            {"word": "としょかん", "reading": "としょかん", "meaning": "library"},
+            {"word": "かりる", "reading": "かりる", "meaning": "to borrow"},
+            {"word": "一度に", "reading": "いちどに", "meaning": "at one time"},
+            {"word": "じしょ", "reading": "じしょ", "meaning": "dictionary"},
+        ],
+    },
+    {
+        "id": "n5-r06",
+        "title": "Who gets up first?",
+        "jp_title": "わたしの家族",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "わたしの家族は、4人です。父と母と弟とわたしです。父は毎朝6時に起きます。母は父より早く、5時半に起きて、朝ごはんを作ります。"
+            "わたしは7時に起きます。弟は、いつも7時半ごろまでねています。",
+        ],
+        "en": [
+            "There are four people in my family: my father, my mother, my little brother and me. My father gets up at 6 every "
+            "morning. My mother gets up earlier than him, at 5:30, and makes breakfast. I get up at 7. My little brother always "
+            "sleeps until about 7:30.",
+        ],
+        "questions": [
+            {
+                "q": "いちばん早く起きる人は、だれですか。",
+                "choices": ["父", "母", "弟", "わたし"],
+                "answer": 1,
+                "why": "母は父より早く、5時半に起きて: earlier than the father's 6 o'clock, and the earliest of all.",
+            },
+        ],
+        "vocab": [
+            {"word": "家族", "reading": "かぞく", "meaning": "family"},
+            {"word": "毎朝", "reading": "まいあさ", "meaning": "every morning"},
+            {"word": "起きる", "reading": "おきる", "meaning": "to get up"},
+            {"word": "より", "reading": "より", "meaning": "than"},
+        ],
+    },
+    {
+        "id": "n5-r07",
+        "title": "My new flat",
+        "jp_title": "新しいアパート",
+        "kind": "Medium passage",
+        "minutes": 3,
+        "text": [
+            "先月から、新しいアパートに住んでいます。前のアパートは駅から遠かったですが、今のアパートは駅から歩いて5分です。"
+            "へやは少しせまいですが、明るくて、きれいです。まどから大きい公園が見えます。",
+            "近くにスーパーがありませんから、買い物は少したいへんです。買い物のときは、自転車で10分の店まで行きます。"
+            "でも、わたしはこのアパートがとても好きです。",
+        ],
+        "en": [
+            "Since last month I've been living in a new flat. My old flat was far from the station, but this one is five minutes' "
+            "walk from it. The room is a little small, but it's bright and clean. I can see a big park from the window.",
+            "There's no supermarket nearby, so shopping is a bit of a bother. When I go shopping, I cycle ten minutes to a shop. "
+            "But I really like this flat.",
+        ],
+        "questions": [
+            {
+                "q": "今のアパートは、どうですか。",
+                "choices": [
+                    "駅から遠いです。",
+                    "へやが広いです。",
+                    "まどから公園が見えます。",
+                    "近くにスーパーがあります。",
+                ],
+                "answer": 2,
+                "why": "まどから大きい公園が見えます. The OLD flat was far from the station, the room is せまい (small), "
+                       "and there's no supermarket nearby.",
+            },
+            {
+                "q": "この人は、買い物のときどうしますか。",
+                "choices": [
+                    "駅の近くのスーパーへ歩いて行きます。",
+                    "自転車で店へ行きます。",
+                    "公園の店で買います。",
+                    "友だちに買ってもらいます。",
+                ],
+                "answer": 1,
+                "why": "自転車で10分の店まで行きます. The five-minute walk is to the station, not a shop.",
+            },
+        ],
+        "vocab": [
+            {"word": "先月", "reading": "せんげつ", "meaning": "last month"},
+            {"word": "住む", "reading": "すむ", "meaning": "to live (somewhere)"},
+            {"word": "せまい", "reading": "せまい", "meaning": "small, cramped"},
+            {"word": "明るい", "reading": "あかるい", "meaning": "bright"},
+            {"word": "公園", "reading": "こうえん", "meaning": "park"},
+            {"word": "自転車", "reading": "じてんしゃ", "meaning": "bicycle"},
+        ],
+    },
+    {
+        "id": "n5-r08",
+        "title": "Studying Japanese",
+        "jp_title": "日本語の勉強",
+        "kind": "Medium passage",
+        "minutes": 3,
+        "text": [
+            "わたしは、1年前から日本語を勉強しています。はじめは、ひらがなもかたかなもわかりませんでしたが、今は少し読むことができます。",
+            "毎日、朝ごはんを食べる前に、30分ぐらいかんじを書きます。夜は、日本の歌を聞いたり、アニメを見たりします。",
+            "来年の春、日本へ旅行に行きたいです。日本で、日本語で買い物をしたいです。",
+        ],
+        "en": [
+            "I've been studying Japanese for a year. At first I couldn't understand hiragana or katakana, but now I can read a little.",
+            "Every day, before I eat breakfast, I write kanji for about thirty minutes. In the evening I listen to Japanese songs, "
+            "watch anime and so on.",
+            "Next spring I want to travel to Japan. In Japan, I want to go shopping in Japanese.",
+        ],
+        "questions": [
+            {
+                "q": "この人は、毎朝何をしますか。",
+                "choices": [
+                    "朝ごはんを食べてから、かんじを書きます。",
+                    "朝ごはんを食べる前に、かんじを書きます。",
+                    "日本の歌を聞きます。",
+                    "アニメを見ます。",
+                ],
+                "answer": 1,
+                "why": "朝ごはんを食べる前に、30分ぐらいかんじを書きます. 〜前に is before; 〜てから would be after. "
+                       "Songs and anime are in the evening.",
+            },
+            {
+                "q": "この人は、来年何をしたいですか。",
+                "choices": [
+                    "日本語の学校に入りたいです。",
+                    "日本で仕事をしたいです。",
+                    "日本で、日本語で買い物をしたいです。",
+                    "日本の歌を歌いたいです。",
+                ],
+                "answer": 2,
+                "why": "来年の春、日本へ旅行に行きたいです。日本で、日本語で買い物をしたいです.",
+            },
+        ],
+        "vocab": [
+            {"word": "はじめ", "reading": "はじめ", "meaning": "at first, the beginning"},
+            {"word": "歌", "reading": "うた", "meaning": "song"},
+            {"word": "来年", "reading": "らいねん", "meaning": "next year"},
+            {"word": "旅行", "reading": "りょこう", "meaning": "trip, travel"},
+        ],
+    },
+    {
+        "id": "n5-r09",
+        "title": "My birthday",
+        "jp_title": "たんじょうび",
+        "kind": "Medium passage",
+        "minutes": 3,
+        "text": [
+            "きのうは、わたしのたんじょうびでした。朝、母が「おめでとう」と言って、赤いセーターをくれました。",
+            "学校では、友だちのケンさんが、ケーキを作って持ってきました。とてもおいしかったです。",
+            "夜は、家族でレストランへ行きました。父は仕事でおそくなりましたから、仕事の後で、レストランに来ました。"
+            "みんなで食べて、話して、とても楽しかったです。",
+        ],
+        "en": [
+            "Yesterday was my birthday. In the morning my mother said \"Happy birthday\" and gave me a red sweater.",
+            "At school, my friend Ken made a cake and brought it. It was really delicious.",
+            "In the evening my family went to a restaurant. My father was late because of work, so he came to the restaurant "
+            "after work. We all ate and talked, and it was great fun.",
+        ],
+        "questions": [
+            {
+                "q": "ケーキを作った人は、だれですか。",
+                "choices": ["母", "父", "ケンさん", "わたし"],
+                "answer": 2,
+                "why": "友だちのケンさんが、ケーキを作って持ってきました. Mum gave the sweater.",
+            },
+            {
+                "q": "父は、きのうの夜どうしましたか。",
+                "choices": [
+                    "家で、みんなを待っていました。",
+                    "家族といっしょに、家からレストランへ行きました。",
+                    "仕事の後で、レストランに来ました。",
+                    "赤いセーターを買いました。",
+                ],
+                "answer": 2,
+                "why": "父は仕事でおそくなりましたから、仕事の後で、レストランに来ました: he came straight from work, not from home.",
+            },
+        ],
+        "vocab": [
+            {"word": "たんじょうび", "reading": "たんじょうび", "meaning": "birthday"},
+            {"word": "おめでとう", "reading": "おめでとう", "meaning": "congratulations, happy birthday"},
+            {"word": "くれる", "reading": "くれる", "meaning": "to give (to me)"},
+            {"word": "楽しい", "reading": "たのしい", "meaning": "fun, enjoyable"},
+        ],
+    },
+    {
+        "id": "n5-r10",
+        "title": "The lunch menu",
+        "jp_title": "ランチメニュー",
+        "kind": "Information search",
+        "minutes": 3,
+        "text": [
+            "さくらレストラン　ランチメニュー（11時〜2時）",
+            "①カレー　700円",
+            "②ハンバーグ　900円\n・サラダがつきます。",
+            "③さかなのランチ　800円\n・スープがつきます。",
+            "④スパゲッティ　750円",
+            "※コーヒー、こうちゃは、ランチといっしょに150円です。",
+        ],
+        "en": [
+            "Sakura Restaurant: lunch menu (11 to 2)",
+            "1. Curry, 700 yen",
+            "2. Hamburger steak, 900 yen\n- Comes with salad.",
+            "3. Fish lunch, 800 yen\n- Comes with soup.",
+            "4. Spaghetti, 750 yen",
+            "* Coffee or tea is 150 yen with a lunch.",
+        ],
+        "questions": [
+            {
+                "q": "リーさんは、1,000円持っています。ランチとコーヒーをたのみたいです。リーさんがたのむことができるランチはどれですか。",
+                "choices": ["①だけ", "①と④", "①と③と④", "②と③"],
+                "answer": 2,
+                "why": "Add 150 yen for coffee: ① 850, ② 1,050, ③ 950, ④ 900. Everything except ② fits in 1,000 yen.",
+            },
+            {
+                "q": "スープがあるランチはどれですか。",
+                "choices": ["①", "②", "③", "④"],
+                "answer": 2,
+                "why": "③さかなのランチ: スープがつきます. ② comes with salad, not soup.",
+            },
+        ],
+        "vocab": [
+            {"word": "ランチ", "reading": "ランチ", "meaning": "lunch (set)"},
+            {"word": "つく", "reading": "つく", "meaning": "to come with"},
+            {"word": "こうちゃ", "reading": "こうちゃ", "meaning": "black tea"},
+            {"word": "たのむ", "reading": "たのむ", "meaning": "to order, ask for"},
+        ],
+    },
     # ------------------------------------------------------------------ N4
     {
         "id": "n4-r01",
