@@ -11,7 +11,7 @@ from .kanji_api import add_card as add_kanji_card
 
 router = APIRouter(prefix="/api/quiz", tags=["quiz"])
 
-KANJI_SOURCES = ("studied", "N5", "N4", "N3", "N2", "lessons")
+KANJI_SOURCES = ("studied", "N5", "N4", "N3", "N2", "N1", "lessons")
 
 
 def _saved_words(conn) -> list[dict]:

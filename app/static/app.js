@@ -644,7 +644,7 @@ async function renderProgress() {
     meter("Hiragana", known(data.kana.hiragana), data.kana.hiragana.total, `${known(data.kana.hiragana)} / ${data.kana.hiragana.total}`),
     meter("Katakana", known(data.kana.katakana), data.kana.katakana.total, `${known(data.kana.katakana)} / ${data.kana.katakana.total}`),
     ...Object.entries(data.lessons).map(([lvl, l]) => meter(`${lvl} lessons`, l.done, l.total, `${l.done} / ${l.total} complete`)),
-    ...["N5", "N4", "N3", "N2"].filter(lvl => data.kanji?.[lvl]).map(lvl =>
+    ...["N5", "N4", "N3", "N2", "N1"].filter(lvl => data.kanji?.[lvl]).map(lvl =>
       meter(`Kanji (${lvl} list)`, known(data.kanji[lvl]), data.kanji[lvl].total,
         `${known(data.kanji[lvl])} known · ${data.kanji[lvl].total} total`)),
     ...Object.entries(data.reading || {}).map(([lvl, r]) => meter(`${lvl} reading passages`, r.done, r.total, `${r.done} / ${r.total} read`)),
@@ -1936,6 +1936,7 @@ const KANJI_GROUPS = {
   N4: ["N4", "Closest to JLPT N4 (KANJIDIC's old level-3 list)"],
   N3: ["N3", "Closest to JLPT N3: the 300 most common kanji of KANJIDIC's old level-2 list (which mixes N3 and N2), plus the ones your lessons use"],
   N2: ["N2", "Closest to JLPT N2: the rest of KANJIDIC's old level-2 list, after the N3 share"],
+  N1: ["N1", "Closest to JLPT N1: the rest of the Jōyō kanji (KANJIDIC's old level-1 list plus the 2010 additions), with the ones your lessons use first"],
   lessons: ["From lessons", "Kanji used in your lessons that are on none of the lists above"],
 };
 
@@ -2274,7 +2275,7 @@ async function renderWritingSession(body) {
   const results = [];
   let i = 0;
 
-  const sources = el("div", { class: "segmented" }, [["studied", "My kanji"], ["N5", "N5 list"], ["N4", "N4 list"], ["N3", "N3 list"], ["N2", "N2 list"]].map(([s, label]) =>
+  const sources = el("div", { class: "segmented" }, [["studied", "My kanji"], ["N5", "N5 list"], ["N4", "N4 list"], ["N3", "N3 list"], ["N2", "N2 list"], ["N1", "N1 list"]].map(([s, label]) =>
     el("button", { type: "button", class: s === source ? "active" : "",
       onclick: () => { prefs.set("write.source", s); renderWritingSession(body); } }, label)));
 
@@ -2443,7 +2444,7 @@ async function renderQuiz() {
       el("div", { class: "chips" }, lessonChips.filter((_, i) => opts.lessons[i].level === level))));
   const typeChips = typeEntries.map(([t, [jp, en]]) =>
     chip(t, el("span", {}, el("span", { lang: "ja" }, jp), ` ${en}`), settings.types.includes(t)));
-  const kanjiSources = [["studied", `My kanji (${opts.studied_kanji})`], ["N5", "N5 list"], ["N4", "N4 list"], ["N3", "N3 list"], ["N2", "N2 list"], ["lessons", "From lessons"]];
+  const kanjiSources = [["studied", `My kanji (${opts.studied_kanji})`], ["N5", "N5 list"], ["N4", "N4 list"], ["N3", "N3 list"], ["N2", "N2 list"], ["N1", "N1 list"], ["lessons", "From lessons"]];
   const kanjiSource = el("div", { class: "segmented" }, kanjiSources.map(([value, label]) =>
     el("button", { type: "button", class: value === settings.kanji_source ? "active" : "",
       disabled: value === "studied" && !opts.studied_kanji,

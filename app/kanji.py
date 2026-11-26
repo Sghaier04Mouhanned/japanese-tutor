@@ -35,7 +35,13 @@ OLD_JLPT_TO_LEVEL = {4: "N5", 3: "N4"}
 # the old level-2 kanji the N5-N3 lessons use, and "closest to N2" is the rest of old level 2.
 N3_OLD_LEVEL = 2
 N3_MOST_FREQUENT = 300
-GROUPS = ("N5", "N4", "N3", "N2", "lessons")  # "lessons": in the lessons but on none of the lists
+# Today's N1 expects roughly the whole Jōyō list. So "closest to N1" is every Jōyō kanji
+# (KANJIDIC grades 1-8) not on the lists above, including the 2010 additions such as
+# 誰 and 頃 that have no old level, plus old level-1 name kanji (grade 9) the lessons use.
+# The other old level-1 name kanji aren't tested and stay out.
+N1_OLD_LEVEL = 1
+JOYO_MAX_GRADE = 8
+GROUPS = ("N5", "N4", "N3", "N2", "N1", "lessons")  # "lessons": in the lessons but on none of the lists
 
 _KANJI_CHAR = re.compile(r"[一-鿿々]")
 _lock = threading.Lock()
@@ -71,7 +77,10 @@ def build() -> int:
                 continue
             literal = elem.findtext("literal")
             jlpt = int(elem.findtext("misc/jlpt") or 0)
+            grade = int(elem.findtext("misc/grade") or 0) or None
             level = OLD_JLPT_TO_LEVEL.get(jlpt) or ("N3" if jlpt == N3_OLD_LEVEL else None)
+            if not level and ((grade or 99) <= JOYO_MAX_GRADE or (jlpt == N1_OLD_LEVEL and literal in in_lessons)):
+                level = "N1"
             if level or literal in in_lessons:
                 rm = elem.find("reading_meaning/rmgroup")
                 on = [r.text for r in rm.findall("reading[@r_type='ja_on']")] if rm is not None else []
@@ -85,7 +94,7 @@ def build() -> int:
                     "group": level or "lessons",
                     "on": on[:4], "kun": list(dict.fromkeys(kun))[:5], "meanings": learner_first(literal, meanings),
                     "strokes": int(elem.findtext("misc/stroke_count") or 0),
-                    "grade": int(elem.findtext("misc/grade") or 0) or None,
+                    "grade": grade,
                     "freq": int(freq) if freq else None,
                     "lesson": in_lessons.get(literal),
                 }
@@ -130,13 +139,15 @@ def _add_examples(entries: dict[str, dict]) -> None:
     conn.close()
     # JMdict ranks by newspaper frequency (日米, 同日 rank high). For learners,
     # first prefer words whose kanji are all on the N5/N4/N3 lists.
-    # Then words within N2, so N2 kanji get examples made of other study-list kanji.
+    # Then words within N2, then within N1, so harder kanji get examples made of
+    # other study-list kanji rather than rare ones.
     beginner = {k for k, e in entries.items() if e["group"] in ("N5", "N4", "N3")}
     studied = beginner | {k for k, e in entries.items() if e["group"] == "N2"}
+    joyo = studied | {k for k, e in entries.items() if e["group"] == "N1"}
 
     def tier(form: str) -> int:
         chars = set(_KANJI_CHAR.findall(form))
-        return 0 if chars <= beginner else 1 if chars <= studied else 2
+        return 0 if chars <= beginner else 1 if chars <= studied else 2 if chars <= joyo else 3
 
     rows.sort(key=lambda r: (tier(r[0]), r[2], len(r[0])))
     for form, data, _priority, entry_id in rows:
@@ -149,6 +160,28 @@ def _add_examples(entries: dict[str, dict]) -> None:
                                             "meaning": dictionary.short_meaning(entry, senses=1)})
             seen[ch].update({form, entry_id, *entry["kanji"]})
 
+    # Some N1 kanji (臼, 餌, 虹…) appear in no word marked common: fall back to the
+    # dictionary's other words, single kanji included, so every kanji has examples.
+    missing = {k for k, e in entries.items() if not e["examples"]}
+    if missing:
+        conn = sqlite3.connect(dictionary.INDEX)
+        rows = conn.execute(
+            """SELECT f.form, e.data, e.priority, e.id FROM forms f JOIN entries e ON e.id = f.entry_id
+               WHERE f.kind = 'k' AND length(f.form) BETWEEN 1 AND 3"""
+        ).fetchall()
+        conn.close()
+        rows = [(form, json.loads(data), priority, entry_id) for form, data, priority, entry_id in rows
+                if set(form) & missing]
+        # Prefer entries headed by the form: JMdict also lists 虹 under 二次 and 岬 under 崎.
+        rows.sort(key=lambda r: (tier(r[0]), len(r[0]), r[1]["kanji"][0] != r[0], r[2]))
+        for form, entry, _priority, entry_id in rows:
+            for ch in set(form) & missing:
+                if len(entries[ch]["examples"]) >= 3 or form in seen[ch] or entry_id in seen[ch]:
+                    continue
+                entries[ch]["examples"].append({"word": form, "reading": entry["readings"][0],
+                                                "meaning": dictionary.short_meaning(entry, senses=1)})
+                seen[ch].update({form, entry_id, *entry["kanji"]})
+
 
 def available() -> bool:
     return INDEX.exists() or SOURCE.exists()
@@ -159,7 +192,7 @@ def _load() -> dict[str, dict]:
     with _lock:
         data = json.loads(INDEX.read_text(encoding="utf-8")) if INDEX.exists() else None
         # Rebuild when new lessons use kanji the index doesn't have (or has under another
-        # lesson), when the index predates a group (the N3 list), or when the learner
+        # lesson), when the index predates a group (the N1 list), or when the learner
         # meanings changed.
         if data is None or (SOURCE.exists() and (
                 {e["group"] for e in data.values()} != set(GROUPS)

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import random
 import re
+from functools import lru_cache
 
 from . import furigana, lessons
 from .kanji_meanings import cue
@@ -147,8 +148,14 @@ def _listening_q(ex: dict, examples: list[dict]) -> dict | None:
 
 # ---------- kanji questions ----------
 
-def _meanings(e: dict) -> set[str]:
-    return {m.lower() for m in e["meanings"]}
+def _meanings(e: dict) -> frozenset[str]:
+    return _shown_meanings(e["kanji"], tuple(e["meanings"]))
+
+
+@lru_cache(maxsize=4096)
+def _shown_meanings(ch: str, meanings: tuple[str, ...]) -> frozenset[str]:
+    # As shown in questions: "vague (曖昧)" is shown as "vague", so it overlaps with "vague".
+    return frozenset(m.lower() for m in cue(ch, list(meanings)))
 
 
 def _kanji_label(e: dict) -> str:

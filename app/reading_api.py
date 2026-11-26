@@ -17,7 +17,7 @@ def _passage_or_404(passage_id: str) -> dict:
     return passage
 
 
-_LIST_ORDER = ("N5", "N4", "N3", "N2")
+_LIST_ORDER = ("N5", "N4", "N3", "N2", "N1")
 
 
 def _known_kanji(level: str) -> set[str] | None:
