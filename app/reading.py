@@ -507,6 +507,324 @@ PASSAGES: list[dict] = [
             {"word": "おかし", "reading": "おかし", "meaning": "sweets, snacks"},
         ],
     },
+    {
+        "id": "n5-r13",
+        "title": "The test has moved",
+        "jp_title": "あしたのテスト",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "リンさんへ",
+            "あしたのテストのことです。テストは、10時からではありません。9時からになりました。教室も、205ではなくて、3かいの301です。"
+            "えんぴつとけしゴムを持ってきてください。じしょは使うことができません。",
+            "山田",
+        ],
+        "en": [
+            "To Lin,",
+            "This is about tomorrow's test. It isn't from 10 any more: it's now from 9. The room isn't 205 either, it's 301 on the "
+            "third floor. Please bring a pencil and an eraser. You can't use a dictionary.",
+            "Yamada",
+        ],
+        "questions": [
+            {
+                "q": "リンさんは、あした何時に、どの教室へ行きますか。",
+                "choices": ["10時に205の教室", "9時に205の教室", "10時に301の教室", "9時に301の教室"],
+                "answer": 3,
+                "why": "The test is now 9時から, and the room is 3かいの301 (ではなくて means \"not 205, but...\").",
+            },
+        ],
+        "vocab": [
+            {"word": "テスト", "reading": "テスト", "meaning": "test"},
+            {"word": "教室", "reading": "きょうしつ", "meaning": "classroom"},
+            {"word": "えんぴつ", "reading": "えんぴつ", "meaning": "pencil"},
+            {"word": "じしょ", "reading": "じしょ", "meaning": "dictionary"},
+        ],
+    },
+    {
+        "id": "n5-r14",
+        "title": "A rainy Saturday",
+        "jp_title": "土曜日の朝",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "わたしは、毎週土曜日の朝、近くの公園で友だちとテニスをします。きのうは雨でしたから、テニスをしないで、友だちと駅の前のカフェへ行きました。"
+            "コーヒーを飲んで、たくさん話しました。午後は、うちでへやのそうじをしました。",
+        ],
+        "en": [
+            "Every Saturday morning I play tennis with a friend in the park nearby. Yesterday it rained, so instead of playing tennis "
+            "we went to the café in front of the station. We drank coffee and talked a lot. In the afternoon I cleaned my room at home.",
+        ],
+        "questions": [
+            {
+                "q": "この人は、きのうの朝、何をしましたか。",
+                "choices": [
+                    "公園でテニスをしました。",
+                    "カフェで友だちと話しました。",
+                    "うちでへやのそうじをしました。",
+                    "友だちのうちへ行きました。",
+                ],
+                "answer": 1,
+                "why": "It rained, so テニスをしないで (without playing tennis) they went to a café and talked. The cleaning was in the "
+                       "afternoon.",
+            },
+        ],
+        "vocab": [
+            {"word": "毎週", "reading": "まいしゅう", "meaning": "every week"},
+            {"word": "公園", "reading": "こうえん", "meaning": "park"},
+            {"word": "そうじ", "reading": "そうじ", "meaning": "cleaning"},
+        ],
+    },
+    {
+        "id": "n5-r15",
+        "title": "Returning an umbrella",
+        "jp_title": "ゆきさんのメール",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "アンさん",
+            "きのうは、かさをどうもありがとうございました。かさは、あしたの朝、学校で返します。"
+            "それから、アンさんがほしいと言っていた本を、わたしも持っています。いっしょに持っていきますから、読んでください。",
+            "ゆき",
+        ],
+        "en": [
+            "Ann,",
+            "Thank you very much for the umbrella yesterday. I'll give it back tomorrow morning at school. "
+            "Also, I have the book you said you wanted. I'll bring it along too, so please read it.",
+            "Yuki",
+        ],
+        "questions": [
+            {
+                "q": "ゆきさんは、あした何をしますか。",
+                "choices": [
+                    "アンさんにかさをかります。",
+                    "アンさんにかさと本をわたします。",
+                    "アンさんと本を買いに行きます。",
+                    "アンさんに本をかえします。",
+                ],
+                "answer": 1,
+                "why": "She returns the umbrella (かさは…返します) and brings her own book along (いっしょに持っていきます) for Ann to read. "
+                       "The book is Yuki's, so she isn't returning it.",
+            },
+        ],
+        "vocab": [
+            {"word": "かさ", "reading": "かさ", "meaning": "umbrella"},
+            {"word": "返す", "reading": "かえす", "meaning": "to return, give back"},
+            {"word": "ほしい", "reading": "ほしい", "meaning": "to want (a thing)"},
+        ],
+    },
+    {
+        "id": "n5-r16",
+        "title": "A visit to a primary school",
+        "jp_title": "小学校へ行きます",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "りゅうがくせいのみなさんへ",
+            "来週の金曜日に、近くの小学校へ行きます。小学生といっしょにあそんだり、ひるごはんを食べたりします。"
+            "行きたい人は、水曜日までに、じむしょで名前を書いてください。お金はいりません。",
+        ],
+        "en": [
+            "To all international students,",
+            "Next Friday we're going to a primary school nearby. We'll play with the pupils, have lunch with them, and so on. "
+            "If you'd like to go, please write your name at the office by Wednesday. It's free.",
+        ],
+        "questions": [
+            {
+                "q": "小学校へ行きたい人は、どうしますか。",
+                "choices": [
+                    "金曜日に、じむしょへ行きます。",
+                    "水曜日までに、じむしょで名前を書きます。",
+                    "水曜日までに、お金をはらいます。",
+                    "小学校に電話をします。",
+                ],
+                "answer": 1,
+                "why": "水曜日までに、じむしょで名前を書いてください. Friday is the visit itself, and お金はいりません (no money needed).",
+            },
+        ],
+        "vocab": [
+            {"word": "小学校", "reading": "しょうがっこう", "meaning": "primary school"},
+            {"word": "じむしょ", "reading": "じむしょ", "meaning": "office"},
+            {"word": "いる", "reading": "いる", "meaning": "to need (いりません: not needed)"},
+        ],
+    },
+    {
+        "id": "n5-r17",
+        "title": "My cooking class",
+        "jp_title": "料理教室",
+        "kind": "Medium passage",
+        "minutes": 3,
+        "text": [
+            "わたしは、日本に来て、もうすぐ一年です。日本に来る前は、日本の食べ物をあまり知りませんでした。今は、すしやてんぷらが大好きです。",
+            "先月から、週に一回、近くの料理教室に行っています。先生は、やさしい女の人です。先週は、カレーを作りました。"
+            "日本のカレーは、わたしの国のカレーよりあまくて、おいしかったです。",
+            "来月は、すしを作ります。とても楽しみです。いつか、国の家族にも作りたいです。",
+        ],
+        "en": [
+            "I've been in Japan for almost a year. Before I came, I didn't know much about Japanese food. Now I love sushi and tempura.",
+            "Since last month I've been going to a cooking class nearby once a week. The teacher is a kind woman. Last week we made "
+            "curry. Japanese curry was sweeter than the curry in my country, and it was delicious.",
+            "Next month we're making sushi. I'm really looking forward to it. One day I'd like to make it for my family back home too.",
+        ],
+        "questions": [
+            {
+                "q": "この人は、料理教室で、先週何を作りましたか。",
+                "choices": ["すし", "てんぷら", "カレー", "ケーキ"],
+                "answer": 2,
+                "why": "先週は、カレーを作りました. Sushi is next month, and tempura is just a food they like.",
+            },
+            {
+                "q": "日本のカレーは、どうでしたか。",
+                "choices": [
+                    "からくて、おいしかったです。",
+                    "あまくて、おいしかったです。",
+                    "あまくて、おいしくなかったです。",
+                    "わたしの国のカレーと同じでした。",
+                ],
+                "answer": 1,
+                "why": "わたしの国のカレーよりあまくて、おいしかったです: sweeter than at home, and delicious.",
+            },
+        ],
+        "vocab": [
+            {"word": "料理", "reading": "りょうり", "meaning": "cooking, dish"},
+            {"word": "一回", "reading": "いっかい", "meaning": "once"},
+            {"word": "あまい", "reading": "あまい", "meaning": "sweet"},
+            {"word": "楽しみ", "reading": "たのしみ", "meaning": "something to look forward to"},
+        ],
+    },
+    {
+        "id": "n5-r18",
+        "title": "A trip to Kyoto",
+        "jp_title": "京都りょこう",
+        "kind": "Medium passage",
+        "minutes": 3,
+        "text": [
+            "先週、母と二人で京都へ行きました。東京から新幹線で二時間ぐらいでした。",
+            "さいしょの日は、古いお寺をたくさん見ました。人がとても多かったですが、きれいでした。"
+            "つぎの日は雨でしたから、お寺には行かないで、ホテルの近くの店でおみやげを買いました。",
+            "母は、京都のおかしが大好きになりました。また、いっしょに行きたいです。",
+        ],
+        "en": [
+            "Last week my mother and I went to Kyoto, just the two of us. It took about two hours from Tokyo by shinkansen.",
+            "On the first day we saw lots of old temples. There were a great many people, but they were beautiful. "
+            "The next day it rained, so instead of going to temples we bought souvenirs at a shop near the hotel.",
+            "My mother came to love Kyoto's sweets. I'd like to go together again.",
+        ],
+        "questions": [
+            {
+                "q": "つぎの日、二人は何をしましたか。",
+                "choices": [
+                    "古いお寺をたくさん見ました。",
+                    "ホテルの近くの店でおみやげを買いました。",
+                    "雨でしたから、ホテルで休みました。",
+                    "新幹線で京都へ行きました。",
+                ],
+                "answer": 1,
+                "why": "つぎの日は雨でしたから…おみやげを買いました. The temples were the first day.",
+            },
+            {
+                "q": "お寺は、どうでしたか。",
+                "choices": [
+                    "人が少なくて、しずかでした。",
+                    "人が多かったですが、きれいでした。",
+                    "古くて、きれいではありませんでした。",
+                    "雨で、見ることができませんでした。",
+                ],
+                "answer": 1,
+                "why": "人がとても多かったですが、きれいでした. It rained on the second day, when they didn't go to temples.",
+            },
+        ],
+        "vocab": [
+            {"word": "新幹線", "reading": "しんかんせん", "meaning": "bullet train"},
+            {"word": "古い", "reading": "ふるい", "meaning": "old"},
+            {"word": "お寺", "reading": "おてら", "meaning": "temple"},
+            {"word": "おみやげ", "reading": "おみやげ", "meaning": "souvenir"},
+        ],
+    },
+    {
+        "id": "n5-r19",
+        "title": "The swimming pool",
+        "jp_title": "みどりプール",
+        "kind": "Information search",
+        "minutes": 3,
+        "text": [
+            "みどりプール",
+            "・時間　午前9時〜午後8時",
+            "・休み　水曜日",
+            "・お金　大人　500円\n　　　　子ども（12さいまで）　200円",
+            "・午後5時からは、大人も子どもも、半分のお金です。",
+        ],
+        "en": [
+            "Midori Pool",
+            "- Hours: 9 a.m. to 8 p.m.",
+            "- Closed: Wednesdays",
+            "- Prices: adults 500 yen\n          children (up to 12) 200 yen",
+            "- From 5 p.m., adults and children pay half price.",
+        ],
+        "questions": [
+            {
+                "q": "お父さんと10さいのむすこが、日曜日の午後6時にプールへ行きます。二人でいくらですか。",
+                "choices": ["700円", "350円", "500円", "250円"],
+                "answer": 1,
+                "why": "After 5 p.m. everything is half price: the father pays 250 yen and the 10-year-old 100 yen, so 350 yen.",
+            },
+            {
+                "q": "このプールについて、正しいものはどれですか。",
+                "choices": [
+                    "水曜日も、およぐことができます。",
+                    "午後8時から、およぐことができます。",
+                    "13さいの人は、200円です。",
+                    "午前9時から、あいています。",
+                ],
+                "answer": 3,
+                "why": "It opens at 午前9時. It's closed on Wednesdays, closes at 8 p.m., and the child price is only up to 12.",
+            },
+        ],
+        "vocab": [
+            {"word": "大人", "reading": "おとな", "meaning": "adult"},
+            {"word": "子ども", "reading": "こども", "meaning": "child"},
+            {"word": "半分", "reading": "はんぶん", "meaning": "half"},
+            {"word": "およぐ", "reading": "およぐ", "meaning": "to swim"},
+        ],
+    },
+    {
+        "id": "n5-r20",
+        "title": "The bus timetable",
+        "jp_title": "バスのじこくひょう",
+        "kind": "Information search",
+        "minutes": 3,
+        "text": [
+            "バスのじこくひょう（さくら駅 → 山川大学）",
+            "・月曜日〜金曜日　7:30　8:00　8:30　9:00",
+            "・土曜日・日曜日　8:00　9:00　10:00",
+            "・さくら駅から山川大学まで、25分かかります。",
+        ],
+        "en": [
+            "Bus timetable (Sakura Station → Yamakawa University)",
+            "- Monday to Friday: 7:30, 8:00, 8:30, 9:00",
+            "- Saturday and Sunday: 8:00, 9:00, 10:00",
+            "- It takes 25 minutes from Sakura Station to Yamakawa University.",
+        ],
+        "questions": [
+            {
+                "q": "マイクさんは、月曜日の朝9時までに大学につきたいです。いちばんおそいバスは、何時のバスですか。",
+                "choices": ["7:30", "8:00", "8:30", "9:00"],
+                "answer": 2,
+                "why": "The ride takes 25 minutes: the 8:30 bus arrives at 8:55, but the 9:00 one arrives at 9:25.",
+            },
+            {
+                "q": "土曜日の10時のバスにのると、大学に何時につきますか。",
+                "choices": ["10時", "10時15分", "10時25分", "10時30分"],
+                "answer": 2,
+                "why": "10:00 plus the 25-minute ride is 10:25.",
+            },
+        ],
+        "vocab": [
+            {"word": "じこくひょう", "reading": "じこくひょう", "meaning": "timetable"},
+            {"word": "かかる", "reading": "かかる", "meaning": "to take (time)"},
+            {"word": "つく", "reading": "つく", "meaning": "to arrive"},
+            {"word": "おそい", "reading": "おそい", "meaning": "late"},
+        ],
+    },
     # ------------------------------------------------------------------ N4
     {
         "id": "n4-r01",
@@ -1023,6 +1341,343 @@ PASSAGES: list[dict] = [
             {"word": "それぞれ", "reading": "それぞれ", "meaning": "each"},
             {"word": "授業", "reading": "じゅぎょう", "meaning": "class, lesson"},
             {"word": "平日", "reading": "へいじつ", "meaning": "weekday"},
+        ],
+    },
+    {
+        "id": "n4-r13",
+        "title": "The club meeting has moved",
+        "jp_title": "サークルのお知らせ",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "テニスサークルのみなさんへ",
+            "今週金曜日のミーティングは、部屋が使えなくなったので、来週の月曜日に変わりました。時間は同じで、夕方5時からです。"
+            "夏の合宿について話しますので、行きたい場所を一つ考えてきてください。",
+            "部長　山本",
+        ],
+        "en": [
+            "To everyone in the tennis club,",
+            "This Friday's meeting has moved to next Monday, because the room can't be used. The time is the same: from 5 in the "
+            "evening. We'll talk about the summer training camp, so please come with one place you'd like to go.",
+            "Yamamoto, club captain",
+        ],
+        "questions": [
+            {
+                "q": "ミーティングまでに、何をしておかなければなりませんか。",
+                "choices": [
+                    "部屋を予約しておく。",
+                    "合宿に行きたい場所を考えておく。",
+                    "合宿のお金を払っておく。",
+                    "金曜日に部屋へ行っておく。",
+                ],
+                "answer": 1,
+                "why": "行きたい場所を一つ考えてきてください. Nothing is said about booking a room or paying, and Friday's meeting is off.",
+            },
+        ],
+        "vocab": [
+            {"word": "夕方", "reading": "ゆうがた", "meaning": "evening"},
+            {"word": "合宿", "reading": "がっしゅく", "meaning": "training camp"},
+            {"word": "考える", "reading": "かんがえる", "meaning": "to think about"},
+            {"word": "部長", "reading": "ぶちょう", "meaning": "(club) captain, head"},
+        ],
+    },
+    {
+        "id": "n4-r14",
+        "title": "Lift inspection",
+        "jp_title": "エレベーターの点検",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "このマンションに住んでいるみなさまへ",
+            "来週の火曜日、午前10時から午後3時まで、エレベーターの点検をします。その時間は、エレベーターが使えません。階段を使ってください。"
+            "重い荷物がある人は、管理人室に連絡してください。お手伝いします。",
+        ],
+        "en": [
+            "To everyone living in this building,",
+            "Next Tuesday, from 10 a.m. to 3 p.m., the lift will be inspected. During that time the lift can't be used. Please use "
+            "the stairs. If you have heavy things to carry, please contact the caretaker's office. We'll help you.",
+        ],
+        "questions": [
+            {
+                "q": "火曜日の午前11時に、重い荷物を部屋に運びたい人は、どうしますか。",
+                "choices": [
+                    "エレベーターを使う。",
+                    "管理人室に連絡する。",
+                    "午前10時まで待つ。",
+                    "一人で階段で運ぶ。",
+                ],
+                "answer": 1,
+                "why": "At 11 the lift is being inspected, and 重い荷物がある人は、管理人室に連絡してください. Waiting until 10 is "
+                       "impossible: 10 has already passed.",
+            },
+        ],
+        "vocab": [
+            {"word": "点検", "reading": "てんけん", "meaning": "inspection"},
+            {"word": "階段", "reading": "かいだん", "meaning": "stairs"},
+            {"word": "荷物", "reading": "にもつ", "meaning": "luggage, things to carry"},
+            {"word": "管理人", "reading": "かんりにん", "meaning": "caretaker"},
+            {"word": "連絡", "reading": "れんらく", "meaning": "contact"},
+        ],
+    },
+    {
+        "id": "n4-r15",
+        "title": "A note from the host mother",
+        "jp_title": "テーブルの上のメモ",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "マイクさんへ",
+            "今日は、仕事で帰りが遅くなりそうです。晩ご飯は冷蔵庫に入れてあるので、電子レンジで温めて食べてください。"
+            "それから、雨が降りそうなので、もし雨が降ってきたら、外に干してある洗濯物を中に入れておいてくれませんか。",
+            "よし子",
+        ],
+        "en": [
+            "To Mike,",
+            "I'll probably be home late from work today. Dinner is in the fridge, so please heat it up in the microwave and eat. "
+            "Also, it looks like rain, so if it starts raining, could you bring in the washing that's hanging outside?",
+            "Yoshiko",
+        ],
+        "questions": [
+            {
+                "q": "雨が降ってきたら、マイクさんは何をしますか。",
+                "choices": [
+                    "晩ご飯を作る。",
+                    "洗濯物を中に入れる。",
+                    "よし子さんに電話する。",
+                    "洗濯物を外に干す。",
+                ],
+                "answer": 1,
+                "why": "雨が降ってきたら、外に干してある洗濯物を中に入れておいてくれませんか. Dinner is already made.",
+            },
+        ],
+        "vocab": [
+            {"word": "冷蔵庫", "reading": "れいぞうこ", "meaning": "fridge"},
+            {"word": "温める", "reading": "あたためる", "meaning": "to heat up"},
+            {"word": "干す", "reading": "ほす", "meaning": "to hang out to dry"},
+            {"word": "洗濯物", "reading": "せんたくもの", "meaning": "washing, laundry"},
+        ],
+    },
+    {
+        "id": "n4-r16",
+        "title": "Learning to swim",
+        "jp_title": "泳げるようになった",
+        "kind": "Short passage",
+        "minutes": 2,
+        "text": [
+            "子どものころ、私は泳ぐことができませんでした。それで、去年の夏から、週に二回プールに通い始めました。"
+            "初めは5メートルも泳げませんでしたが、毎週練習して、今では500メートル泳げるようになりました。来年は、海で泳いでみたいと思っています。",
+        ],
+        "en": [
+            "As a child I couldn't swim. So last summer I started going to a pool twice a week. At first I couldn't even swim five "
+            "metres, but I practised every week, and now I can swim 500 metres. Next year I'd like to try swimming in the sea.",
+        ],
+        "questions": [
+            {
+                "q": "この人について、正しいものはどれですか。",
+                "choices": [
+                    "子どものころから、泳ぐのが得意だった。",
+                    "去年から、プールで練習している。",
+                    "今は、5メートルしか泳げない。",
+                    "もう、海で泳いだことがある。",
+                ],
+                "answer": 1,
+                "why": "去年の夏から、週に二回プールに通い始めました. They couldn't swim as a child, can now swim 500 m, and the sea is "
+                       "next year's plan.",
+            },
+        ],
+        "vocab": [
+            {"word": "泳ぐ", "reading": "およぐ", "meaning": "to swim"},
+            {"word": "通う", "reading": "かよう", "meaning": "to go regularly"},
+            {"word": "初め", "reading": "はじめ", "meaning": "the beginning, at first"},
+            {"word": "練習", "reading": "れんしゅう", "meaning": "practice"},
+        ],
+    },
+    {
+        "id": "n4-r17",
+        "title": "Bicycles at the station",
+        "jp_title": "駅前の自転車",
+        "kind": "Medium passage",
+        "minutes": 4,
+        "text": [
+            "私の町では、去年から、駅前に自転車を止めることができなくなりました。前は、たくさんの人が駅前に自転車を止めていたので、"
+            "道が狭くなって、歩く人が困っていたからです。",
+            "今は、駅から少し離れたところに、大きい自転車置き場ができました。お金が一日100円かかりますが、屋根があって、雨の日も自転車がぬれないので、便利です。",
+            "でも、駅まで歩く時間が長くなったので、朝は前より10分早く家を出なければなりません。私は少し不便になったと思っていますが、"
+            "駅前がきれいになってよかったと言う人も多いです。",
+        ],
+        "en": [
+            "In my town, since last year, you can't park bicycles in front of the station any more. Before, lots of people parked "
+            "their bikes there, so the road got narrow and people on foot had trouble.",
+            "Now there's a big bicycle park a little way from the station. It costs 100 yen a day, but it has a roof, so bikes don't "
+            "get wet on rainy days, which is handy.",
+            "But it takes longer to walk to the station, so in the morning I have to leave home ten minutes earlier than before. "
+            "I think it's become a bit less convenient, but many people say it's good that the area in front of the station is tidy now.",
+        ],
+        "questions": [
+            {
+                "q": "駅前に自転車を止めることができなくなったのは、どうしてですか。",
+                "choices": [
+                    "自転車をぬすまれる人が多かったから",
+                    "歩く人が困っていたから",
+                    "自転車置き場が高かったから",
+                    "駅前に新しい店ができたから",
+                ],
+                "answer": 1,
+                "why": "道が狭くなって、歩く人が困っていたからです: the parked bikes narrowed the road for people on foot.",
+            },
+            {
+                "q": "この人は、今、朝どうしていますか。",
+                "choices": [
+                    "前より10分早く家を出ている。",
+                    "駅までバスで行っている。",
+                    "駅前に自転車を止めている。",
+                    "前より10分遅く家を出ている。",
+                ],
+                "answer": 0,
+                "why": "駅まで歩く時間が長くなったので、朝は前より10分早く家を出なければなりません.",
+            },
+        ],
+        "vocab": [
+            {"word": "止める", "reading": "とめる", "meaning": "to park, stop"},
+            {"word": "離れる", "reading": "はなれる", "meaning": "to be away from"},
+            {"word": "置き場", "reading": "おきば", "meaning": "place to keep things (自転車置き場: bicycle park)"},
+            {"word": "屋根", "reading": "やね", "meaning": "roof"},
+            {"word": "不便", "reading": "ふべん", "meaning": "inconvenient"},
+        ],
+    },
+    {
+        "id": "n4-r18",
+        "title": "My first part-time job in Japan",
+        "jp_title": "初めてのアルバイト",
+        "kind": "Medium passage",
+        "minutes": 4,
+        "text": [
+            "私は、先月から、大学の近くのパン屋でアルバイトをしています。日本でアルバイトをするのは初めてなので、最初はとても緊張しました。",
+            "一番難しかったのは、敬語です。お客さんに「いらっしゃいませ」や「少々お待ちください」と言うのですが、なかなか上手に言えませんでした。"
+            "店長が何度も練習させてくれたので、今は前より自然に言えるようになりました。",
+            "アルバイトを始めてから、日本語が上手になりましたし、日本人の友達もできました。これからも続けたいと思っています。",
+        ],
+        "en": [
+            "Since last month I've been working part-time at a bakery near my university. It's my first part-time job in Japan, so "
+            "at first I was very nervous.",
+            "The hardest thing was polite language. I say things like \"Welcome\" and \"Please wait a moment\" to customers, but I "
+            "just couldn't say them well. The manager let me practise again and again, so now I can say them more naturally than before.",
+            "Since I started the job, my Japanese has got better and I've made Japanese friends too. I'd like to keep it up.",
+        ],
+        "questions": [
+            {
+                "q": "この人は、アルバイトで何が一番難しかったと言っていますか。",
+                "choices": ["パンを作ること", "敬語を使うこと", "お客さんが多いこと", "朝早く起きること"],
+                "answer": 1,
+                "why": "一番難しかったのは、敬語です.",
+            },
+            {
+                "q": "この人は、今どうですか。",
+                "choices": [
+                    "まだ、敬語が全然言えない。",
+                    "前より自然に、敬語が言えるようになった。",
+                    "アルバイトをやめたいと思っている。",
+                    "店長に、敬語を教えている。",
+                ],
+                "answer": 1,
+                "why": "今は前より自然に言えるようになりました, and they want to keep working there (続けたい).",
+            },
+        ],
+        "vocab": [
+            {"word": "緊張", "reading": "きんちょう", "meaning": "nervousness"},
+            {"word": "敬語", "reading": "けいご", "meaning": "polite language"},
+            {"word": "店長", "reading": "てんちょう", "meaning": "shop manager"},
+            {"word": "自然", "reading": "しぜん", "meaning": "natural"},
+            {"word": "続ける", "reading": "つづける", "meaning": "to continue"},
+        ],
+    },
+    {
+        "id": "n4-r19",
+        "title": "Japanese classes",
+        "jp_title": "日本語教室のお知らせ",
+        "kind": "Information search",
+        "minutes": 4,
+        "text": [
+            "市民センター　日本語教室のお知らせ",
+            "①初級クラス\n・月曜日・木曜日　午前10時〜11時半\n・1か月　2,000円",
+            "②中級クラス\n・火曜日・金曜日　午後7時〜8時半\n・1か月　2,500円",
+            "③会話クラス\n・土曜日　午後2時〜4時\n・1回　500円（予約はいりません）",
+            "※①と②は、始まる三日前までに、電話かメールで申し込んでください。\n※教科書は、センターで1冊1,000円で買えます。",
+        ],
+        "en": [
+            "Community Centre: Japanese classes",
+            "1. Beginner class\n- Mondays and Thursdays, 10 to 11:30 a.m.\n- 2,000 yen a month",
+            "2. Intermediate class\n- Tuesdays and Fridays, 7 to 8:30 p.m.\n- 2,500 yen a month",
+            "3. Conversation class\n- Saturdays, 2 to 4 p.m.\n- 500 yen a session (no booking needed)",
+            "* For 1 and 2, apply by phone or email at least three days before they start.\n* Textbooks can be bought at the "
+            "centre for 1,000 yen each.",
+        ],
+        "questions": [
+            {
+                "q": "アナさんは、月曜日から金曜日まで、朝9時から夜8時まで仕事があります。アナさんが出られるクラスはどれですか。",
+                "choices": ["①", "②", "③", "②と③"],
+                "answer": 2,
+                "why": "① is on weekday mornings, and ② starts at 7 p.m., before her work ends at 8. Only ③, on Saturdays, fits.",
+            },
+            {
+                "q": "このお知らせについて、正しいものはどれですか。",
+                "choices": [
+                    "会話クラスは、予約しなければならない。",
+                    "中級クラスは、1か月2,000円だ。",
+                    "初級クラスは、電話かメールで申し込む。",
+                    "教科書は、ただでもらえる。",
+                ],
+                "answer": 2,
+                "why": "①と②は…電話かメールで申し込んでください. The conversation class needs no booking, the intermediate class "
+                       "is 2,500 yen, and textbooks cost 1,000 yen.",
+            },
+        ],
+        "vocab": [
+            {"word": "初級", "reading": "しょきゅう", "meaning": "beginner level"},
+            {"word": "中級", "reading": "ちゅうきゅう", "meaning": "intermediate level"},
+            {"word": "予約", "reading": "よやく", "meaning": "booking"},
+            {"word": "申し込む", "reading": "もうしこむ", "meaning": "to apply"},
+        ],
+    },
+    {
+        "id": "n4-r20",
+        "title": "Bicycle hire",
+        "jp_title": "レンタサイクルのご案内",
+        "kind": "Information search",
+        "minutes": 4,
+        "text": [
+            "レンタサイクルのご案内",
+            "・料金　2時間まで　500円\n　　　　1日　1,200円（朝9時〜夕方6時）",
+            "・電動自転車は、上の料金に300円たしてください。",
+            "・自転車を借りるときは、パスポートか免許証を見せてください。",
+            "・夕方6時までに返してください。遅れたときは、1時間300円かかります。",
+        ],
+        "en": [
+            "Bicycle hire: information",
+            "- Prices: up to 2 hours, 500 yen\n          a whole day, 1,200 yen (9 a.m. to 6 p.m.)",
+            "- For electric bikes, add 300 yen to the prices above.",
+            "- When you hire a bike, please show your passport or driving licence.",
+            "- Please return bikes by 6 p.m. If you're late, it costs 300 yen an hour.",
+        ],
+        "questions": [
+            {
+                "q": "王さんは、朝10時から午後4時まで、普通の自転車を借りたいです。いくらかかりますか。",
+                "choices": ["500円", "1,200円", "1,500円", "1,800円"],
+                "answer": 1,
+                "why": "Six hours is more than the 2-hour price covers, so it's the whole-day price: 1,200 yen.",
+            },
+            {
+                "q": "林さんは、電動自転車を1時間半借りました。いくら払いますか。",
+                "choices": ["300円", "500円", "800円", "1,500円"],
+                "answer": 2,
+                "why": "An hour and a half is within 2時間まで (500 yen), plus 300 yen for an electric bike: 800 yen.",
+            },
+        ],
+        "vocab": [
+            {"word": "料金", "reading": "りょうきん", "meaning": "charge, fee"},
+            {"word": "電動", "reading": "でんどう", "meaning": "electric"},
+            {"word": "借りる", "reading": "かりる", "meaning": "to hire, borrow"},
+            {"word": "遅れる", "reading": "おくれる", "meaning": "to be late"},
         ],
     },
     {
