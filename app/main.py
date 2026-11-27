@@ -5,7 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from . import (chat_api, deck_api, furigana, kana_api, kanji_api, lessons_api, listening_api, progress_api, quiz_api,
-               reading_api, speech_api, tts, tts_api)
+               reading_api, speech_api, tts, tts_api, words_api)
 from .config import STATIC_DIR
 from .db import init_db
 
@@ -42,6 +42,7 @@ app.include_router(tts_api.router)
 app.include_router(kanji_api.router)
 app.include_router(reading_api.router)
 app.include_router(listening_api.router)
+app.include_router(words_api.router)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 

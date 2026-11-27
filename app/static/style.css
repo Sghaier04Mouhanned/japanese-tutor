@@ -90,8 +90,8 @@ select, input, textarea { color-scheme: dark; }
 }
 .nav a:hover { color: var(--text); background: rgba(255, 255, 255, .05); }
 .nav a.active { color: var(--text); background: rgba(255, 255, 255, .07); }
-.topbar-end { display: flex; justify-content: flex-end; gap: 1.25rem; }
-.topbar-end a { color: var(--muted-page); text-decoration: none; font-size: .92rem; font-weight: 500; padding: .45rem 0; }
+.topbar-end { display: flex; justify-content: flex-end; gap: 1.1rem; }
+.topbar-end a { color: var(--muted-page); text-decoration: none; font-size: .92rem; font-weight: 500; padding: .45rem 0; white-space: nowrap; }
 .topbar-end a:hover, .topbar-end a.active { color: var(--text); }
 .topbar-end a.active { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 6px; }
 .badge {
@@ -671,6 +671,27 @@ kbd {
 .missed li { margin-bottom: .4rem; font-size: .9rem; }
 @media (max-width: 640px) { .quiz-choices { grid-template-columns: 1fr; } }
 
+/* words (JLPT word lists) */
+.word-tools { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-bottom: 1rem; }
+.word-search {
+  flex: 1 1 14rem; min-width: 0; padding: .5rem .75rem; border-radius: 9px; font: inherit; font-size: .92rem;
+  background: var(--deep); color: var(--text); border: 1px solid var(--border);
+}
+.word-search:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.word-row { color: inherit; text-decoration: none; border-radius: 8px; }
+.word-row:hover { background: var(--surface-2); }
+.word-note { color: var(--muted); }
+.word-detail-head { display: flex; align-items: center; gap: .75rem; margin-bottom: .25rem; }
+.word-big { font-family: var(--jp); font-size: 3rem; line-height: 1.6; }
+.word-big rt { font-size: .35em; color: var(--muted); }
+.word-detail-reading { font-family: var(--jp); color: var(--muted); font-size: 1.1rem; margin-bottom: .5rem; }
+.example-source { grid-column: 1; font-size: .78rem; color: var(--muted); }
+.tag-level { color: var(--accent); background: var(--accent-soft); }
+.word-level { font-size: .8rem; margin-top: .2rem; }
+.review-example { margin: .6rem auto 0; max-width: 34rem; font-size: .95rem; }
+.review-example .jp-line { font-family: var(--jp); font-size: 1.1rem; line-height: 2; }
+.review-example .jp-line p { margin: 0; }
+
 /* notebook */
 .list { display: flex; flex-direction: column; }
 .list-row {
@@ -739,7 +760,7 @@ kbd {
 
 @media (max-width: 640px) {
   .nav a { padding: .4rem .6rem; font-size: .88rem; flex: none; }
-  /* Four links on the right: tighter, and scrollable rather than widening the page. */
+  /* Five links on the right: tighter, and scrollable rather than widening the page. */
   .topbar-end { gap: .8rem; min-width: 0; overflow-x: auto; scrollbar-width: none; }
   .topbar-end a { font-size: .85rem; flex: none; }
   .container { padding: .75rem .75rem 2.5rem; }

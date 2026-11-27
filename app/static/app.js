@@ -259,6 +259,7 @@ const views = {
   lessons: renderLessons,
   quiz: renderQuiz,
   kanji: renderKanji,
+  words: renderWords,
   reading: renderReading,
   listening: renderListening,
 };
@@ -649,7 +650,9 @@ async function renderProgress() {
         `${known(data.kanji[lvl])} known · ${data.kanji[lvl].total} total`)),
     ...Object.entries(data.reading || {}).map(([lvl, r]) => meter(`${lvl} reading passages`, r.done, r.total, `${r.done} / ${r.total} read`)),
     ...Object.entries(data.listening || {}).map(([lvl, r]) => meter(`${lvl} listening items`, r.done, r.total, `${r.done} / ${r.total} done`)),
-    meter("Vocabulary (≈800 for N5)", known(data.vocab), data.vocab.target, `${known(data.vocab)} known · ${data.vocab.saved} saved`),
+    ...Object.keys(data.words || {}).map(lvl =>
+      meter(`Words (${lvl} list)`, known(data.words[lvl]), data.words[lvl].total,
+        `${known(data.words[lvl])} known · ${data.words[lvl].total} total`)),
     ...quizMeters);
 
   const draw = () => {
@@ -1030,6 +1033,10 @@ async function renderReview() {
             el("span", { class: "word-reading", lang: "ja", style: "font-size:1.3rem" }, card.reading),
             speakButton(card.reading)),
           el("div", { class: "meaning" }, card.meaning),
+          card.level && el("div", { class: "muted word-level" }, `JLPT ${card.level} word`),
+          card.example && el("div", { class: "review-example" },
+            richEl("div", { class: "jp-line", lang: "ja" }, card.example.segments),
+            el("div", { class: "muted" }, card.example.en)),
           readingOk === false
             ? el("div", { class: "btn-row" }, el("button", { class: "btn btn-primary", type: "button",
                 onclick: () => grade("again") }, "Continue"))
@@ -1927,6 +1934,153 @@ async function renderListeningItem(body, id) {
     after);
   window.scrollTo(0, 0);
   prepare();
+}
+
+/* ================= words (JLPT word lists) ================= */
+
+const WORD_LEVELS = {
+  N5: "Closest to JLPT N5: about 700 everyday words, the base of everything else",
+  N4: "Closest to JLPT N4: about 670 more everyday words",
+  N3: "Closest to JLPT N3: about 2,100 words for daily life, simple news and short essays",
+  N2: "Closest to JLPT N2: about 1,800 words for articles, notices and opinions",
+  N1: "Closest to JLPT N1: about 2,700 words for dense, abstract and formal Japanese",
+};
+const WORDS_PAGE = 150;  // rows drawn at a time; "Show more" adds the next batch
+
+// A word with furigana over its kanji, from the list's own reading.
+function wordRuby(word, parts, attrs = {}) {
+  const span = el("span", { lang: "ja", ...attrs });
+  span.innerHTML = parts
+    ? parts.map(p => p.r ? `<ruby>${escapeHtml(p.t)}<rt>${escapeHtml(p.r)}</rt></ruby>` : escapeHtml(p.t)).join("")
+    : escapeHtml(word);
+  return span;
+}
+
+function wordRow(w) {
+  return el("a", { class: "list-row word-row", href: `#words/${w.id}` },
+    el("i", { class: `dot ${w.status}`, title: w.status === "locked" ? "not studied" : w.status }),
+    el("div", { class: "list-main" },
+      el("div", { class: "list-title", lang: "ja" }, w.word, w.reading !== w.word && el("small", {}, w.reading)),
+      el("div", { class: "list-sub" }, w.meaning, w.note && el("span", { class: "word-note", lang: "ja" }, ` · ${w.note}`))),
+    w.lesson ? el("span", { class: "tag", title: "Taught in a lesson" }, "lesson") : el("span"));
+}
+
+async function renderWords() {
+  const body = $("#words-body");
+  if (routeArg) return renderWordDetail(body, decodeURIComponent(routeArg));
+  const level = prefs.get("words.level", "N5");
+  const filter = prefs.get("words.filter", "all");
+  const { words: items } = await api.get(`/api/words?level=${level}`);
+  const known = items.filter(w => w.status === "known" || w.status === "mastered").length;
+  const studying = items.filter(w => w.status !== "locked").length;
+  let query = "";
+  let meaningStart = null;  // English matches only at the start of a word: "eat" is not "weather"
+  let shown = WORDS_PAGE;
+
+  const tabs = el("div", { class: "segmented" }, Object.keys(WORD_LEVELS).map(lvl =>
+    el("button", { type: "button", class: lvl === level ? "active" : "",
+      onclick: () => { prefs.set("words.level", lvl); renderWords(); } }, lvl)));
+  const filters = el("div", { class: "segmented" }, [["all", "All"], ["new", "Not studied"], ["studying", "Studying"]].map(([f, label]) =>
+    el("button", { type: "button", class: f === filter ? "active" : "",
+      onclick: () => { prefs.set("words.filter", f); renderWords(); } }, label)));
+  const learnBtn = el("button", { class: "btn btn-primary", type: "button", disabled: studying === items.length },
+    el("span", { class: "arrow" }, "Add next 10 to reviews"));
+  learnBtn.addEventListener("click", async () => {
+    learnBtn.disabled = true;
+    const { added } = await api.post("/api/words/learn-next", { level, count: 10 });
+    refreshBadge();
+    await renderWords();
+    if (added.length) $("#words-added").textContent = `Added ${added.join("、")} to your reviews.`;
+  });
+  const search = el("input", { class: "word-search", type: "search", placeholder: "Search a word, reading or meaning",
+    "aria-label": "Search the list", autocomplete: "off", spellcheck: "false" });
+  const list = el("div", { class: "list word-list" });
+  const more = el("button", { class: "btn btn-ghost", type: "button" });
+
+  const matches = w => {
+    if (filter === "new" && w.status !== "locked") return false;
+    if (filter === "studying" && w.status === "locked") return false;
+    return !query || w.word.includes(query) || w.reading.includes(query) || meaningStart.test(w.meaning);
+  };
+  function draw() {
+    const visible = items.filter(matches);
+    list.replaceChildren(...visible.slice(0, shown).map(wordRow));
+    if (!visible.length) list.append(el("p", { class: "muted" },
+      query ? `No words match in the ${level} list. Try another level.` : "No words match."));
+    more.hidden = visible.length <= shown;
+    more.textContent = `Show more (${visible.length - shown} left)`;
+  }
+  search.addEventListener("input", () => {
+    query = search.value.trim().toLowerCase();
+    meaningStart = new RegExp(`\\b${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`, "i");
+    shown = WORDS_PAGE;
+    draw();
+  });
+  more.addEventListener("click", () => { shown += WORDS_PAGE; draw(); });
+
+  body.replaceChildren(
+    el("div", { class: "panel-head" },
+      el("h2", {}, "Words"),
+      tabs),
+    el("p", { class: "muted", style: "margin-top:-.4rem" }, WORD_LEVELS[level],
+      ". Words your lessons teach come first, then the most common. Tap a word for example sentences."),
+    el("div", { class: "progress-line" },
+      el("div", { class: "progress" }, el("div", { class: "progress-fill", style: `width:${items.length ? known / items.length * 100 : 0}%` })),
+      el("span", {}, `${known} / ${items.length} known · ${studying} studying`)),
+    el("div", { class: "kanji-actions" }, learnBtn,
+      el("span", { class: "muted", id: "words-added", role: "status" })),
+    el("div", { class: "word-tools" }, filters, search),
+    el("div", { class: "legend" },
+      el("span", {}, el("i", { class: "dot locked" }), "Not studied"),
+      el("span", {}, el("i", { class: "dot learning" }), "Learning"),
+      el("span", {}, el("i", { class: "dot known" }), "Known"),
+      el("span", {}, el("i", { class: "dot mastered" }), "Mastered")),
+    list,
+    el("div", { class: "btn-row" }, more),
+    el("p", { class: "credit" }, "Word lists: Jonathan Waller's JLPT lists (tanos.co.uk, CC BY), via open-anki-jlpt-decks (MIT). There has been no official JLPT word list since 2010."),
+  );
+  draw();
+}
+
+async function renderWordDetail(body, id) {
+  const w = await api.get(`/api/words/${encodeURIComponent(id)}`);
+  prefetchSpeech([w.reading, ...w.examples.map(e => e.jp)]);
+  const add = el("button", { class: "btn btn-primary", type: "button", disabled: w.status !== "locked" },
+    w.status === "locked" ? el("span", { class: "arrow" }, "Add to reviews") : "In your reviews ✓");
+  add.addEventListener("click", async () => {
+    add.disabled = true;
+    await api.post(`/api/words/${encodeURIComponent(id)}/learn`, {});
+    add.textContent = "In your reviews ✓";
+    refreshBadge();
+  });
+
+  body.replaceChildren(
+    el("div", { class: "lesson-head" },
+      el("a", { class: "back", href: "#words" }, "← All words"),
+      el("div", { class: "lesson-level" }, `${w.level} · ${w.position} / ${w.level_size}`)),
+    el("div", { class: "word-detail" },
+      el("div", { class: "word-detail-head" },
+        wordRuby(w.word, w.parts, { class: "word-big" }),
+        speakButton(w.reading)),
+      !w.parts && w.reading !== w.word && el("div", { class: "word-detail-reading", lang: "ja" }, w.reading),
+      el("h2", { class: "kanji-meaning" }, w.meaning),
+      w.note && el("p", { class: "muted", lang: "ja" }, w.note),
+      w.lesson_label && el("p", { class: "muted" }, "Taught in ", el("a", { href: `#lessons/${w.lesson}` }, w.lesson_label)),
+      el("div", { class: "btn-row", style: "justify-content:flex-start" }, add)),
+    el("div", { class: "lesson-section" },
+      el("h3", {}, "Example sentences"),
+      w.examples.length
+        ? w.examples.map(e => el("div", { class: "example" },
+            richEl("div", { class: "jp-line", lang: "ja" }, e.segments),
+            el("div", { class: "en" }, e.en),
+            el("a", { class: "example-source", href: e.href }, e.source),
+            el("div", { class: "example-actions" }, speakButton(e.jp))))
+        : el("p", { class: "muted" }, "None of your lessons or listening scripts use this word yet.")),
+    el("div", { class: "lesson-actions" },
+      w.prev && el("a", { class: "btn", href: `#words/${w.prev}` }, "← Previous word"),
+      w.next && el("a", { class: "btn", href: `#words/${w.next}` }, "Next word →")),
+  );
+  window.scrollTo(0, 0);
 }
 
 /* ================= kanji ================= */
@@ -2870,6 +3024,7 @@ async function openWordPopup(span, seg, next) {
           el("span", { class: "word-main", lang: "ja" }, main),
           reading && el("span", { class: "word-reading", lang: "ja" }, reading),
           entry.common && el("span", { class: "tag" }, "common"),
+          entry.jlpt && el("span", { class: "tag tag-level", title: `On the JLPT ${entry.jlpt} word list` }, entry.jlpt),
           speakButton(reading || main)),
         el("ol", { class: "senses" }, entry.senses.slice(0, 4).map(s =>
           el("li", {},

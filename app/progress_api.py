@@ -7,14 +7,12 @@ from datetime import date, timedelta
 
 from fastapi import APIRouter
 
-from . import kana, kanji, lessons, listening, reading, srs
+from . import kana, kanji, lessons, listening, reading, srs, words, words_api
 from .db import connect
 
 router = APIRouter(prefix="/api/progress", tags=["progress"])
 
 ACTIVITY_DAYS = 30
-# Commonly cited size of the N5 vocabulary; a rough target, not an official list.
-N5_VOCAB_TARGET = 800
 
 
 def _per_day(conn, sql: str, since: float) -> dict[str, int]:
@@ -54,6 +52,7 @@ def progress():
                LEFT JOIN deck_cards c ON c.kind = 'mistake' AND c.ref_id = m.id""").fetchall()
         done_ids = {r[0] for r in conn.execute("SELECT lesson_id FROM lesson_progress WHERE status = 'done'")}
         kanji_rows = conn.execute("SELECT kanji, state, stability FROM kanji_cards").fetchall()
+        word_status = words_api.statuses(conn)
 
         all_days = {r[0] for r in conn.execute(
             """SELECT date(t, 'unixepoch', 'localtime') FROM (
@@ -93,7 +92,16 @@ def progress():
 
     kana_total = sum(len(g["items"]) for g in kana.groups("hiragana"))
     scripts = {s: counts([r for r in kana_rows if r["script"] == s]) | {"total": kana_total} for s in kana.SCRIPTS}
-    vocab = counts(vocab_rows) | {"saved": len(vocab_rows), "target": N5_VOCAB_TARGET}
+    vocab = counts(vocab_rows) | {"saved": len(vocab_rows)}
+    # Words per JLPT list (app/words.py), whichever way they were saved.
+    word_progress = {}
+    for lvl in words.LEVELS:
+        members = words.by_level(lvl)
+        out = {"learning": 0, "known": 0, "mastered": 0, "total": len(members)}
+        for w in members:
+            if w["id"] in word_status:
+                out[word_status[w["id"]]] += 1
+        word_progress[lvl] = out
     mistakes = counts(mistake_rows) | {"total": len(mistake_rows)}
 
     # Kanji per JLPT list (only when the kanji data is installed).
@@ -115,6 +123,7 @@ def progress():
                           "total": sum(1 for les in lessons.LESSONS if lessons.level(les) == lvl)}
                     for lvl in lessons.LEVELS},
         "vocab": vocab,
+        "words": word_progress,
         "mistakes": mistakes,
         "kanji": kanji_progress,
         "reading": {lvl: {"done": sum(1 for p in reading.PASSAGES if reading.level(p) == lvl and p["id"] in read_ids),

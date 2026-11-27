@@ -15,7 +15,8 @@ KANJI_SOURCES = ("studied", "N5", "N4", "N3", "N2", "N1", "lessons")
 
 
 def _saved_words(conn) -> list[dict]:
-    return [dict(r) for r in conn.execute("SELECT word, reading, meaning FROM vocab")]
+    # Affixes from the JLPT lists (～円, お～) make odd quiz questions on their own.
+    return [dict(r) for r in conn.execute("SELECT word, reading, meaning FROM vocab WHERE word NOT LIKE '%～%'")]
 
 
 def _kanji_pool(conn, source: str) -> tuple[list[dict], list[dict]]:

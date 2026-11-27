@@ -5,7 +5,7 @@ import time
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from . import checks, dictionary, srs
+from . import checks, dictionary, furigana, srs, words
 from .db import connect
 from .srs import Rating
 
@@ -42,7 +42,8 @@ def dict_lookup(q: str, k: str | None = None, next: str = "", p: str | None = No
     return {
         "available": True,
         "matched": matched,
-        "entries": [{**e, "senses": e["senses"][:5], "saved": e["id"] in saved} for e in entries[:3]],
+        "entries": [{**e, "senses": e["senses"][:5], "saved": e["id"] in saved, "jlpt": words.level_of_entry(e["id"])}
+                    for e in entries[:3]],
     }
 
 
@@ -153,7 +154,7 @@ def deck_review(limit: int = 50):
     with connect() as conn:
         rows = conn.execute(
             """SELECT c.id, c.kind, c.ref_id,
-                      v.word, v.reading, v.meaning,
+                      v.word, v.reading, v.meaning, v.entry_id,
                       m.wrong, m.correct, m.note
                FROM deck_cards c
                LEFT JOIN vocab v ON c.kind = 'vocab' AND v.id = c.ref_id
@@ -168,11 +169,22 @@ def deck_review(limit: int = 50):
     for r in rows:
         if r["kind"] == "vocab" and r["word"]:
             cards.append({"id": r["id"], "kind": "vocab", "word": r["word"], "reading": r["reading"],
-                          "meaning": r["meaning"], "ask_reading": _has_kanji(r["word"])})
+                          "meaning": r["meaning"], "ask_reading": _has_kanji(r["word"]),
+                          **_word_context(r["word"], r["reading"], r["entry_id"])})
         elif r["kind"] == "mistake" and r["wrong"]:
             cards.append({"id": r["id"], "kind": "mistake", "wrong": r["wrong"],
                           "correct": r["correct"], "note": r["note"]})
     return {"cards": cards, "due_count": count, "next_due": next_due}
+
+
+def _word_context(word: str, reading: str, entry_id: int | None) -> dict:
+    """The JLPT level and one example sentence, shown with a word's answer."""
+    w = words.match(word, reading, entry_id)
+    if w is None:
+        return {"level": None, "example": None}
+    found = words.examples(w, 1)
+    example = {**found[0], "segments": furigana.annotate(found[0]["jp"])} if found else None
+    return {"level": w["level"], "example": example}
 
 
 class ReadingCheck(BaseModel):
@@ -182,7 +194,7 @@ class ReadingCheck(BaseModel):
 
 @router.post("/deck/check-reading")
 def check_reading(body: ReadingCheck):
-    return {"correct": checks.same_reading(body.reading, body.answer)}
+    return {"correct": checks.same_reading(body.reading.strip("～"), body.answer)}  # ～円 is read en
 
 
 class DeckAnswer(BaseModel):

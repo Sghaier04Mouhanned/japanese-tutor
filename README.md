@@ -31,9 +31,24 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
 - Runs on your own machine (faster-whisper, CPU); compares by sound, so 学校 = がっこう
 
 **Progress dashboard (Home)**
-- JLPT N5 building blocks: kana, lessons, vocabulary toward ~800 words, quiz accuracy per section
+- JLPT building blocks: kana, lessons, words and kanji per level list, reading and listening, quiz
+  accuracy per section
 - Last 30 days of study (kana, words & mistakes, quizzes) with hover details and a table view
 - Quiz score trend; study days, total reviews and quizzes
+
+**JLPT word lists (Words in the top bar)**
+- About 8,000 words by level: N5 (731), N4 (667), N3 (about 2,100), N2 (about 1,750) and N1 (about
+  2,700), from Jonathan Waller's JLPT lists (CC BY) via open-anki-jlpt-decks (MIT), in
+  `app/jlpt_words.tsv`. There has been no official word list since 2010, so these are close guides
+- Cleaned up for learners: spellings matched to JMdict (終る → 終わる), words usually written in kana
+  shown in kana (綺麗 → きれい, with the kanji as a note), and everyday greetings moved to N5
+- Words your lessons teach come first, then the most common; search by word, reading or meaning
+- Add the next 10 to your reviews, or one at a time; words you saved from lessons or the dictionary
+  count too (a lesson's 行きます is the list's 行く)
+- Each word has up to three example sentences from the lessons, listening scripts and reading
+  passages, matched by spelling and reading (四人 is not ～人); review cards show one with the answer
+- The dictionary popup shows a word's JLPT level, and the dashboard tracks each level list
+- `python -m app.words` checks the lists and counts the words with example sentences
 
 **Kanji study**
 - Lists closest to N5 (103), N4 (181), N3 (about 370), N2 (about 370) and N1 (about 1,110), plus
@@ -96,7 +111,7 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
 **Dictionary, notebook and reviews**
 - Click any Japanese word (chat or lessons) to look it up in JMdict and save it
 - Sensei logs the mistakes it corrects; they come back as review cards
-- The Review tab covers kana, saved words (typed readings checked strictly) and mistakes
+- The Review tab covers kana, saved words (typed readings checked strictly), mistakes and kanji
 - Notebook lists your saved words and mistakes
 
 **AI tutor chat**
@@ -217,6 +232,7 @@ app/
   checks.py     kana vs romaji consistency check
   lessons.py    the hand-written N5 lessons (+ lessons_api.py)
   dictionary.py JMdict import and lookup
+  words.py      JLPT word lists (jlpt_words.tsv) and example sentences (+ words_api.py)
   deck_api.py   saved words, mistakes and their reviews
   quiz.py       JLPT-style question generator (+ quiz_api.py)
   speech.py     Whisper transcription and shadowing comparison (+ speech_api.py)

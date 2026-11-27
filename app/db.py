@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS vocab (
     word        TEXT    NOT NULL,
     reading     TEXT    NOT NULL,   -- hiragana/katakana
     meaning     TEXT    NOT NULL,
-    source      TEXT    NOT NULL,   -- 'chat' | 'lesson'
+    source      TEXT    NOT NULL,   -- 'chat' | 'lesson' | 'reading' | 'listening' | 'jlpt' (word lists)
     created_at  REAL    NOT NULL,
     UNIQUE (word, reading)
 );
