@@ -15,6 +15,13 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
   with a time estimate and a streak of fully finished days
 - The Home button leads to the next open step
 
+**Backups (Home → Your data)**
+- All progress lives in `data/tutor.db`; a copy goes to `data/backups` each day the app runs
+  (the last 14 are kept)
+- Download a backup to keep elsewhere, and restore from a downloaded file or any daily copy
+- Restoring saves your current progress first (the last 5 of these are kept), so it can be undone;
+  files that aren't a healthy tutor database are refused, and older backups get the newer tables
+
 **JLPT N5 lessons**
 - 30 hand-written lessons covering the core N5 grammar: greetings, self-introduction, です,
   questions, これ/それ/あれ, の, polite verbs, past tense, particles, time, い- and な-adjectives,
@@ -283,6 +290,7 @@ app/
   mock.py       timed mock tests: grammar questions, test builder and scoring (+ mock_api.py)
   missed_api.py reading and listening questions whose latest answer was wrong
   plan_api.py   today's study plan on Home
+  backup_api.py daily copies of tutor.db, download and restore
   speech.py     Whisper transcription and shadowing comparison (+ speech_api.py)
   tts.py        VOICEVOX engine control and cached speech synthesis (+ tts_api.py)
   kanji.py      kanji index from KANJIDIC2 + KanjiVG strokes (+ kanji_api.py)

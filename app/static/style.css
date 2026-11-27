@@ -727,6 +727,16 @@ kbd {
   .plan-title .jp { display: block; margin: 0; }
 }
 
+/* backups (home) */
+.backup-actions { justify-content: flex-start; margin-top: .9rem; }
+.backup-list { margin-top: .9rem; }
+.backup-list .list-row { grid-template-columns: 1fr auto; }
+.backup-list .list-title { font-family: var(--ui); font-size: 1rem; }
+.backup-status { min-height: 1.4rem; margin-top: .6rem; font-weight: 600; }
+.backup-status.ok { color: var(--ok); }
+.backup-status.bad { color: var(--bad); }
+.backup-folder { font-family: var(--mono); font-size: .78rem; overflow-wrap: anywhere; }
+
 /* mock tests */
 .mock-grid { margin-top: 1rem; }
 .mock-card { display: flex; flex-direction: column; gap: .45rem; cursor: default; }

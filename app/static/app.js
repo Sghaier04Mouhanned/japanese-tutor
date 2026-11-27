@@ -425,6 +425,7 @@ async function renderHome() {
   $("#hero-primary").href = due ? "#review" : "#lessons";
   $("#hero-primary-label").textContent = due ? `Start review (${due})` : "Continue learning";
   renderPlan().catch(showError);
+  renderBackups().catch(showError);
   setState("state-due", due ? `${due} due` : "all clear", due ? "todo" : "ok");
   setState("state-streak", stats.streak_days ? "on track" : "start today", stats.streak_days ? "ok" : "todo");
   setState("state-today", stats.reviews_today ? "studied" : "not yet", stats.reviews_today ? "ok" : "todo");
@@ -518,6 +519,80 @@ async function renderPlan() {
       : el("p", { class: "hint" },
           "Steps tick themselves off as you study, and the plan starts fresh each day.",
           streak && ` Plan streak: ${streak}.`),
+  );
+}
+
+/* ================= backups ================= */
+
+function fileSize(bytes) {
+  return bytes < 1024 * 1024 ? `${Math.max(1, Math.round(bytes / 1024))} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+}
+
+async function renderBackups() {
+  const data = await api.get("/api/backup");
+  const panel = $("#backup-panel");
+  const status = el("p", { class: "backup-status", role: "status" });
+  const fileInput = el("input", { type: "file", accept: ".db,application/vnd.sqlite3", hidden: true });
+
+  async function restore(label, send) {
+    if (!confirm(`Replace all your current progress with ${label}?
+
+`
+      + "Your current progress is saved to the backups folder first, so you can undo this.")) return;
+    panel.querySelectorAll("button").forEach(b => { b.disabled = true; });
+    status.className = "backup-status";
+    status.textContent = "Restoring…";
+    try {
+      await send();
+      status.className = "backup-status ok";
+      status.textContent = "Restored. Reloading…";
+      later(() => location.reload(), 800);
+    } catch (err) {
+      status.className = "backup-status bad";
+      status.textContent = err.message;
+      panel.querySelectorAll("button").forEach(b => { b.disabled = false; });
+    }
+  }
+
+  fileInput.addEventListener("change", () => {
+    const file = fileInput.files[0];
+    fileInput.value = "";
+    if (!file) return;
+    restore(`the backup "${file.name}"`, async () => {
+      const r = await fetch("/api/backup/restore", { method: "POST",
+        headers: { "Content-Type": "application/octet-stream" }, body: file });
+      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || r.statusText);
+    });
+  });
+
+  const daily = data.backups;
+  panel.replaceChildren(
+    el("div", { class: "panel-head" },
+      el("h2", {}, "Your data"),
+      el("span", { class: "muted" }, `tutor.db · ${fileSize(data.size)}`)),
+    el("p", { class: "muted" },
+      `All your progress lives in one file on this computer. A copy is saved each day you use the app (the last ${data.keep} are kept), `,
+      "and you can download one to keep somewhere safe, like a USB stick or cloud drive."),
+    el("div", { class: "btn-row backup-actions" },
+      el("a", { class: "btn btn-primary", href: "/api/backup/download", download: "" },
+        el("span", { class: "arrow" }, "Download a backup")),
+      el("button", { class: "btn", type: "button", onclick: () => fileInput.click() }, "Restore from a file…"),
+      fileInput),
+    status,
+    daily.length
+      ? el("div", { class: "list backup-list" }, daily.map(b =>
+          el("div", { class: "list-row" },
+            el("div", { class: "list-main" },
+              el("div", { class: "list-title" },
+                new Date(b.modified * 1000).toLocaleString(undefined,
+                  { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }),
+                el("small", {}, b.before_restore ? "saved before a restore" : "daily copy")),
+              el("div", { class: "list-sub" }, fileSize(b.size))),
+            el("button", { class: "btn btn-ghost", type: "button",
+              onclick: () => restore(`the copy from ${shortDate(b.date)}`,
+                () => api.post(`/api/backup/restore/${encodeURIComponent(b.name)}`)) }, "Restore"))))
+      : el("p", { class: "muted" }, "No daily copies yet."),
+    el("p", { class: "hint" }, "Daily copies are in ", el("span", { class: "backup-folder" }, data.folder), "."),
   );
 }
 

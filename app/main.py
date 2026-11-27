@@ -1,11 +1,12 @@
+import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from . import (chat_api, deck_api, furigana, kana_api, kanji_api, lessons_api, listening_api, missed_api, mock_api,
-               plan_api, progress_api, quiz_api, reading_api, speech_api, tts, tts_api, words_api)
+from . import (backup_api, chat_api, deck_api, furigana, kana_api, kanji_api, lessons_api, listening_api, missed_api,
+               mock_api, plan_api, progress_api, quiz_api, reading_api, speech_api, tts, tts_api, words_api)
 from .config import STATIC_DIR
 from .db import init_db
 
@@ -13,9 +14,11 @@ from .db import init_db
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     init_db()
+    backups = asyncio.create_task(backup_api.keep_backing_up())  # a copy of tutor.db each day
     furigana.annotate("日本")  # load the dictionary now, not on the first chat message
     await tts.start()  # VOICEVOX, if installed; it warms up in the background
     yield
+    backups.cancel()
     tts.stop()
 
 
@@ -46,6 +49,7 @@ app.include_router(words_api.router)
 app.include_router(mock_api.router)
 app.include_router(missed_api.router)
 app.include_router(plan_api.router)
+app.include_router(backup_api.router)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
