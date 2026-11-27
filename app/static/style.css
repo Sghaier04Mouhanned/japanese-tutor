@@ -692,6 +692,13 @@ kbd {
 .review-example .jp-line { font-family: var(--jp); font-size: 1.1rem; line-height: 2; }
 .review-example .jp-line p { margin: 0; }
 
+/* mistakes page */
+.missed-row { color: inherit; text-decoration: none; border-radius: 8px; }
+.missed-row:hover { background: var(--surface-2); }
+.missed-row .list-title { font-size: 1.05rem; }
+.missed-kind { font-family: var(--jp); }
+.missed-kind.listening { color: var(--accent); background: var(--accent-soft); }
+
 /* mock tests */
 .mock-grid { margin-top: 1rem; }
 .mock-card { display: flex; flex-direction: column; gap: .45rem; cursor: default; }

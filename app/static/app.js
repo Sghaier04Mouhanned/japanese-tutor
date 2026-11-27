@@ -263,6 +263,7 @@ const views = {
   words: renderWords,
   reading: renderReading,
   listening: renderListening,
+  missed: renderMissed,
 };
 
 function route() {
@@ -275,8 +276,8 @@ function route() {
   for (const section of document.querySelectorAll(".view")) {
     section.hidden = section.id !== `view-${name}`;
   }
-  // Practice lives under Kana, Listening under Reading, mock tests under Quiz.
-  const navName = { practice: "learn", listening: "reading", mock: "quiz" }[name] || name;
+  // Practice lives under Kana, Listening and Mistakes under Reading, mock tests under Quiz.
+  const navName = { practice: "learn", listening: "reading", missed: "reading", mock: "quiz" }[name] || name;
   for (const link of document.querySelectorAll(".nav a, .topbar-end a")) {
     link.classList.toggle("active", link.dataset.view === navName);
   }
@@ -1572,10 +1573,14 @@ function inlineRuby(segments) {
   return span;
 }
 
-async function renderPassage(body, id) {
+// opts (from the mistakes page): only = the one question to ask, back = the back link,
+// next() = a promise of the "next mistake" link.
+async function renderPassage(body, id, opts = {}) {
   const p = await api.get(`/api/reading/${id}`);
   const startedAt = performance.now();
-  const chosen = p.questions.map(() => null);
+  const retry = opts.only != null;
+  const shown = retry ? [opts.only] : p.questions.map((_, i) => i);
+  const chosen = shown.map(() => null);
   let checked = false;
 
   const furiganaOn = prefs.get("reading.furigana", true);
@@ -1593,13 +1598,14 @@ async function renderPassage(body, id) {
 
   const check = el("button", { class: "btn btn-primary", type: "button", disabled: true }, "Check answers");
   const summary = el("div", { role: "status" });
-  const questions = p.questions.map((q, qi) => {
+  const questions = shown.map((index, qi) => {
+    const q = p.questions[index];
     const explain = el("div");
     const buttons = q.choices.map((c, ci) =>
       el("button", { class: "quiz-choice jp reading-choice", type: "button", "aria-pressed": "false",
         onclick: () => pick(qi, ci) }, el("span", { class: "key" }, ci + 1), inlineRuby(c)));
     return { buttons, explain, node: el("div", { class: "reading-q" },
-      el("div", { class: "reading-q-head" }, el("span", { class: "reading-q-num" }, `問${qi + 1}`),
+      el("div", { class: "reading-q-head" }, el("span", { class: "reading-q-num" }, `問${index + 1}`),
         richEl("div", { class: "jp-line", lang: "ja" }, q.segments)),
       el("div", { class: "quiz-choices reading-choices" }, buttons),
       explain) };
@@ -1619,8 +1625,10 @@ async function renderPassage(body, id) {
     if (checked || chosen.includes(null)) return;
     checked = true;
     check.disabled = true;
-    const res = await api.post(`/api/reading/${id}/answers`,
-      { answers: chosen, elapsed_ms: Math.round(performance.now() - startedAt) });
+    const res = retry
+      ? await api.post(`/api/missed/reading/${id}/${opts.only}`, { answer: chosen[0] })
+      : await api.post(`/api/reading/${id}/answers`,
+        { answers: chosen, elapsed_ms: Math.round(performance.now() - startedAt) });
     res.results.forEach((r, qi) => {
       const q = questions[qi];
       q.buttons.forEach((b, i) => {
@@ -1634,7 +1642,7 @@ async function renderPassage(body, id) {
         el("div", { class: "quiz-explain" }, r.why));
     });
     const minutes = Math.max(1, Math.round((performance.now() - startedAt) / 60000));
-    summary.replaceChildren(el("p", { class: "reading-score" },
+    if (!retry) summary.replaceChildren(el("p", { class: "reading-score" },
       el("strong", {}, `${res.correct} / ${res.total} correct`), ` · ${minutes} min (suggested: about ${p.minutes} min)`));
     check.hidden = true;
     after.replaceChildren(...afterSections(res));
@@ -1664,8 +1672,9 @@ async function renderPassage(body, id) {
             el("td", {}, speakButton(v.reading))))))),
       el("div", { class: "lesson-actions" },
         addWords,
-        el("button", { class: "btn btn-ghost", type: "button", onclick: () => renderPassage(body, id) }, "↻ Try again"),
-        p.next_id && el("a", { class: "btn btn-primary", href: `#reading/${p.next_id}` }, "Next passage →")),
+        el("button", { class: "btn btn-ghost", type: "button", onclick: () => renderPassage(body, id, opts) }, "↻ Try again"),
+        opts.next ? nextSlot(opts.next())
+          : p.next_id && el("a", { class: "btn btn-primary", href: `#reading/${p.next_id}` }, "Next passage →")),
     ];
   }
 
@@ -1677,16 +1686,18 @@ async function renderPassage(body, id) {
   const after = el("div");
   page.append(
     el("div", { class: "lesson-head" },
-      el("a", { class: "back", href: "#reading" }, "← All passages"),
+      opts.back || el("a", { class: "back", href: "#reading" }, "← All passages"),
       el("div", { class: "lesson-level" }, `JLPT ${p.level} · Passage ${p.number} · ${p.kind}`),
       el("h2", {}, p.title),
       el("div", { class: "jp", lang: "ja" }, p.jp_title),
-      el("p", { class: "goal" }, `${p.questions.length} question${p.questions.length > 1 ? "s" : ""} · about ${p.minutes} minutes`)),
+      el("p", { class: "goal" }, retry
+        ? `You missed question ${opts.only + 1}${p.questions.length > 1 ? ` of ${p.questions.length}` : ""} before. Read the passage again and answer it.`
+        : `${p.questions.length} question${p.questions.length > 1 ? "s" : ""} · about ${p.minutes} minutes`)),
     el("div", { class: "reading-toolbar" }, furiganaToggle,
       el("span", { class: "muted" }, "Kanji beyond the study lists keep their furigana, as on the JLPT.")),
     text,
     el("div", { class: "lesson-section" },
-      el("h3", {}, "Questions"),
+      el("h3", {}, retry ? "Question" : "Questions"),
       questions.map(q => q.node),
       el("div", { class: "lesson-actions" }, check),
       summary),
@@ -1713,11 +1724,16 @@ const LISTENING_HOWTO = {
   integrated: "Listen to the explanation of the options, then to the conversation. Keep track of each person's conditions.",
 };
 
-// The Reading / Listening switch at the top of both lists.
+// The Reading / Listening / Mistakes switch at the top of the three lists.
 function practiceTabs(active) {
+  const mistakes = el("a", { class: active === "missed" ? "active" : "", href: "#missed" }, "Mistakes");
+  api.get("/api/missed").then(d => {
+    if (d.questions.length) mistakes.textContent = `Mistakes (${d.questions.length})`;
+  }).catch(() => {});
   return el("div", { class: "segmented" },
     el("a", { class: active === "reading" ? "active" : "", href: "#reading" }, "Reading"),
-    el("a", { class: active === "listening" ? "active" : "", href: "#listening" }, "Listening"));
+    el("a", { class: active === "listening" ? "active" : "", href: "#listening" }, "Listening"),
+    mistakes);
 }
 
 // Plays a script line by line, each role in its own VOICEVOX voice (or the browser's
@@ -1807,7 +1823,8 @@ async function renderListening() {
     }));
 }
 
-async function renderListeningItem(body, id) {
+// opts (from the mistakes page): retry, back and next() as for renderPassage.
+async function renderListeningItem(body, id, opts = {}) {
   await ttsChecked;
   const item = await api.get(`/api/listening/${id}`);
   let plays = 0;
@@ -1861,7 +1878,7 @@ async function renderListeningItem(body, id) {
     if (answered) return;
     answered = true;
     buttons.forEach(b => { b.disabled = true; });
-    const res = await api.post(`/api/listening/${id}/answer`, { answer: n, plays });
+    const res = await api.post(`/api/listening/${id}/answer`, { answer: n, plays, retry: !!opts.retry });
     buttons.forEach((b, i) => {
       // Reveal what the spoken-only choices said.
       if (!item.choices[i]) b.replaceChildren(el("span", { class: "key" }, i + 1), inlineRuby(res.choices[i]));
@@ -1905,8 +1922,9 @@ async function renderListeningItem(body, id) {
             el("td", {}, speakButton(v.reading))))))),
       el("div", { class: "lesson-actions" },
         addWords,
-        el("button", { class: "btn btn-ghost", type: "button", onclick: () => renderListeningItem(body, id) }, "↻ Try again"),
-        item.next_id && el("a", { class: "btn btn-primary", href: `#listening/${item.next_id}` }, "Next item →")),
+        el("button", { class: "btn btn-ghost", type: "button", onclick: () => renderListeningItem(body, id, opts) }, "↻ Try again"),
+        opts.next ? nextSlot(opts.next())
+          : item.next_id && el("a", { class: "btn btn-primary", href: `#listening/${item.next_id}` }, "Next item →")),
     ];
   }
 
@@ -1919,7 +1937,7 @@ async function renderListeningItem(body, id) {
 
   body.replaceChildren(
     el("div", { class: "lesson-head" },
-      el("a", { class: "back", href: "#listening" }, "← All listening"),
+      opts.back || el("a", { class: "back", href: "#listening" }, "← All listening"),
       el("div", { class: "lesson-level" }, `JLPT ${item.level} · Item ${item.number} · ${item.kind_en} (${item.kind_jp})`),
       el("h2", {}, item.title),
       el("p", { class: "goal" }, LISTENING_HOWTO[item.kind])),
@@ -1935,6 +1953,75 @@ async function renderListeningItem(body, id) {
     after);
   window.scrollTo(0, 0);
   prepare();
+}
+
+/* ================= mistakes (reading and listening questions to try again) ================= */
+
+const MISSED_SOURCE = { practice: "practice", mock: "a mock test", retry: "a retry" };
+const missedKey = q => q.kind === "reading" ? `reading/${q.ref}/${q.question}` : `listening/${q.ref}`;
+
+// A placeholder that turns into the link once the promise gives it.
+function nextSlot(promise) {
+  const slot = el("span");
+  promise.then(link => slot.replaceWith(link)).catch(() => slot.remove());
+  return slot;
+}
+
+async function renderMissed() {
+  const body = $("#missed-body");
+  if (routeArg) {
+    const [kind, ref, question] = routeArg.split("/");
+    const nav = missedNav(routeArg);
+    if (kind === "reading") return renderPassage(body, ref, { only: Number(question), ...nav });
+    return renderListeningItem(body, ref, { retry: true, ...nav });
+  }
+  const { questions, cleared } = await api.get("/api/missed");
+  const levels = [...new Set(questions.map(q => q.level))];
+  body.replaceChildren(
+    el("div", { class: "panel-head" }, practiceTabs("missed"),
+      el("span", { class: "muted" }, cleared ? `${cleared} cleared so far` : "")),
+    el("p", { class: "muted" },
+      "Reading and listening questions you got wrong, in practice or in a mock test. Answer one right and it leaves the list; ",
+      "get it wrong again and it stays."),
+    questions.length
+      ? el("div", { class: "lesson-actions" },
+        el("a", { class: "btn btn-primary", href: `#missed/${missedKey(questions[0])}` },
+          el("span", { class: "arrow" }, `Start (${questions.length} to go)`)))
+      : el("p", { class: "empty" }, cleared
+        ? "All clear: every question you missed has since been answered right."
+        : "No mistakes yet. Reading and listening questions you get wrong, in practice or a mock test, will show up here."),
+    ...levels.map(level => {
+      const ofLevel = questions.filter(q => q.level === level);
+      return el("section", { class: "level-block", "aria-labelledby": `missed-${level}` },
+        el("div", { class: "level-head" },
+          el("h3", { id: `missed-${level}` }, `JLPT ${level}`),
+          el("span", { class: "muted" }, `${ofLevel.length} to try again`)),
+        el("div", { class: "list" }, ofLevel.map(q =>
+          el("a", { class: "list-row missed-row", href: `#missed/${missedKey(q)}` },
+            el("span", { class: `tag missed-kind ${q.kind}`, lang: "ja" }, q.kind === "reading" ? "読解" : "聴解"),
+            el("div", { class: "list-main" },
+              el("div", { class: "list-title", lang: "ja" }, q.prompt),
+              el("div", { class: "list-sub" },
+                `${q.label} · ${q.title}${q.of > 1 ? ` · question ${q.question + 1}` : ""} · missed `,
+                q.times_wrong > 1 ? `${q.times_wrong} times, last in ` : "in ", MISSED_SOURCE[q.source])),
+            el("span", { class: "muted", "aria-hidden": "true" }, "→")))));
+    }));
+}
+
+// The back link, and after an answer, a link to the next question still on the list.
+function missedNav(current) {
+  const before = api.get("/api/missed");  // the list as it was when this question opened
+  return {
+    back: el("a", { class: "back", href: "#missed" }, "← All mistakes"),
+    async next() {
+      const old = (await before).questions.map(missedKey);
+      const now = (await api.get("/api/missed")).questions;
+      const at = old.indexOf(current);
+      const after = now.find(q => old.indexOf(missedKey(q)) > at) || now.find(q => missedKey(q) !== current);
+      if (after) return el("a", { class: "btn btn-primary", href: `#missed/${missedKey(after)}` }, "Next mistake →");
+      return el("a", { class: "btn btn-primary", href: "#missed" }, now.length ? "Back to the list" : "All clear ✓");
+    },
+  };
 }
 
 /* ================= words (JLPT word lists) ================= */
@@ -2871,6 +2958,8 @@ function renderMockReport(body, test, report) {
       : `✗ Estimated: not yet. ${report.pass_mark - report.score} points below the pass mark`);
   const groups = MOCK_GROUP_ORDER.concat(["reading", "listening"]).filter(g => report.groups[g]);
   const missedWords = Object.values(res).filter(r => !r.correct && r.word).map(r => r.word);
+  const missedRL = ["reading", "listening"].reduce((n, g) =>
+    n + (report.groups[g] ? report.groups[g].total - report.groups[g].correct : 0), 0);
 
   const addMissed = el("button", { class: "btn", type: "button", disabled: !missedWords.length },
     missedWords.length ? `＋ Add ${missedWords.length} missed word${missedWords.length > 1 ? "s" : ""} to reviews` : "No missed words");
@@ -2951,6 +3040,8 @@ function renderMockReport(body, test, report) {
           `${p.title} ${mmss(report.elapsed_ms[p.key])}${p.minutes ? ` of ${p.minutes}:00` : ""}`).join(" · ")) : ""),
     el("div", { class: "lesson-actions" },
       addMissed,
+      missedRL ? el("a", { class: "btn", href: "#missed" },
+        `Try the ${missedRL} missed reading and listening question${missedRL > 1 ? "s" : ""} again`) : "",
       el("button", { class: "btn btn-primary", type: "button", onclick: e => startMock(body, test.level, e.currentTarget) },
         el("span", { class: "arrow" }, `Take another ${test.level} test`))),
     el("div", { class: "lesson-section" },

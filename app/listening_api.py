@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from . import furigana, listening, tts
-from .db import connect
+from .db import connect, record_attempts
 from .lessons_api import add_words
 
 router = APIRouter(prefix="/api/listening", tags=["listening"])
@@ -94,6 +94,7 @@ def review_item(item: dict) -> dict:
 class Answer(BaseModel):
     answer: int = Field(ge=0, le=9)
     plays: int = Field(default=1, ge=0, le=100)
+    retry: bool = False  # answered from the mistakes page
 
 
 @router.post("/{item_id}/answer")
@@ -103,6 +104,7 @@ def check_answer(item_id: str, body: Answer):
     with connect() as conn:
         conn.execute("INSERT INTO listening_results (item_id, correct, plays, created_at) VALUES (?, ?, ?, ?)",
                      (item_id, int(correct), body.plays, time.time()))
+        record_attempts(conn, "listening", "retry" if body.retry else "practice", [(item_id, 0, correct)])
         saved = {(r["word"], r["reading"]) for r in conn.execute("SELECT word, reading FROM vocab")}
     return {
         "correct": correct, "answer": item["answer"], "why": item["why"],

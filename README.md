@@ -134,6 +134,15 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
 - Under "Read & listen" in the top bar, next to reading practice; `python -m app.listening` checks the
   items (`--readings` prints the transcripts' furigana)
 
+**Mistakes (Read & listen → Mistakes)**
+- Every reading and listening question you get wrong, in practice or in a mock test (unanswered ones
+  too), comes back here until you answer it right; the tab shows how many are left
+- A reading mistake shows its passage again with just that question; a listening mistake can be
+  replayed as often as you like. After answering: the explanation, translation or transcript, and
+  a link to the next mistake
+- Answers are logged per question in `question_attempts`; on first start it is filled from earlier
+  listening answers, finished mock tests and reading scores that were all right or all wrong
+
 **Dictionary, notebook and reviews**
 - Click any Japanese word (chat or lessons) to look it up in JMdict and save it
 - Sensei logs the mistakes it corrects; they come back as review cards
@@ -262,6 +271,7 @@ app/
   deck_api.py   saved words, mistakes and their reviews
   quiz.py       JLPT-style question generator (+ quiz_api.py)
   mock.py       timed mock tests: grammar questions, test builder and scoring (+ mock_api.py)
+  missed_api.py reading and listening questions whose latest answer was wrong
   speech.py     Whisper transcription and shadowing comparison (+ speech_api.py)
   tts.py        VOICEVOX engine control and cached speech synthesis (+ tts_api.py)
   kanji.py      kanji index from KANJIDIC2 + KanjiVG strokes (+ kanji_api.py)

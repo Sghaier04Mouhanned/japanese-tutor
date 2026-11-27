@@ -1,4 +1,6 @@
+import json
 import sqlite3
+import time
 from contextlib import contextmanager
 
 from .config import DB_PATH
@@ -155,6 +157,19 @@ CREATE TABLE IF NOT EXISTS mock_tests (
     result      TEXT                -- JSON: answers, per-question results, section scores, time used
 );
 
+-- Every answer to a reading or listening question, wherever it was given: the
+-- mistakes page brings back the questions whose latest answer was wrong.
+CREATE TABLE IF NOT EXISTS question_attempts (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    kind        TEXT    NOT NULL CHECK (kind IN ('reading', 'listening')),
+    ref         TEXT    NOT NULL,   -- passage or listening item id
+    question    INTEGER NOT NULL,   -- question index in the passage (0 for listening)
+    correct     INTEGER NOT NULL,
+    source      TEXT    NOT NULL CHECK (source IN ('practice', 'mock', 'retry')),
+    created_at  REAL    NOT NULL
+);
+CREATE INDEX IF NOT EXISTS question_attempts_ref ON question_attempts (kind, ref, question);
+
 CREATE TABLE IF NOT EXISTS deck_reviews (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     card_id     INTEGER NOT NULL REFERENCES deck_cards (id) ON DELETE CASCADE,
@@ -175,11 +190,42 @@ MIGRATIONS = [
 def init_db() -> None:
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     with connect() as conn:
+        had_attempts = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'question_attempts'").fetchone()
         conn.executescript(SCHEMA)
+        if not had_attempts:
+            _backfill_attempts(conn)
         for table, column, definition in MIGRATIONS:
             existing = {r["name"] for r in conn.execute(f"PRAGMA table_info({table})")}
             if column not in existing:
                 conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
+
+
+def record_attempts(conn, kind: str, source: str, answers: list[tuple[str, int, bool]]) -> None:
+    """Log answers to reading or listening questions: (passage or item id, question index, correct)."""
+    now = time.time()
+    conn.executemany("""INSERT INTO question_attempts (kind, ref, question, correct, source, created_at)
+                        VALUES (?, ?, ?, ?, ?, ?)""", [(kind, ref, q, int(ok), source, now) for ref, q, ok in answers])
+
+
+def _backfill_attempts(conn) -> None:
+    """Fill question_attempts from what was saved before it existed: listening answers,
+    finished mock tests, and reading scores where the score tells which questions were
+    right (all or none; a partial score doesn't say which ones were missed)."""
+    rows = [("listening", r["item_id"], 0, r["correct"], "practice", r["created_at"])
+            for r in conn.execute("SELECT item_id, correct, created_at FROM listening_results")]
+    for r in conn.execute("SELECT passage_id, correct, total, created_at FROM reading_results"):
+        if r["correct"] in (0, r["total"]):
+            rows += [("reading", r["passage_id"], i, int(r["correct"] > 0), "practice", r["created_at"])
+                     for i in range(r["total"])]
+    for r in conn.execute("SELECT data, result, finished_at FROM mock_tests WHERE finished_at IS NOT NULL"):
+        test, result = json.loads(r["data"]), json.loads(r["result"])["questions"]
+        rows += [("reading", q["passage"], q["index"], int(result[q["id"]]["correct"]), "mock", r["finished_at"])
+                 for q in test["reading"] if q["id"] in result]
+        rows += [("listening", q["item"], 0, int(result[q["id"]]["correct"]), "mock", r["finished_at"])
+                 for q in test["listening"] if q["id"] in result]
+    conn.executemany("""INSERT INTO question_attempts (kind, ref, question, correct, source, created_at)
+                        VALUES (?, ?, ?, ?, ?, ?)""", rows)
 
 
 def get_setting(conn, key: str, default: str | None = None) -> str | None:

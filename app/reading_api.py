@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from . import furigana, kanji, reading
-from .db import connect
+from .db import connect, record_attempts
 from .lessons_api import add_words
 
 router = APIRouter(prefix="/api/reading", tags=["reading"])
@@ -95,6 +95,7 @@ def check_answers(passage_id: str, body: Answers):
     with connect() as conn:
         conn.execute("""INSERT INTO reading_results (passage_id, correct, total, elapsed_ms, created_at)
                         VALUES (?, ?, ?, ?, ?)""", (passage_id, correct, len(results), body.elapsed_ms, time.time()))
+        record_attempts(conn, "reading", "practice", [(passage_id, i, r["correct"]) for i, r in enumerate(results)])
         saved = {(r["word"], r["reading"]) for r in conn.execute("SELECT word, reading FROM vocab")}
     return {
         "results": results, "correct": correct, "total": len(results),

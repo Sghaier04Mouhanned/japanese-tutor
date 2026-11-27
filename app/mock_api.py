@@ -7,7 +7,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from . import listening, mock, reading
-from .db import connect
+from .db import connect, record_attempts
 from .listening_api import public_item, review_item, voices
 from .reading_api import _annotate
 
@@ -138,6 +138,10 @@ def submit(test_id: int, body: Submit):
                WHERE id = ?""",
             (time.time(), result["correct"], result["total"], result["score"], int(result["passed"]),
              json.dumps(result, ensure_ascii=False), test_id))
+        # Unanswered questions count as missed: they come back on the mistakes page.
+        got = result["questions"]
+        record_attempts(conn, "reading", "mock", [(q["passage"], q["index"], got[q["id"]]["correct"]) for q in test["reading"]])
+        record_attempts(conn, "listening", "mock", [(q["item"], 0, got[q["id"]]["correct"]) for q in test["listening"]])
     return _report(test, result)
 
 
