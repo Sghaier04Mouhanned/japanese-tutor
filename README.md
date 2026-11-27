@@ -31,8 +31,9 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
 - Vocabulary: kanji reading, spelling and word meaning from the level's word list, using kanji up to
   that level; readings never offer another valid reading as a wrong answer, spellings never offer
   a word read the same way
-- Grammar: 58 hand-written questions (`app/mock.py`) on the lessons' patterns, where only one
-  choice fits in form or meaning, plus particle questions from the N5 and N4 lessons
+- Grammar: 143 hand-written questions (`app/mock.py`, 24 for N5 and N4, 30 or more for N3 to N1) on
+  the level's patterns, where only one choice fits in form or meaning, plus particle questions from
+  the N5 and N4 lessons
 - Reading: two short passages, a medium one and an information search, comparison or long passage;
   furigana only on kanji beyond the level, as on the test
 - Listening: one item of each kind, played once with no replay; the audio is prepared in the
@@ -41,8 +42,11 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
   reading) and checks the real pass marks and section minimums. The JLPT equates scores across
   tests, so it's an estimate. Then every question again with the answer and explanation,
   transcripts and translations, and one click to add missed words to your reviews
-- `python -m app.mock` checks the grammar questions and builds sample tests (`--readings` prints
-  their furigana)
+- Each new test picks the passages, listening items and grammar questions you've met least in
+  earlier mock tests (then ones you haven't practised), so every level gives 3 full tests before
+  anything repeats; the level's card says how many fresh tests are left
+- `python -m app.mock` checks the grammar questions, builds sample tests and checks that 3 tests in a
+  row share nothing (`--readings` prints their furigana)
 
 **Speaking (local Whisper)**
 - 🎤 in the chat: speak Japanese, check the transcript, send it to Sensei
@@ -93,14 +97,16 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
   Turn on "Write kanji from memory" in the Review tab to answer due kanji by writing them
 
 **Reading practice (JLPT 読解, N5 to N1)**
-- 10 N5 passages (14 questions): notes, a class notice, a diary, an invitation, library rules, family
-  routines, a new flat, a birthday and a lunch menu, mostly in hiragana with N5 kanji
-- 10 N4 passages (14 questions): memos, emails, notices, a diary entry, simple essays and a timetable
-- 20 hand-written N3 passages: notes, emails, notices, short essays and information-search pages,
-  with 36 JLPT-style questions in Japanese and an English explanation for every answer
+- 12 N5 passages (18 questions): notes, a class notice, a diary, an invitation, library rules, family
+  routines, a new flat, a birthday, a lunch menu, library hours and a supermarket flyer, mostly in
+  hiragana with N5 kanji
+- 12 N4 passages (18 questions): memos, emails, notices, a diary entry, simple essays, a timetable,
+  rubbish collection rules and part-time job ads
+- 21 hand-written N3 passages: notes, emails, notices, short essays and information-search pages,
+  with 38 JLPT-style questions in Japanese and an English explanation for every answer
 - 20 N2 passages (40 questions): formal notices and emails, opinion essays, information-search pages,
   and A/B comparisons where two writers argue opposite sides, as in the N2 test
-- 10 N1 passages (21 questions): formal notices, dense opinion essays, a long passage with four
+- 12 N1 passages (23 questions): formal notices, dense opinion essays, a long passage with four
   questions, an A/B comparison and an information-search page
 - Furigana toggle; kanji beyond the passage's level keep their furigana, as on the real test
 - Tap any word to look it up; 🔊 reads each paragraph; after answering, see the translation and add
@@ -108,16 +114,17 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
 - `python -m app.reading` checks the questions; add `--readings` to proofread the furigana
 
 **Listening practice (JLPT 聴解, N5 to N1)**
-- 10 N5 items: what to bring, buying fruit, a family's size, a meeting time, asking for water, greetings
-  and simple replies, in the same four formats as N4
-- 10 N4 items: shopping for a party, a first clinic visit, a teacher's homework notice, picking a day,
-  plus utterance expressions (発話表現: what would you say in this situation?) and quick responses
-- 20 hand-written N3 items in the four test formats: task-based (課題理解), key point (ポイント理解),
+- 18 N5 items: what to bring, buying fruit, a family's size, a meeting time, homework, birthdays,
+  asking for water or a price, greetings and simple replies, in the same four formats as N4
+- 18 N4 items: shopping for a party, a first clinic visit, a library card, a changed meeting time, a
+  noisy flat, plus utterance expressions (発話表現: what would you say in this situation?) and quick
+  responses
+- 21 hand-written N3 items in the four test formats: task-based (課題理解), key point (ポイント理解),
   summary (概要理解) and quick response (即時応答)
-- 20 N2 items, adding integrated comprehension (統合理解): a staff member explains three options, two
-  people discuss them, and you work out which one a person chooses
-- 10 N1 items: a thesis supervision, city hall procedures, a film review, a lecture on dialects,
-  honorific quick responses, and an integrated item weighing four options against three people's needs
+- 21 N2 items, adding integrated comprehension (統合理解): a staff member explains three or four
+  options, two people discuss them, and you work out which one they choose
+- 21 N1 items: a thesis supervision, city hall procedures, a film review, lectures on dialects and
+  failure, business and honorific quick responses, and integrated items weighing four options
 - Read by VOICEVOX with a different voice per role (narrator 九州そら, woman 春日部つむぎ, man 玄野武宏,
   staff 青山龍星);
   the clips are made before the first play so lines follow each other smoothly. Without VOICEVOX the

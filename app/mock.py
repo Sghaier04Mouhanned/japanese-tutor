@@ -105,6 +105,32 @@ GRAMMAR: dict[str, list[dict]] = {
          "why": "Giving a reason: さむいから (because it's cold). が, けど and のに mean \"but\"."},
         {"q": "ここはきんえんです。ここでたばこを（　）ください。", "choices": ["すわないで", "すわなくて", "すわない", "すわないの"],
          "answer": 0, "why": "No smoking here, so a request not to: ない-form + でください (please don't smoke)."},
+        {"q": "きのうは、とても（　）です。", "choices": ["さむかった", "さむいでした", "さむくでした", "さむかったでした"],
+         "answer": 0, "why": "The past of an い-adjective: さむい → さむかったです. さむいでした is a common mistake."},
+        {"q": "この本は、あまりおもしろ（　）ありません。", "choices": ["く", "い", "くて", "かった"], "answer": 0,
+         "why": "The negative of an い-adjective: おもしろい → おもしろくありません."},
+        {"q": "わたしのへやは、あまり（　）。", "choices": ["ひろくないです", "ひろいです", "ひろかったです", "ひろいでした"],
+         "answer": 0, "why": "あまり (not very) needs a negative: ひろくないです (not very big)."},
+        {"q": "つくえの上に、本が三さつ（　）。", "choices": ["あります", "います", "です", "あるです"], "answer": 0,
+         "why": "Things take あります: 本があります. います is for people and animals."},
+        {"q": "A「きのう、なにを（　）か。」B「テレビを見ました。」", "choices": ["しました", "します", "しましょう", "して"],
+         "answer": 0, "why": "きのう (yesterday) and B answers in the past (見ました), so A asks in the past: なにをしましたか."},
+        {"q": "日曜日、友だちと映画を（　）に行きます。", "choices": ["見", "見る", "見て", "見た"], "answer": 0,
+         "why": "Going somewhere to do something: ます-stem + に行きます (見に行きます, go to see)."},
+        {"q": "ばんごはんを（　）あとで、しゅくだいをします。", "choices": ["たべた", "たべる", "たべて", "たべ"], "answer": 0,
+         "why": "After doing: た-form + あとで (たべたあとで, after eating)."},
+        {"q": "ねる（　）、はをみがきます。", "choices": ["まえに", "あとで", "たり", "ながら"], "answer": 0,
+         "why": "Before doing: dictionary form + まえに (ねるまえに, before going to bed). あとで needs the た-form."},
+        {"q": "わたしは、あたらしいくつが（　）です。", "choices": ["ほしい", "ほしく", "ほしくて", "ほしかって"], "answer": 0,
+         "why": "Wanting a thing: 〜がほしいです (I want new shoes)."},
+        {"q": "A「どうして、きのう休みましたか。」B「あたまがいたかった（　）です。」", "choices": ["から", "けど", "まで", "ので"],
+         "answer": 0, "why": "Answering どうして (why) with a reason: 〜からです (because...). ので can't come before です."},
+        {"q": "じゅぎょうは、9時（　）12時までです。", "choices": ["から", "まで", "に", "で"], "answer": 0,
+         "why": "From... until: 9時から12時まで."},
+        {"q": "わたしは、すしが（　）です。", "choices": ["すき", "すきな", "すきだ", "すきに"], "answer": 0,
+         "why": "すき is a な-adjective; before です it has no な: すきです (I like sushi)."},
+        {"q": "A「もう、ひるごはんを食べましたか。」B「いいえ、（　）です。」", "choices": ["まだ", "もう", "よく", "とても"],
+         "answer": 0, "why": "Not yet: いいえ、まだです. もう means \"already\"."},
     ],
     "N4": [
         {"q": "わたしは一度、富士山に（　）ことがあります。", "choices": ["のぼった", "のぼる", "のぼって", "のぼり"],
@@ -129,6 +155,32 @@ GRAMMAR: dict[str, list[dict]] = {
          "why": "Hard to do: ます-stem + にくい (飲みにくい, hard to swallow)."},
         {"q": "時間がないので、タクシーで（　）。", "choices": ["行きましょう", "行ったことがあります", "行ったり", "行かせられます"],
          "answer": 0, "why": "No time, so a suggestion: 行きましょう (let's go by taxi)."},
+        {"q": "雨が（　）ば、試合は中止です。", "choices": ["ふれ", "ふら", "ふり", "ふる"], "answer": 0,
+         "why": "The conditional ば: ふる → ふれば (if it rains)."},
+        {"q": "駅に着い（　）、電話してください。", "choices": ["たら", "たり", "ば", "ながら"], "answer": 0,
+         "why": "When/once: た-form + ら (着いたら, when you arrive). 着いば and 着いながら aren't forms."},
+        {"q": "この漢字の読み方を（　）いますか。", "choices": ["知って", "知り", "知る", "知った"], "answer": 0,
+         "why": "知る (to get to know) is used as 知っています for \"know\"."},
+        {"q": "部屋の電気がついて（　）。だれかいるようです。", "choices": ["います", "あります", "おきます", "みます"],
+         "answer": 0, "why": "つく is intransitive, so a state takes ている: ついています (the light is on). てある goes with transitive verbs (つけてある)."},
+        {"q": "暑いので、窓が開けて（　）。", "choices": ["あります", "います", "みます", "いきます"], "answer": 0,
+         "why": "Transitive verb + てある shows the state someone left: 窓が開けてあります (the window has been opened)."},
+        {"q": "日本に来て（　）、もう3年になります。", "choices": ["から", "まで", "ので", "ても"], "answer": 0,
+         "why": "Since: て-form + から (日本に来てから, since I came to Japan)."},
+        {"q": "この料理は、母（　）教えてもらいました。", "choices": ["に", "を", "で", "へ"], "answer": 0,
+         "why": "The person who does it for you takes に with 〜てもらう: 母に教えてもらいました (my mother taught me)."},
+        {"q": "弟は、毎日遊んで（　）います。", "choices": ["ばかり", "しか", "ほど", "まで"], "answer": 0,
+         "why": "Doing nothing but: て-form + ばかりいる (遊んでばかりいます)."},
+        {"q": "天気予報（　）、明日は雪だそうです。", "choices": ["によると", "について", "にとって", "として"], "answer": 0,
+         "why": "The source of hearsay: 〜によると〜そうです (according to the forecast)."},
+        {"q": "このケーキはおいし（　）ですね。", "choices": ["そう", "よう", "らしい", "みたい"], "answer": 0,
+         "why": "Looks like: い-adjective without い + そう (おいしそう, looks tasty). よう, らしい and みたい need the full おいしい."},
+        {"q": "わたしは、来年日本へ行く（　）です。", "choices": ["つもり", "ながら", "まま", "たり"], "answer": 0,
+         "why": "A plan: dictionary form + つもりです (I intend to go)."},
+        {"q": "電車の中で、さいふを（　）しまいました。", "choices": ["なくして", "なくし", "なくす", "なくした"], "answer": 0,
+         "why": "Something regrettable: て-form + しまいました (I lost my wallet)."},
+        {"q": "楽しみにしていたのに、妹にわたしのケーキを（　）。", "choices": ["食べられました", "食べました", "食べたがりました", "食べようとしました"],
+         "answer": 0, "why": "Suffering passive: 妹に食べられました (my sister ate it, and I'm upset). The others can't take 妹に."},
     ],
     "N3": [
         {"q": "A「今、電話してもいい？」B「ごめん、今からご飯を食べる（　）なんだ。」", "choices": ["ところ", "うち", "まま", "ほど"],
@@ -155,6 +207,46 @@ GRAMMAR: dict[str, list[dict]] = {
          "why": "Even: 子供でさえできる (even a child can do it). しか would need a negative."},
         {"q": "医者に、お酒を飲みすぎない（　）言われた。", "choices": ["ように", "ために", "そうに", "ことに"],
          "answer": 0, "why": "Reporting advice or an order: 〜ように言われた (I was told not to drink too much)."},
+        {"q": "家を出た（　）、雨が降り出した。", "choices": ["とたん", "うちに", "まま", "最中"], "answer": 0,
+         "why": "The moment: た-form + とたん (just as I left the house)."},
+        {"q": "会議の（　）に、電話が鳴った。", "choices": ["最中", "とたん", "とおり", "まま"], "answer": 0,
+         "why": "Right in the middle of: Nの最中に (in the middle of the meeting)."},
+        {"q": "彼は、本当は知っている（　）、教えてくれない。", "choices": ["くせに", "おかげで", "ついでに", "ように"],
+         "answer": 0, "why": "Although (with blame): 知っているくせに (even though he knows, he won't tell me)."},
+        {"q": "この店は、値段が安い（　）、料理がおいしい。", "choices": ["わりに", "ために", "せいで", "たびに"], "answer": 0,
+         "why": "Better than expected for: 安いわりに (for the low price, it's good)."},
+        {"q": "練習すれば（　）ほど、上手になる。", "choices": ["する", "した", "して", "しよう"], "answer": 0,
+         "why": "The more..., the more: 〜ば〜ほど repeats the verb: すればするほど."},
+        {"q": "来月から、大阪の支店で働くことに（　）。会社が決めたので、しかたがない。", "choices": ["なった", "した", "みた", "いた"],
+         "answer": 0, "why": "Decided by someone else: ことになった. ことにした is your own decision, but the company decided."},
+        {"q": "あの店はいつも込んでいるから、おいしい（　）だ。", "choices": ["はず", "まま", "くせ", "ところ"], "answer": 0,
+         "why": "A conclusion from evidence: 〜はずだ (it must be good, since it's always busy)."},
+        {"q": "とてもまじめな人だから、彼がそんなことを言う（　）。", "choices": ["わけがない", "はずだ", "ことにする", "ようにする"],
+         "answer": 0, "why": "No way: 〜わけがない (he'd never say that). はずだ would mean he's expected to say it."},
+        {"q": "お金がない（　）ではないが、今は買いたくない。", "choices": ["わけ", "はず", "こと", "もの"], "answer": 0,
+         "why": "Not that: 〜わけではない (it's not that I have no money)."},
+        {"q": "子どものころは、よくこの川で泳いだ（　）だ。", "choices": ["もの", "ところ", "まま", "うち"], "answer": 0,
+         "why": "Looking back on what you used to do: た-form + ものだ (I often used to swim here)."},
+        {"q": "事故の原因（　）、今調べています。", "choices": ["について", "にとって", "によって", "として"], "answer": 0,
+         "why": "About, concerning: 原因について調べる (look into the cause)."},
+        {"q": "私は留学生（　）、この大学に来ました。", "choices": ["として", "にとって", "について", "に対して"], "answer": 0,
+         "why": "In the role of: 留学生として (as an exchange student)."},
+        {"q": "病気の父の（　）に、私が会議に出た。", "choices": ["かわり", "まま", "とおり", "ほど"], "answer": 0,
+         "why": "Instead of: Nのかわりに (in place of my sick father)."},
+        {"q": "コンビニへ行く（　）に、手紙を出してきた。", "choices": ["ついで", "まま", "とおり", "くせ"], "answer": 0,
+         "why": "While you're at it: dictionary form + ついでに (on my way to the shop, I also posted a letter)."},
+        {"q": "たとえ雨が降って（　）、試合は行われる。", "choices": ["も", "は", "が", "ば"], "answer": 0,
+         "why": "Even if: たとえ〜ても (even if it rains)."},
+        {"q": "まだ時間はたっぷりあるから、急ぐ（　）はない。", "choices": ["こと", "まま", "ところ", "うち"], "answer": 0,
+         "why": "No need to: dictionary form + ことはない (there's no need to hurry)."},
+        {"q": "日本の夏は、私の国（　）ずっと暑い。", "choices": ["に比べて", "に対して", "について", "にとって"], "answer": 0,
+         "why": "Compared with: 私の国に比べて (compared with my country)."},
+        {"q": "このパソコンは、使い方（　）分かれば、だれでも使える。", "choices": ["さえ", "しか", "ほど", "ばかり"], "answer": 0,
+         "why": "As long as (only this is needed): 〜さえ〜ば (if you just know how to use it)."},
+        {"q": "電車の中では、ほかの人のことを考えて、大きな声で話す（　）。", "choices": ["べきではない", "わけだ", "ところだ", "ばかりだ"],
+         "answer": 0, "why": "Shouldn't (a rule of good conduct): dictionary form + べきではない."},
+        {"q": "ちょっと寒いので、エアコンの温度を上げる（　）。", "choices": ["ことにした", "わけがない", "はずがない", "ところがない"],
+         "answer": 0, "why": "Your own decision: dictionary form + ことにした (I decided to turn the temperature up)."},
     ],
     "N2": [
         {"q": "雨が降っている（　）、試合は予定通り行われた。", "choices": ["にもかかわらず", "からこそ", "次第", "ばかりか"],
@@ -181,6 +273,44 @@ GRAMMAR: dict[str, list[dict]] = {
          "why": "Now that, since: 約束したからには (since you promised, you must keep it)."},
         {"q": "初めて作った（　）、このケーキはとてもおいしい。", "choices": ["にしては", "からには", "次第", "上で"],
          "answer": 0, "why": "Considering: 初めて作ったにしては (for a first attempt, it's very good)."},
+        {"q": "明日は大事な試験なので、今夜は遊びに行く（　）。", "choices": ["わけにはいかない", "に越したことはない", "にほかならない", "かねない"],
+         "answer": 0, "why": "Can't (for social or moral reasons): dictionary form + わけにはいかない. かねない follows the ます-stem."},
+        {"q": "彼の話があまりにおかしくて、笑わ（　）。", "choices": ["ずにはいられなかった", "わけにはいかなかった", "ことはなかった", "かねなかった"],
+         "answer": 0, "why": "Couldn't help doing: ない-stem + ずにはいられない (笑わずにはいられなかった). The others don't follow 笑わ."},
+        {"q": "年をとる（　）、体が弱くなってきた。", "choices": ["につれて", "に先立って", "をめぐって", "にわたって"], "answer": 0,
+         "why": "As one thing changes, so does another: dictionary form + につれて (as I get older)."},
+        {"q": "契約書をよく読んだ（　）、サインしてください。", "choices": ["上で", "末に", "ものの", "あげく"], "answer": 0,
+         "why": "Do A first, then B: た-form + 上で (sign after reading it carefully)."},
+        {"q": "3時間も話し合った（　）、やっと結論が出た。", "choices": ["末に", "ものの", "からといって", "に先立って"], "answer": 0,
+         "why": "After a long process: た-form + 末に (after three hours of discussion, finally...)."},
+        {"q": "お金がある（　）、幸せだとは限らない。", "choices": ["からといって", "からには", "からこそ", "ことから"], "answer": 0,
+         "why": "Just because... doesn't mean: 〜からといって〜とは限らない."},
+        {"q": "申し訳ありませんが、その意見には賛成し（　）。", "choices": ["かねます", "かねません", "がちです", "ぎみです"],
+         "answer": 0, "why": "Politely unable to: ます-stem + かねます (I'm afraid I can't agree). かねません means \"might well\"."},
+        {"q": "そんな乱暴な運転をしていたら、事故を起こし（　）よ。", "choices": ["かねない", "かねる", "がたい", "っこない"],
+         "answer": 0, "why": "A risk of something bad: ます-stem + かねない (you could well cause an accident). っこない means \"no way\"."},
+        {"q": "冬は、どうしても運動不足になり（　）だ。", "choices": ["がち", "っぽい", "げ", "ぶり"], "answer": 0,
+         "why": "Tends to (usually something bad): ます-stem + がちだ."},
+        {"q": "このあたりは、静か（　）、夜になると車の音がうるさい。", "choices": ["どころか", "ばかりか", "に限らず", "にもかかわらず"],
+         "answer": 0, "why": "Far from it, quite the opposite: 静かどころか (far from quiet, it's noisy)."},
+        {"q": "社長が来（　）、会議は始められない。", "choices": ["ないことには", "ずにはいられず", "ないわけにはいかず", "ざるをえず"],
+         "answer": 0, "why": "Unless A happens, B can't: ない-form + ことには (unless the president comes)."},
+        {"q": "材料の量は、人数（　）変えてください。", "choices": ["に応じて", "をめぐって", "にわたって", "に先立って"], "answer": 0,
+         "why": "According to, in response to: 人数に応じて (depending on how many people)."},
+        {"q": "新しい駅の建設（　）、住民の意見が分かれている。", "choices": ["をめぐって", "に応じて", "につれて", "に沿って"], "answer": 0,
+         "why": "Over (a disputed issue): 建設をめぐって (opinions are split over the construction)."},
+        {"q": "台風の影響で、東北地方では三日（　）大雨が続いた。", "choices": ["にわたって", "をめぐって", "に応じて", "につれて"],
+         "answer": 0, "why": "Over a whole span of time or space: 三日にわたって (for three whole days)."},
+        {"q": "留学（　）、日本の文化に興味を持つようになった。", "choices": ["をきっかけに", "にわたって", "にしては", "をめぐって"],
+         "answer": 0, "why": "Triggered by: 留学をきっかけに (studying abroad got me interested)."},
+        {"q": "あんな難しい試験、ぼくに受かり（　）よ。", "choices": ["っこない", "かねる", "がちだ", "ぎみだ"], "answer": 0,
+         "why": "Casual \"no way\": ます-stem + っこない (there's no way I'll pass)."},
+        {"q": "体に悪いのだから、たばこはやめる（　）。", "choices": ["に越したことはない", "にほかならない", "にすぎない", "かねない"],
+         "answer": 0, "why": "It's best to: dictionary form + に越したことはない (it's best to quit)."},
+        {"q": "赤ちゃんは、泣いた（　）、もう笑っている。", "choices": ["かと思うと", "からには", "末に", "上で"], "answer": 0,
+         "why": "No sooner... than: た-form + かと思うと (it had barely cried and it's already laughing)."},
+        {"q": "店の前の通り（　）、桜の木が植えられている。", "choices": ["に沿って", "に応じて", "をめぐって", "につれて"], "answer": 0,
+         "why": "Along: 通りに沿って (along the street)."},
     ],
     "N1": [
         {"q": "この祭りは、この町（　）の伝統行事だ。", "choices": ["ならでは", "ともなると", "をよそに", "といえども"],
@@ -207,6 +337,46 @@ GRAMMAR: dict[str, list[dict]] = {
          "answer": 0, "why": "Couldn't help feeling: 同情を禁じ得ない (I can't help feeling sympathy)."},
         {"q": "彼は、物事を悪い方に考える（　）がある。", "choices": ["きらい", "べき", "まじき", "ならでは"], "answer": 0,
          "why": "A (bad) tendency: dictionary form + きらいがある."},
+        {"q": "人気歌手が来る（　）、会場には朝から長い列ができた。", "choices": ["とあって", "といえども", "ともなく", "をおいて"],
+         "answer": 0, "why": "Because of this special situation: 〜とあって (since a popular singer was coming)."},
+        {"q": "彼は、足のけが（　）、最後まで走りきった。", "choices": ["をものともせず", "にひきかえ", "を皮切りに", "に即して"],
+         "answer": 0, "why": "Undaunted by: 〜をものともせず (in spite of his injured leg)."},
+        {"q": "兄は勉強家だ。それ（　）、弟は遊んでばかりいる。", "choices": ["にひきかえ", "をおいて", "とあって", "ともなると"],
+         "answer": 0, "why": "In contrast to: それにひきかえ (by contrast, the younger brother...)."},
+        {"q": "このプロジェクトを任せられるのは、彼（　）ほかにいない。", "choices": ["をおいて", "にひきかえ", "をものともせず", "を皮切りに"],
+         "answer": 0, "why": "No one but: 〜をおいてほかにいない (there's no one but him)."},
+        {"q": "東京公演（　）、全国20都市でコンサートが行われる。", "choices": ["を皮切りに", "をおいて", "にひきかえ", "に足る"],
+         "answer": 0, "why": "Starting with: 東京公演を皮切りに (starting with the Tokyo show)."},
+        {"q": "子どもたちの幸せを、心から願って（　）。", "choices": ["やみません", "たえません", "至りません", "極まりません"],
+         "answer": 0, "why": "Never cease to (wish, hope): て-form + やまない (I sincerely wish)."},
+        {"q": "彼のこれまでの仕事ぶりは、十分に信頼する（　）ものだ。", "choices": ["に足る", "とあって", "をおいて", "にひきかえ"],
+         "answer": 0, "why": "Worthy of: dictionary form + に足る (worth trusting)."},
+        {"q": "客に対するあの店員の態度は、失礼（　）。", "choices": ["極まりない", "ずくめだ", "まみれだ", "がてらだ"], "answer": 0,
+         "why": "Extremely: な-adjective + 極まりない (extremely rude)."},
+        {"q": "この映画は、見る人の心を動かさ（　）。", "choices": ["ずにはおかない", "ずくめだ", "まじき", "べく"], "answer": 0,
+         "why": "Is bound to (cause): ない-stem + ずにはおかない (it can't fail to move people)."},
+        {"q": "試験に合格せ（　）、彼は寝る時間も惜しんで勉強した。", "choices": ["んがため", "がてら", "ならでは", "まみれで"],
+         "answer": 0, "why": "Formal \"in order to\": ない-stem + んがため (する → せんがため)."},
+        {"q": "狭い（　）も、やっと自分の家を持つことができた。", "choices": ["ながら", "とあって", "をおいて", "にひきかえ"],
+         "answer": 0, "why": "Although: 狭いながらも (small as it is, I finally have my own house)."},
+        {"q": "相手がだれ（　）、失礼な態度は許されない。", "choices": ["であれ", "とあって", "をおいて", "なりに"], "answer": 0,
+         "why": "Whoever it may be: だれであれ (no matter who)."},
+        {"q": "どんなに反対され（　）、私の決心は変わらない。", "choices": ["ようが", "べく", "なり", "がてら"], "answer": 0,
+         "why": "No matter how: volitional + が (どんなに反対されようが)."},
+        {"q": "社長（　）、法律を守らなければならない。", "choices": ["といえども", "にひきかえ", "ならでは", "を皮切りに"],
+         "answer": 0, "why": "Even (someone like): 社長といえども (even the president must obey the law)."},
+        {"q": "このような賞をいただき、光栄（　）です。", "choices": ["の至り", "極まり", "めき", "ずくめ"], "answer": 0,
+         "why": "The height of: 光栄の至りです (it's the greatest honour). 極まり needs ない: 光栄極まりない."},
+        {"q": "風がやわらかくなり、だんだん春（　）きた。", "choices": ["めいて", "ぶって", "まみれて", "ずくめて"], "answer": 0,
+         "why": "Showing signs of: 春めいてきた (it's starting to feel like spring)."},
+        {"q": "子どもたちは、泥（　）になって遊んでいた。", "choices": ["まみれ", "ずくめ", "めき", "ぶり"], "answer": 0,
+         "why": "Covered all over in (something messy): 泥まみれ (covered in mud)."},
+        {"q": "あなたのことを思え（　）、厳しく言うのだ。", "choices": ["ばこそ", "ようが", "なり", "とあって"], "answer": 0,
+         "why": "Precisely because: ば-form + こそ (思えばこそ, it's because I care about you)."},
+        {"q": "彼は、何を見る（　）、窓の外を眺めていた。", "choices": ["ともなく", "とあって", "といえども", "をおいて"], "answer": 0,
+         "why": "Without really meaning to: 〜ともなく (gazing out of the window, not looking at anything in particular)."},
+        {"q": "判断は、個人の感情ではなく、事実（　）行わなければならない。", "choices": ["に即して", "をおいて", "にひきかえ", "を皮切りに"],
+         "answer": 0, "why": "In line with, based on: 事実に即して (based on the facts)."},
     ],
 }
 
@@ -339,9 +509,16 @@ def _choice_q(group: str, prompt: dict, correct: str, distractors: list[str], wh
 
 # ---------- grammar ----------
 
-def _grammar_questions(level: str, count: int, particles: int) -> list[dict]:
+def _freshest(pool: list, n: int, key, seen: dict | None, done: set | None = None) -> list:
+    """n items of the pool, least seen in earlier mock tests first, then ones not done in
+    practice, random among equals: a learner sees everything before anything repeats."""
+    seen, done = seen or {}, done or set()
+    return sorted(pool, key=lambda x: (seen.get(key(x), 0), key(x) in done, random.random()))[:n]
+
+
+def _grammar_questions(level: str, count: int, particles: int, seen: dict | None = None) -> list[dict]:
     out = []
-    for g in random.sample(GRAMMAR[level], min(count, len(GRAMMAR[level]))):
+    for g in _freshest(GRAMMAR[level], count, lambda g: g["q"], seen):
         order = list(range(4))
         random.shuffle(order)
         out.append({"group": "grammar", "prompt": {"text": g["q"]}, "choices": [g["choices"][i] for i in order],
@@ -364,38 +541,71 @@ def _grammar_questions(level: str, count: int, particles: int) -> list[dict]:
 
 # ---------- reading and listening ----------
 
-def _passages(level: str) -> list[dict]:
+def _passages(level: str, seen: dict | None = None, done: set | None = None) -> list[dict]:
     of_level = [p for p in reading.PASSAGES if reading.level(p) == level]
+    pid = lambda p: p["id"]  # noqa: E731
     chosen = []
     for kind, n in _READING_PLAN.items():
-        chosen += random.sample([p for p in of_level if p["kind"] == kind], n)
+        chosen += _freshest([p for p in of_level if p["kind"] == kind], n, pid, seen, done)
     others = [p for p in of_level if p["kind"] not in _READING_PLAN]
-    chosen += random.sample(others, min(_READING_OTHER, len(others)))
+    chosen += _freshest(others, _READING_OTHER, pid, seen, done)
     return chosen
 
 
-def _listening_items(level: str, count: int) -> list[dict]:
-    of_level = [i for i in listening.ITEMS if listening.level(i) == level]
-    random.shuffle(of_level)
+def _listening_items(level: str, count: int, seen: dict | None = None, done: set | None = None) -> list[dict]:
+    of_level = _freshest([i for i in listening.ITEMS if listening.level(i) == level], 999,
+                         lambda i: i["id"], seen, done)
     chosen, kinds = [], set()
-    for i in of_level:  # one of each kind first, then any
+    for i in of_level:  # one of each kind first
         if i["kind"] not in kinds:
             chosen.append(i)
             kinds.add(i["kind"])
-    chosen += [i for i in of_level if i not in chosen][: max(0, count - len(chosen))]
     chosen = chosen[:count]
+    seen = seen or {}
+    while len(chosen) < count:  # then the freshest, from the kinds with the most unseen items left
+        rest = [i for i in of_level if i not in chosen]
+        left = {k: sum(1 for i in rest if i["kind"] == k and not seen.get(i["id"])) for k in kinds}
+        chosen.append(min(rest, key=lambda i: (seen.get(i["id"], 0), -left[i["kind"]], rest.index(i))))
     return sorted(chosen, key=lambda i: LISTENING_ORDER.index(i["kind"]))
+
+
+def seen_in(tests: list[dict]) -> dict[str, int]:
+    """How often each passage, listening item and grammar question came up in these
+    earlier tests (build()'s dicts), for build(seen=...)."""
+    seen: dict[str, int] = {}
+    for t in tests:
+        keys = t["passages"] + [r["item"] for r in t["listening"]]
+        keys += [q["prompt"]["text"] for q in t["grammar"] if q["group"] == "grammar"]
+        for k in keys:
+            seen[k] = seen.get(k, 0) + 1
+    return seen
+
+
+def fresh_tests(level: str, seen: dict) -> int:
+    """How many more tests of this level can be made from passages, listening items and
+    grammar questions not met in a mock test yet."""
+    passages = [p for p in reading.PASSAGES if reading.level(p) == level and p["id"] not in seen]
+    counts = [sum(p["kind"] == kind for p in passages) // n for kind, n in _READING_PLAN.items()]
+    counts.append(sum(p["kind"] not in _READING_PLAN for p in passages) // _READING_OTHER)
+    items = [i for i in listening.ITEMS if listening.level(i) == level]
+    fresh = [i for i in items if i["id"] not in seen]
+    per_kind = [sum(i["kind"] == k for i in fresh) for k in {i["kind"] for i in items}]  # each test needs one of each
+    counts.append(min([len(fresh) // SPEC[level]["listening"]] + per_kind))
+    counts.append(sum(g["q"] not in seen for g in GRAMMAR[level]) // SPEC[level]["grammar"])
+    return min(counts)
 
 
 # ---------- the test ----------
 
-def build(level: str) -> dict:
-    """A new test. Answers stay in this dict (stored server-side); public() strips them."""
+def build(level: str, seen: dict | None = None, done: set | None = None) -> dict:
+    """A new test. Answers stay in this dict (stored server-side); public() strips them.
+    seen (from seen_in) and done (passage and item ids practised) make it pick the
+    content met least so far."""
     spec = SPEC[level]
     vocab = _vocab_questions(level, spec["vocab"])
-    grammar = _grammar_questions(level, spec["grammar"], spec["particles"])
-    passages = _passages(level)
-    items = _listening_items(level, spec["listening"])
+    grammar = _grammar_questions(level, spec["grammar"], spec["particles"], seen)
+    passages = _passages(level, seen, done)
+    items = _listening_items(level, spec["listening"], seen, done)
 
     n = 0
     def qid() -> str:
@@ -511,8 +721,18 @@ def _check(show_readings: bool = False) -> int:
             for q in test["vocab"] + test["grammar"]:
                 if len(set(q["choices"])) != len(q["choices"]):
                     problems.append(f"{level}: repeated choice in {q['choices']}")
+        seen: dict[str, int] = {}
+        fresh = fresh_tests(level, seen)
+        for _ in range(fresh):  # back-to-back tests: nothing comes back while unseen content is left
+            used = seen_in([build(level, seen)])
+            if set(used) & set(seen):
+                problems.append(f"{level}: a passage, item or grammar question repeated within {fresh} tests")
+                break
+            seen.update(used)
+        if fresh < 3:
+            problems.append(f"{level}: content for only {fresh} test(s) without repeats, aim for 3")
         t = build(level)
-        mins = " + ".join(f"{p['title']} {p['minutes']} min" for p in t["parts"] if p["minutes"])
+        mins =" + ".join(f"{p['title']} {p['minutes']} min" for p in t["parts"] if p["minutes"])
         print(f"{level}: {len(t['vocab'])} vocabulary, {len(t['grammar'])} grammar, {len(t['reading'])} reading "
               f"({len(t['passages'])} passages), {len(t['listening'])} listening · {mins}")
     print(f"{sum(len(q) for q in GRAMMAR.values())} grammar questions, {len(problems)} problem(s)")

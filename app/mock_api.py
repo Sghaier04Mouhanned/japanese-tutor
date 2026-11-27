@@ -20,6 +20,17 @@ def _level_or_404(level: str) -> str:
     return level
 
 
+def _seen(conn, level: str) -> dict[str, int]:
+    """What earlier tests of this level used, abandoned ones too (their content was seen)."""
+    rows = conn.execute("SELECT data FROM mock_tests WHERE level = ?", (level,))
+    return mock.seen_in([json.loads(r["data"]) for r in rows])
+
+
+def _practised(conn) -> set[str]:
+    rows = conn.execute("SELECT passage_id FROM reading_results UNION SELECT item_id FROM listening_results")
+    return {r[0] for r in rows}
+
+
 @router.get("")
 def overview():
     with connect() as conn:
@@ -31,6 +42,8 @@ def overview():
         sample = mock.build(level)  # cheap; gives this level's parts and typical timings
         rules = mock.SCORING[level]
         done = [h for h in history if h["level"] == level]
+        with connect() as conn:
+            seen = _seen(conn, level)
         levels.append({
             "level": level,
             "parts": [{"title": p["title"], "minutes": p["minutes"]} for p in sample["parts"]],
@@ -42,6 +55,7 @@ def overview():
             "sections": [{"title": t, "max": m, "minimum": mn} for _k, t, m, mn in rules["sections"]],
             "best": max((h["score"] for h in done), default=None),
             "last": done[0] if done else None,
+            "fresh_tests": mock.fresh_tests(level, seen),
         })
     return {"levels": levels, "history": history}
 
@@ -83,8 +97,8 @@ def _public(test_id: int, test: dict, voice_map: dict | None) -> dict:
 @router.post("/{level}/start")
 async def start(level: str):
     _level_or_404(level)
-    test = mock.build(level)
     with connect() as conn:
+        test = mock.build(level, _seen(conn, level), _practised(conn))
         cur = conn.execute("INSERT INTO mock_tests (level, data, created_at) VALUES (?, ?, ?)",
                            (level, json.dumps(test, ensure_ascii=False), time.time()))
         test_id = cur.lastrowid

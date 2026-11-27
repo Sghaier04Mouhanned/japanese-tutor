@@ -2606,6 +2606,9 @@ async function renderMock() {
           l.parts.map(p => el("li", {}, el("span", { lang: "ja" }, p.title), el("span", { class: "muted" }, p.minutes ? `${p.minutes} min` : `${l.questions.listening} items, heard once`)))),
         el("div", { class: "goal" }, `${l.questions.vocab} vocabulary · ${l.questions.grammar} grammar · ${l.questions.reading} reading · ${l.questions.listening} listening`),
         el("div", { class: "goal" }, `Pass mark ${l.pass_mark} / ${l.max}`, l.best != null ? ` · your best ${l.best}` : ""),
+        el("div", { class: "goal muted" }, l.fresh_tests
+          ? `Unseen passages, listening and grammar for ${l.fresh_tests} more test${l.fresh_tests > 1 ? "s" : ""}`
+          : "You've seen all of this level's passages, listening and grammar; the least-seen come back first"),
         el("button", { class: "btn btn-primary", type: "button", onclick: e => startMock(body, l.level, e.currentTarget) },
           el("span", { class: "arrow" }, `Start ${l.level} test`))))),
     data.history.length ? el("div", { class: "lesson-section" },

@@ -415,6 +415,98 @@ PASSAGES: list[dict] = [
             {"word": "たのむ", "reading": "たのむ", "meaning": "to order, ask for"},
         ],
     },
+    {
+        "id": "n5-r11",
+        "title": "The library",
+        "jp_title": "としょかんのあんない",
+        "kind": "Information search",
+        "minutes": 3,
+        "text": [
+            "さくらとしょかん",
+            "・あいている時間\n　火曜日〜金曜日　9時〜7時\n　土曜日・日曜日　9時〜5時",
+            "・休み　月曜日",
+            "・本は、一人10さつまで、2週間かりることができます。",
+            "・CDとDVDは、一人3つまで、1週間かりることができます。",
+        ],
+        "en": [
+            "Sakura Library",
+            "- Opening hours\n  Tuesday to Friday, 9 to 7\n  Saturday and Sunday, 9 to 5",
+            "- Closed on Mondays",
+            "- You can borrow up to 10 books each, for two weeks.",
+            "- You can borrow up to 3 CDs and DVDs each, for one week.",
+        ],
+        "questions": [
+            {
+                "q": "マリアさんは、学校が毎日4時におわります。日曜日は、アルバイトがあります。マリアさんがとしょかんへ行くことができるのは、いつですか。",
+                "choices": ["月曜日の5時", "水曜日の5時", "土曜日の6時", "日曜日の3時"],
+                "answer": 1,
+                "why": "The library is closed on Mondays, shuts at 5 on Saturdays, and she works on Sundays. On Wednesday it's open "
+                       "until 7, so 5 o'clock is fine.",
+            },
+            {
+                "q": "ヤンさんは、本を3さつとDVDを1つかりました。いつまでにかえしますか。",
+                "choices": ["本もDVDも1週間で", "本もDVDも2週間で", "本は2週間で、DVDは1週間で", "本は1週間で、DVDは2週間で"],
+                "answer": 2,
+                "why": "Books are lent for 2週間 (two weeks), CDs and DVDs for 1週間 (one week).",
+            },
+        ],
+        "vocab": [
+            {"word": "あいている", "reading": "あいている", "meaning": "open"},
+            {"word": "休み", "reading": "やすみ", "meaning": "closed (day), holiday"},
+            {"word": "かりる", "reading": "かりる", "meaning": "to borrow"},
+            {"word": "かえす", "reading": "かえす", "meaning": "to return, give back"},
+        ],
+    },
+    {
+        "id": "n5-r12",
+        "title": "Today's bargains",
+        "jp_title": "スーパーのチラシ",
+        "kind": "Information search",
+        "minutes": 3,
+        "text": [
+            "ABCスーパー　きょうだけ安い！",
+            "①たまご　10こ　200円\n・一人一つまで",
+            "②りんご　3こ　300円",
+            "③ぎゅうにゅう　1本　150円\n・午後3時から",
+            "④パン　1つ　100円\n・午前10時から12時まで",
+            "※3,000円より多く買った人には、おかしをあげます。",
+        ],
+        "en": [
+            "ABC Supermarket: cheap today only!",
+            "1. Eggs, 10 for 200 yen\n- One pack per person",
+            "2. Apples, 3 for 300 yen",
+            "3. Milk, 150 yen a carton\n- From 3 p.m.",
+            "4. Bread, 100 yen each\n- From 10 a.m. to 12",
+            "* Anyone who spends more than 3,000 yen gets some sweets.",
+        ],
+        "questions": [
+            {
+                "q": "キムさんは、午後1時にスーパーへ行きます。キムさんが安く買うことができるものは、どれですか。",
+                "choices": ["②と④", "①と②", "①と②と③", "①と②と④"],
+                "answer": 1,
+                "why": "At 1 p.m. the bread offer (10 to 12) is over and the milk offer (from 3) hasn't started. Eggs and apples are "
+                       "cheap all day.",
+            },
+            {
+                "q": "このチラシについて、正しいものはどれですか。",
+                "choices": [
+                    "たまごは、一人二つ買うことができます。",
+                    "パンは、一日中安いです。",
+                    "3,000円より多く買うと、おかしがもらえます。",
+                    "ぎゅうにゅうは、朝から安いです。",
+                ],
+                "answer": 2,
+                "why": "3,000円より多く買った人には、おかしをあげます. Eggs are one per person, bread is cheap only 10 to 12, and milk "
+                       "only from 3 p.m.",
+            },
+        ],
+        "vocab": [
+            {"word": "安い", "reading": "やすい", "meaning": "cheap"},
+            {"word": "たまご", "reading": "たまご", "meaning": "egg"},
+            {"word": "ぎゅうにゅう", "reading": "ぎゅうにゅう", "meaning": "milk"},
+            {"word": "おかし", "reading": "おかし", "meaning": "sweets, snacks"},
+        ],
+    },
     # ------------------------------------------------------------------ N4
     {
         "id": "n4-r01",
@@ -830,6 +922,107 @@ PASSAGES: list[dict] = [
             {"word": "貸す", "reading": "かす", "meaning": "to lend"},
             {"word": "申し込み", "reading": "もうしこみ", "meaning": "signing up, application"},
             {"word": "受付", "reading": "うけつけ", "meaning": "reception desk"},
+        ],
+    },
+    {
+        "id": "n4-r11",
+        "title": "Putting out the rubbish",
+        "jp_title": "ごみの出し方",
+        "kind": "Information search",
+        "minutes": 4,
+        "text": [
+            "みどり町　ごみの出し方",
+            "①燃えるごみ（生ごみ、紙など）\n・月曜日と木曜日\n・朝8時までに出してください。",
+            "②プラスチック\n・水曜日\n・きれいに洗ってから出してください。",
+            "③びん・かん\n・第2・第4金曜日",
+            "④大きいごみ（いす、机など）\n・電話で申し込んでください。1つ500円かかります。",
+            "※ごみは、前の日の夜に出さないでください。",
+        ],
+        "en": [
+            "Midori Town: how to put out rubbish",
+            "1. Burnable rubbish (food waste, paper, etc.)\n- Mondays and Thursdays\n- Put it out by 8 a.m.",
+            "2. Plastic\n- Wednesdays\n- Wash it clean before putting it out.",
+            "3. Bottles and cans\n- 2nd and 4th Fridays",
+            "4. Large items (chairs, desks, etc.)\n- Apply by phone. It costs 500 yen per item.",
+            "* Please don't put rubbish out the night before.",
+        ],
+        "questions": [
+            {
+                "q": "リーさんは、火曜日の夜、ジュースのびんと生ごみを捨てたいと思っています。どうしますか。",
+                "choices": [
+                    "火曜日の夜に、両方出す。",
+                    "木曜日の朝8時までに生ごみを出して、びんは第2か第4金曜日に出す。",
+                    "水曜日の朝に、両方出す。",
+                    "電話で申し込んでから、両方出す。",
+                ],
+                "answer": 1,
+                "why": "Rubbish can't go out the night before. Food waste is burnable (next day: Thursday by 8), and bottles go on the "
+                       "2nd or 4th Friday.",
+            },
+            {
+                "q": "古いいすを捨てたいです。どうしなければなりませんか。",
+                "choices": ["月曜日の朝に出す。", "前の日の夜に出す。", "電話で申し込んで、500円払う。", "第2金曜日に出す。"],
+                "answer": 2,
+                "why": "A chair is a large item: 電話で申し込んでください。1つ500円かかります.",
+            },
+        ],
+        "vocab": [
+            {"word": "燃える", "reading": "もえる", "meaning": "to burn"},
+            {"word": "生ごみ", "reading": "なまごみ", "meaning": "food waste"},
+            {"word": "申し込む", "reading": "もうしこむ", "meaning": "to apply"},
+            {"word": "捨てる", "reading": "すてる", "meaning": "to throw away"},
+            {"word": "両方", "reading": "りょうほう", "meaning": "both"},
+        ],
+    },
+    {
+        "id": "n4-r12",
+        "title": "Part-time jobs",
+        "jp_title": "アルバイトぼしゅう",
+        "kind": "Information search",
+        "minutes": 4,
+        "text": [
+            "アルバイトぼしゅう",
+            "①コンビニ\n・月曜日〜金曜日　朝7時〜10時\n・1時間　1,100円",
+            "②レストラン\n・土曜日・日曜日　夜6時〜11時\n・1時間　1,200円",
+            "③書店\n・土曜日・日曜日　朝10時〜午後4時\n・1時間　1,000円",
+            "④塾の先生\n・月曜日〜金曜日　午後2時〜6時\n・1時間　1,500円",
+            "働きたい人は、それぞれの店に電話してください。",
+        ],
+        "en": [
+            "Part-time staff wanted",
+            "1. Convenience store\n- Monday to Friday, 7 to 10 a.m.\n- 1,100 yen an hour",
+            "2. Restaurant\n- Saturday and Sunday, 6 to 11 p.m.\n- 1,200 yen an hour",
+            "3. Bookshop\n- Saturday and Sunday, 10 a.m. to 4 p.m.\n- 1,000 yen an hour",
+            "4. Cram school teacher\n- Monday to Friday, 2 to 6 p.m.\n- 1,500 yen an hour",
+            "If you'd like to work, please phone each shop.",
+        ],
+        "questions": [
+            {
+                "q": "大学生のチャンさんは、月曜日から金曜日まで、朝9時から午後3時まで授業があります。週末は時間がありますが、夜8時より後は働きたくないです。チャンさんができるアルバイトはどれですか。",
+                "choices": ["①", "②", "③", "④"],
+                "answer": 2,
+                "why": "① and ④ are on weekdays and overlap with classes (7 to 10, and from 2). ② goes on until 11 p.m. ③ is at "
+                       "the weekend and ends at 4.",
+            },
+            {
+                "q": "このお知らせについて、正しいものはどれですか。",
+                "choices": [
+                    "1時間のお金がいちばん高いのは、レストランだ。",
+                    "コンビニの仕事は、朝7時に始まる。",
+                    "書店は、平日だけ働く。",
+                    "塾の先生は、週末に働く。",
+                ],
+                "answer": 1,
+                "why": "The convenience store is 朝7時〜10時. The cram school pays most (1,500 yen), the bookshop is at the weekend, "
+                       "and the cram school on weekdays.",
+            },
+        ],
+        "vocab": [
+            {"word": "ぼしゅう", "reading": "ぼしゅう", "meaning": "recruitment, wanted"},
+            {"word": "塾", "reading": "じゅく", "meaning": "cram school"},
+            {"word": "それぞれ", "reading": "それぞれ", "meaning": "each"},
+            {"word": "授業", "reading": "じゅぎょう", "meaning": "class, lesson"},
+            {"word": "平日", "reading": "へいじつ", "meaning": "weekday"},
         ],
     },
     {
@@ -1893,6 +2086,60 @@ PASSAGES: list[dict] = [
             {"word": "わざわざ", "reading": "わざわざ", "meaning": "going out of one's way"},
             {"word": "役に立つ", "reading": "やくにたつ", "meaning": "to be useful"},
             {"word": "瞬間", "reading": "しゅんかん", "meaning": "moment"},
+        ],
+    },
+    {
+        "id": "n3-r21",
+        "title": "Museum admission",
+        "jp_title": "美術館の入館料",
+        "kind": "Information search",
+        "minutes": 5,
+        "text": [
+            "みなと美術館　入館料のご案内",
+            "・一般　1,200円\n・大学生・高校生　800円（学生証をお見せください）\n・中学生以下　無料",
+            "・65歳以上のお客様は、600円です。（年齢がわかるものをお見せください）",
+            "・20人以上の団体は、一人200円引きになります。",
+            "・毎月第1日曜日は、どなたも半額です。",
+            "開館時間：午前9時30分〜午後5時（入館は午後4時30分まで）\n休館日：毎週月曜日（祝日の場合は、その翌日）",
+        ],
+        "en": [
+            "Minato Art Museum: admission",
+            "- Adults 1,200 yen\n- University and high school students 800 yen (please show your student ID)\n"
+            "- Junior high school age and under free",
+            "- Visitors aged 65 and over pay 600 yen. (Please show something that proves your age.)",
+            "- Groups of 20 or more get 200 yen off per person.",
+            "- On the first Sunday of every month, everyone pays half price.",
+            "Opening hours: 9:30 a.m. to 5 p.m. (last entry 4:30 p.m.)\nClosed: every Monday (when Monday is a public holiday, "
+            "the following day instead)",
+        ],
+        "questions": [
+            {
+                "q": "山田さんは、妻と高校生の娘、小学生の息子の4人で、第2土曜日に行く。山田さんと妻は40代である。全部でいくらかかるか。",
+                "choices": ["2,400円", "3,200円", "4,000円", "1,600円"],
+                "answer": 1,
+                "why": "Two adults 1,200 × 2 = 2,400, the high-school daughter 800, and the primary-school son is free: 3,200 yen. "
+                       "Half price is only on the first Sunday.",
+            },
+            {
+                "q": "この美術館について、正しいものはどれか。",
+                "choices": [
+                    "午後4時45分に行っても、入館できる。",
+                    "団体で行くと、一人600円引きになる。",
+                    "65歳以上の人は、無料で入れる。",
+                    "月曜日が祝日の場合は、月曜日に開いている。",
+                ],
+                "answer": 3,
+                "why": "祝日の場合は、その翌日: on a holiday Monday it closes the next day instead, so it's open that Monday. Last entry "
+                       "is 4:30, groups get 200 yen off, and over-65s pay 600 yen.",
+            },
+        ],
+        "vocab": [
+            {"word": "入館料", "reading": "にゅうかんりょう", "meaning": "admission fee"},
+            {"word": "一般", "reading": "いっぱん", "meaning": "general (adult) admission"},
+            {"word": "団体", "reading": "だんたい", "meaning": "group"},
+            {"word": "半額", "reading": "はんがく", "meaning": "half price"},
+            {"word": "祝日", "reading": "しゅくじつ", "meaning": "public holiday"},
+            {"word": "翌日", "reading": "よくじつ", "meaning": "the next day"},
         ],
     },
     # ------------------------------------------------------------------ N2
@@ -3626,6 +3873,92 @@ PASSAGES: list[dict] = [
             {"word": "拾い読み", "reading": "ひろいよみ", "meaning": "skimming, reading bits"},
             {"word": "衰える", "reading": "おとろえる", "meaning": "to decline, weaken"},
             {"word": "思考", "reading": "しこう", "meaning": "thinking, thought"},
+        ],
+    },
+    {
+        "id": "n1-r11",
+        "title": "Changes to working from home",
+        "jp_title": "在宅勤務制度の見直しについて",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "社員各位",
+            "現在試行中の在宅勤務制度について、来月より、以下のとおり運用を改めることとなりましたので、お知らせいたします。",
+            "これまで週二日を上限としていた在宅勤務を、部署長の承認を得た場合に限り、週三日まで認めます。ただし、毎週水曜日は全社会議を行うため、"
+            "原則として出社をお願いいたします。なお、申請は前週の金曜日までに、所定の様式にて提出してください。",
+            "人事部",
+        ],
+        "en": [
+            "To all staff,",
+            "We would like to inform you that, from next month, the way the working-from-home scheme now on trial is run "
+            "will change as follows.",
+            "Working from home, which until now was limited to two days a week, will be allowed up to three days a week, but only with "
+            "the approval of your department head. However, as there is a company-wide meeting every Wednesday, we ask you as a rule to "
+            "come to the office that day. Applications must be submitted on the designated form by the Friday of the previous week.",
+            "Human Resources",
+        ],
+        "questions": [
+            {
+                "q": "来月から、在宅勤務について何が変わるか。",
+                "choices": [
+                    "だれでも週三日まで在宅勤務ができるようになる。",
+                    "部署長が認めれば、週三日まで在宅勤務ができるようになる。",
+                    "水曜日にも在宅勤務ができるようになる。",
+                    "申請は、当日までに出せばよくなる。",
+                ],
+                "answer": 1,
+                "why": "部署長の承認を得た場合に限り、週三日まで: three days only with approval, so not だれでも. Wednesdays stay office "
+                       "days, and applications are due the Friday before.",
+            },
+        ],
+        "vocab": [
+            {"word": "在宅勤務", "reading": "ざいたくきんむ", "meaning": "working from home"},
+            {"word": "試行", "reading": "しこう", "meaning": "trial"},
+            {"word": "運用", "reading": "うんよう", "meaning": "operation, running (of a system)"},
+            {"word": "上限", "reading": "じょうげん", "meaning": "upper limit"},
+            {"word": "承認", "reading": "しょうにん", "meaning": "approval"},
+            {"word": "所定", "reading": "しょてい", "meaning": "designated, prescribed"},
+        ],
+    },
+    {
+        "id": "n1-r12",
+        "title": "The trap of easy answers",
+        "jp_title": "わかりやすさの落とし穴",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "近年、何事にも「わかりやすさ」が求められる。難しい話を短くかみ砕いて伝える技術は、確かに貴重である。",
+            "しかし、わかりやすく整理された説明ばかりに慣れてしまうと、すぐには理解できないものに向き合う忍耐が失われていくのではないだろうか。"
+            "世の中の多くの問題は、そもそも単純な答えなど持ち合わせていない。わからなさを抱えたまま考え続ける力こそ、今、見直されるべきだろう。",
+        ],
+        "en": [
+            "These days, everything is expected to be \"easy to understand\". The skill of breaking down a difficult subject and "
+            "explaining it briefly is certainly valuable.",
+            "But if we get used to nothing but neatly organised explanations, won't we lose the patience to face things we can't "
+            "understand straight away? Many of the world's problems simply have no simple answer to begin with. It's the ability to "
+            "keep thinking while holding on to not understanding that deserves a fresh look now.",
+        ],
+        "questions": [
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "難しい話をわかりやすく伝える技術は、必要ない。",
+                    "わかりにくい説明のほうが、わかりやすい説明より優れている。",
+                    "すぐに答えの出ない問題を、考え続ける力が大切だ。",
+                    "世の中の問題には、すべて単純な答えがある。",
+                ],
+                "answer": 2,
+                "why": "わからなさを抱えたまま考え続ける力こそ…見直されるべき. The writer calls clear explanation 貴重 (valuable), so "
+                       "1 and 2 go too far, and 4 is the opposite of 単純な答えなど持ち合わせていない.",
+            },
+        ],
+        "vocab": [
+            {"word": "整理", "reading": "せいり", "meaning": "putting in order, organising"},
+            {"word": "かみ砕く", "reading": "かみくだく", "meaning": "to break down, explain simply"},
+            {"word": "忍耐", "reading": "にんたい", "meaning": "patience, endurance"},
+            {"word": "向き合う", "reading": "むきあう", "meaning": "to face, confront"},
+            {"word": "抱える", "reading": "かかえる", "meaning": "to hold, carry"},
+            {"word": "見直す", "reading": "みなおす", "meaning": "to reconsider, see in a new light"},
         ],
     },
 ]
