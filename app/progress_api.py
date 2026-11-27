@@ -33,11 +33,12 @@ def progress():
                                           SELECT reviewed_at FROM deck_reviews UNION ALL
                                           SELECT reviewed_at FROM kanji_reviews)
                                       WHERE reviewed_at >= ? GROUP BY d""", since)
-        # Quiz, reading and listening questions share the chart's third series.
+        # Quiz, reading, listening and mock test questions share the chart's third series.
         quiz_days = _per_day(conn, """SELECT date(created_at, 'unixepoch', 'localtime') d, SUM(total) FROM (
                                           SELECT created_at, total FROM quiz_sessions UNION ALL
                                           SELECT created_at, total FROM reading_results UNION ALL
-                                          SELECT created_at, 1 FROM listening_results)
+                                          SELECT created_at, 1 FROM listening_results UNION ALL
+                                          SELECT finished_at, total FROM mock_tests WHERE finished_at IS NOT NULL)
                                       WHERE created_at >= ? GROUP BY d""", since)
 
         sessions = [dict(r) for r in conn.execute(
@@ -61,7 +62,8 @@ def progress():
                    SELECT reviewed_at FROM kanji_reviews UNION ALL
                    SELECT created_at FROM quiz_sessions UNION ALL
                    SELECT created_at FROM reading_results UNION ALL
-                   SELECT created_at FROM listening_results)""")}
+                   SELECT created_at FROM listening_results UNION ALL
+                   SELECT finished_at FROM mock_tests WHERE finished_at IS NOT NULL)""")}
         read_ids = {r[0] for r in conn.execute("SELECT DISTINCT passage_id FROM reading_results")}
         heard_ids = {r[0] for r in conn.execute("SELECT DISTINCT item_id FROM listening_results")}
         total_reviews = conn.execute(

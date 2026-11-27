@@ -25,6 +25,25 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
 - Reading distractors are near misses like on the real test (がっこう / がこう / かっこう)
 - Per-type scores, explanations, and one click to add missed words to your reviews
 
+**Timed mock tests (Quiz → Mock test)**
+- One per level, N5 to N1, laid out like the JLPT at about half its length: 言語知識（文字・語彙）, then
+  言語知識（文法）・読解 (N2 and N1 sit them together, as on the real test), each against the clock, then 聴解
+- Vocabulary: kanji reading, spelling and word meaning from the level's word list, using kanji up to
+  that level; readings never offer another valid reading as a wrong answer, spellings never offer
+  a word read the same way
+- Grammar: 58 hand-written questions (`app/mock.py`) on the lessons' patterns, where only one
+  choice fits in form or meaning, plus particle questions from the N5 and N4 lessons
+- Reading: two short passages, a medium one and an information search, comparison or long passage;
+  furigana only on kanji beyond the level, as on the test
+- Listening: one item of each kind, played once with no replay; the audio is prepared in the
+  background while you work on the first parts
+- The report scales each section to the JLPT's points (0-60, or 0-120 for N5/N4 language and
+  reading) and checks the real pass marks and section minimums. The JLPT equates scores across
+  tests, so it's an estimate. Then every question again with the answer and explanation,
+  transcripts and translations, and one click to add missed words to your reviews
+- `python -m app.mock` checks the grammar questions and builds sample tests (`--readings` prints
+  their furigana)
+
 **Speaking (local Whisper)**
 - 🎤 in the chat: speak Japanese, check the transcript, send it to Sensei
 - 🎤 on every lesson example: say the sentence and see which sounds were recognized
@@ -235,6 +254,7 @@ app/
   words.py      JLPT word lists (jlpt_words.tsv) and example sentences (+ words_api.py)
   deck_api.py   saved words, mistakes and their reviews
   quiz.py       JLPT-style question generator (+ quiz_api.py)
+  mock.py       timed mock tests: grammar questions, test builder and scoring (+ mock_api.py)
   speech.py     Whisper transcription and shadowing comparison (+ speech_api.py)
   tts.py        VOICEVOX engine control and cached speech synthesis (+ tts_api.py)
   kanji.py      kanji index from KANJIDIC2 + KanjiVG strokes (+ kanji_api.py)

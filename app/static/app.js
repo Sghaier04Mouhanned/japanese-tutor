@@ -258,6 +258,7 @@ const views = {
   notebook: renderNotebook,
   lessons: renderLessons,
   quiz: renderQuiz,
+  mock: renderMock,
   kanji: renderKanji,
   words: renderWords,
   reading: renderReading,
@@ -274,8 +275,8 @@ function route() {
   for (const section of document.querySelectorAll(".view")) {
     section.hidden = section.id !== `view-${name}`;
   }
-  // Practice lives under Kana, Listening under Reading.
-  const navName = { practice: "learn", listening: "reading" }[name] || name;
+  // Practice lives under Kana, Listening under Reading, mock tests under Quiz.
+  const navName = { practice: "learn", listening: "reading", mock: "quiz" }[name] || name;
   for (const link of document.querySelectorAll(".nav a, .topbar-end a")) {
     link.classList.toggle("active", link.dataset.view === navName);
   }
@@ -2556,6 +2557,406 @@ async function renderKanjiDetail(body, ch) {
   later(diagram.play, 250);
 }
 
+/* ================= mock tests ================= */
+
+const MOCK_GROUPS = {
+  kanji_reading: ["漢字読み", "Kanji reading", "How is the word read?"],
+  spelling: ["表記", "Spelling", "Which is the right way to write the word?"],
+  meaning: ["語彙", "Word meaning", "What does the word mean?"],
+  grammar: ["文法形式の判断", "Grammar", "Which fits the blank best?"],
+  particle: ["助詞", "Particles", "Which particle fits the blank?"],
+  reading: ["読解", "Reading", "Read each text and answer the questions."],
+  listening: ["聴解", "Listening", "Each item plays once."],
+};
+const MOCK_GROUP_ORDER = ["kanji_reading", "spelling", "meaning", "grammar", "particle"];
+
+// The Practice quiz / Mock test switch at the top of both pages.
+function quizTabs(active) {
+  return el("div", { class: "segmented" },
+    el("a", { class: active === "quiz" ? "active" : "", href: "#quiz" }, "Practice quiz"),
+    el("a", { class: active === "mock" ? "active" : "", href: "#mock" }, "Mock test"));
+}
+
+function mmss(ms) {
+  const s = Math.max(0, Math.ceil(ms / 1000));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+
+// A choice is plain text (meanings, kana, words) or furigana segments (sentences).
+function mockChoice(c) {
+  return Array.isArray(c) ? inlineRuby(c) : el("span", { lang: "ja" }, c);
+}
+
+async function renderMock() {
+  const body = $("#mock-body");
+  if (routeArg) return renderMockReview(body, routeArg);
+  const data = await api.get("/api/mock");
+  const pill = h => el("span", { class: `status-pill ${h.passed ? "done" : "started"}` }, h.passed ? "Pass" : "Not yet");
+  body.replaceChildren(
+    el("div", { class: "panel-head" }, quizTabs("mock"),
+      el("span", { class: "muted" }, "Timed, scored like the JLPT")),
+    el("p", { class: "muted" },
+      "A JLPT-style test at about half the real length: vocabulary, grammar and reading against the clock, then listening that plays once. ",
+      "You get a score per section, scaled to the JLPT's points and compared with the real pass marks. The real test equates scores across sittings, so treat yours as an estimate."),
+    el("div", { class: "lesson-grid mock-grid" }, data.levels.map(l =>
+      el("div", { class: "lesson-card mock-card" },
+        el("div", { class: "num" }, `JLPT ${l.level}`, l.last && pill(l.last)),
+        el("div", { class: "title" }, `${l.level} mock test`),
+        el("ul", { class: "mock-parts" },
+          l.parts.map(p => el("li", {}, el("span", { lang: "ja" }, p.title), el("span", { class: "muted" }, p.minutes ? `${p.minutes} min` : `${l.questions.listening} items, heard once`)))),
+        el("div", { class: "goal" }, `${l.questions.vocab} vocabulary · ${l.questions.grammar} grammar · ${l.questions.reading} reading · ${l.questions.listening} listening`),
+        el("div", { class: "goal" }, `Pass mark ${l.pass_mark} / ${l.max}`, l.best != null ? ` · your best ${l.best}` : ""),
+        el("button", { class: "btn btn-primary", type: "button", onclick: e => startMock(body, l.level, e.currentTarget) },
+          el("span", { class: "arrow" }, `Start ${l.level} test`))))),
+    data.history.length ? el("div", { class: "lesson-section" },
+      el("h3", {}, "Your results"),
+      el("div", { class: "list" }, data.history.map(h =>
+        el("a", { class: "list-row word-row", href: `#mock/${h.id}` },
+          el("span", { class: "mock-level" }, h.level),
+          el("div", { class: "list-main" },
+            el("div", {}, `${h.score} points`, el("span", { class: "muted" }, ` · ${h.correct} / ${h.total} correct`)),
+            el("div", { class: "list-sub" }, new Date(h.finished_at * 1000).toLocaleString())),
+          pill(h))))) : "",
+  );
+}
+
+async function startMock(body, level, button) {
+  button.disabled = true;
+  button.textContent = "Preparing the test…";
+  await ttsChecked;
+  try {
+    runMock(body, await api.post(`/api/mock/${level}/start`, {}));
+  } catch (err) {
+    button.disabled = false;
+    button.textContent = `Start ${level} test`;
+    showError(err);
+  }
+}
+
+// Runs a whole test: each timed part, then listening, then the report.
+function runMock(body, test) {
+  const answers = {};
+  const elapsed = {};
+  let finished = false;
+  const warn = e => { e.preventDefault(); e.returnValue = ""; };
+  window.addEventListener("beforeunload", warn);
+  // Leaving the page (another tab of the app, or Quit) abandons the test.
+  onCleanup(() => { finished = true; window.removeEventListener("beforeunload", warn); });
+  const audio = prefetchMockAudio(test);
+
+  const steps = test.parts.map(p => p.key === "listening" ? () => listeningPart(p) : () => timedPart(p));
+  let step = 0;
+  next();
+
+  function next() {
+    if (step < steps.length) return steps[step++]();
+    submit();
+  }
+
+  function header(part, extra) {
+    return el("div", { class: "lesson-head" },
+      el("div", { class: "lesson-level" }, `JLPT ${test.level} mock test · part ${step} of ${steps.length}`),
+      el("h2", { lang: "ja" }, part.title),
+      extra);
+  }
+
+  // ----- vocabulary, grammar and reading: all on one page, against the clock -----
+  function timedPart(part) {
+    const qs = [...(part.groups.includes("vocab") ? test.vocab : []), ...(part.groups.includes("grammar") ? test.grammar : [])];
+    const passages = part.groups.includes("reading") ? test.passages : [];
+    const total = qs.length + passages.reduce((n, p) => n + p.questions.length, 0);
+    body.replaceChildren(
+      header(part, el("p", { class: "goal" }, `${total} questions · ${part.minutes} minutes. You can move between questions and change answers until the time is up.`)),
+      el("div", { class: "btn-row", style: "justify-content:flex-start" },
+        el("button", { class: "btn btn-primary", type: "button", onclick: begin }, el("span", { class: "arrow" }, "Start the clock"))),
+      quitButton());
+    window.scrollTo(0, 0);
+
+    function begin() {
+      const started = Date.now();
+      const deadline = started + part.minutes * 60000;
+      const clock = el("span", { class: "mock-clock" }, mmss(deadline - started));
+      const count = el("span", { class: "muted" });
+      const finishBtn = el("button", { class: "btn btn-primary", type: "button", onclick: () => finish(false) }, "Finish this part");
+      const update = () => { count.textContent = `${ids.filter(id => answers[id] != null).length} / ${ids.length} answered`; };
+      const ids = [];
+      const choiceRow = (id, choices, jp) => {
+        ids.push(id);
+        const buttons = choices.map((c, ci) => el("button", {
+          class: `quiz-choice reading-choice${jp ? " jp" : ""}`, type: "button", "aria-pressed": "false",
+          onclick: () => {
+            answers[id] = ci;
+            buttons.forEach((b, i) => { b.classList.toggle("picked", i === ci); b.setAttribute("aria-pressed", String(i === ci)); });
+            update();
+          } }, el("span", { class: "key" }, ci + 1), mockChoice(c)));
+        return el("div", { class: "quiz-choices reading-choices" }, buttons);
+      };
+
+      let number = 0;
+      let mondai = 0;
+      const sections = [];
+      for (const group of MOCK_GROUP_ORDER) {
+        const ofGroup = qs.filter(q => q.group === group);
+        if (!ofGroup.length) continue;
+        const [jp, en, how] = MOCK_GROUPS[group];
+        sections.push(el("section", { class: "mock-group" },
+          el("h3", {}, `問題${++mondai}`, el("span", { lang: "ja" }, ` ${jp}`), el("span", { class: "muted" }, ` · ${en}`)),
+          el("p", { class: "muted" }, how),
+          ofGroup.map(q => el("div", { class: "reading-q mock-q" },
+            el("div", { class: "reading-q-head" }, el("span", { class: "reading-q-num" }, `${++number}`), mockPrompt(q)),
+            choiceRow(q.id, q.choices, q.jp_choices)))));
+      }
+      if (passages.length) {
+        const [jp, en, how] = MOCK_GROUPS.reading;
+        sections.push(el("section", { class: "mock-group" },
+          el("h3", {}, `問題${++mondai}`, el("span", { lang: "ja" }, ` ${jp}`), el("span", { class: "muted" }, ` · ${en}`)),
+          el("p", { class: "muted" }, how),
+          passages.map(p => el("div", { class: "mock-passage" },
+            el("div", { class: "reading-text" }, p.text.map(t =>
+              el("div", { class: "reading-para" }, richEl("div", { class: "jp-line", lang: "ja" }, t.segments)))),
+            p.questions.map(q => el("div", { class: "reading-q" },
+              el("div", { class: "reading-q-head" }, el("span", { class: "reading-q-num" }, `${++number}`),
+                richEl("div", { class: "jp-line", lang: "ja" }, q.segments)),
+              choiceRow(q.id, q.choices, true)))))));
+      }
+
+      body.replaceChildren(
+        el("div", { class: "mock-bar" }, el("span", { lang: "ja" }, part.title), clock, count, finishBtn),
+        // Furigana only on kanji beyond the level, as on the test.
+        el("div", { class: "reading-page no-furigana" }, sections),
+        el("div", { class: "lesson-actions" }, el("button", { class: "btn btn-primary", type: "button", onclick: () => finish(false) }, "Finish this part")));
+      update();
+      window.scrollTo(0, 0);
+      const timer = setInterval(() => {
+        const left = deadline - Date.now();
+        clock.textContent = mmss(left);
+        clock.classList.toggle("low", left < 60000);
+        if (left <= 0) finish(true);
+      }, 500);
+      onCleanup(() => clearInterval(timer));
+
+      function finish(timeUp) {
+        if (!timeUp) {
+          const open = ids.filter(id => answers[id] == null).length;
+          if (open && !confirm(`${open} question${open > 1 ? "s are" : " is"} unanswered. Finish this part anyway?`)) return;
+        }
+        clearInterval(timer);
+        elapsed[part.key] = Math.min(Date.now() - started, part.minutes * 60000);
+        if (timeUp) alert("Time's up for this part.");
+        next();
+      }
+    }
+  }
+
+  // ----- listening: one item at a time, each heard once -----
+  function listeningPart(part) {
+    const items = test.listening;
+    body.replaceChildren(
+      header(part, el("p", { class: "goal" },
+        `${items.length} items. Each one plays once, as on the test: listen, answer, then go on. You can't go back.`)),
+      el("p", { class: "muted", role: "status" }, test.voices ? "Audio by VOICEVOX." : hasVoice() ? "VOICEVOX isn't running, so the browser's voice reads the items." : "No Japanese voice is available, so the scripts are shown as text."),
+      el("div", { class: "btn-row", style: "justify-content:flex-start" },
+        el("button", { class: "btn btn-primary", type: "button", onclick: () => { started = Date.now(); item(0); } }, el("span", { class: "arrow" }, "Start listening"))),
+      quitButton());
+    window.scrollTo(0, 0);
+    let started = 0;
+
+    async function item(i) {
+      if (i >= items.length) {
+        elapsed[part.key] = Date.now() - started;
+        return next();
+      }
+      const it = items[i];
+      const status = el("div", { class: "listen-status", role: "status" }, "Preparing audio…");
+      const nextBtn = el("button", { class: "btn btn-primary", type: "button", disabled: true, onclick: () => { player?.stop(); item(i + 1); } },
+        i + 1 < items.length ? "Next item →" : "Finish the test");
+      const buttons = it.choices.map((c, n) =>
+        el("button", { class: `quiz-choice jp listen-choice${c ? "" : " number-only"}`, type: "button", "aria-pressed": "false",
+          onclick: () => {
+            answers[it.qid] = n;
+            buttons.forEach((b, k) => { b.classList.toggle("picked", k === n); b.setAttribute("aria-pressed", String(k === n)); });
+          } },
+          el("span", { class: "key" }, n + 1), c ? inlineRuby(c) : el("span", { class: "muted" }, `Choice ${n + 1}`)));
+      let player = null;
+      body.replaceChildren(
+        el("div", { class: "mock-bar" }, el("span", { lang: "ja" }, part.title), el("span", { class: "mock-clock" }, `${i + 1} / ${items.length}`), nextBtn),
+        el("div", { class: "lesson-head" },
+          el("div", { class: "lesson-level" }, `${it.kind_en} (${it.kind_jp})`),
+          el("p", { class: "goal" }, LISTENING_HOWTO[it.kind])),
+        el("div", { class: "listen-player" }, el("span", { class: "mock-ear", "aria-hidden": "true" }, "🎧"), status),
+        el("div", { class: "lesson-section" },
+          it.choices_printed && it.question_segments.length
+            ? richEl("div", { class: "jp-line listen-question", lang: "ja" }, it.question_segments)
+            : el("p", { class: "muted" }, it.kind === "quick" ? "Which reply is best?" : it.kind === "utterance" ? "What would you say?" : "Listen for the question at the end."),
+          el("div", { class: "quiz-choices listen-choices" }, buttons)));
+      window.scrollTo(0, 0);
+
+      if (!test.voices && !hasVoice()) {
+        status.replaceChildren(el("div", { class: "listen-transcript" }, it.script.map(l => el("div", { class: "jp-line", lang: "ja" }, l.text))));
+        nextBtn.disabled = false;
+        return;
+      }
+      await audio.item(it.qid);
+      if (!body.isConnected || finished) return;
+      status.textContent = "Listen…";
+      player = dialoguePlayer(it.script, test.voices, {
+        onLine: n => { status.textContent = n >= 0 ? `Playing… ${n + 1} / ${it.script.length}` : "Played once. Choose your answer."; },
+      });
+      onCleanup(() => player.stop());
+      await new Promise(r => setTimeout(r, 800));
+      if (!body.isConnected) return;
+      await player.play();
+      nextBtn.disabled = false;
+    }
+  }
+
+  function quitButton() {
+    return el("div", { class: "lesson-actions" },
+      el("button", { class: "btn btn-ghost", type: "button", onclick: () => {
+        if (confirm("Quit this test? Nothing is saved.")) { finished = true; route(); }
+      } }, "Quit the test"));
+  }
+
+  async function submit() {
+    finished = true;
+    body.replaceChildren(el("p", { class: "muted" }, "Scoring…"));
+    const report = await api.post(`/api/mock/${test.id}/submit`, { answers, elapsed_ms: elapsed });
+    window.removeEventListener("beforeunload", warn);
+    renderMockReport(body, test, report);
+  }
+}
+
+// What a vocabulary or grammar question shows above its choices.
+function mockPrompt(q) {
+  const p = q.prompt;
+  if (q.group === "kanji_reading") return el("div", { class: "mock-word", lang: "ja" }, p.word);
+  if (q.group === "spelling") return el("div", { class: "mock-word", lang: "ja" }, p.reading);
+  if (q.group === "meaning") return wordRuby(p.word, p.parts, { class: "mock-word" });
+  return el("div", {},
+    richEl("div", { class: "jp-line", lang: "ja" }, p.segments),
+    p.hint && el("div", { class: "quiz-hint" }, `“${p.hint}”`));
+}
+
+// Makes every listening clip in the background while the learner does the other parts.
+function prefetchMockAudio(test) {
+  const ready = {};
+  let chain = Promise.resolve();
+  for (const it of test.listening) {
+    chain = chain.then(async () => {
+      if (!test.voices) return;
+      for (const line of it.script) {
+        try { await fetch(dialogueUrl(line, test.voices)); } catch { /* playing falls back to the browser voice */ }
+      }
+    });
+    ready[it.qid] = chain;
+  }
+  return { item: qid => ready[qid] || Promise.resolve() };
+}
+
+async function renderMockReview(body, id) {
+  const { test, report } = await api.get(`/api/mock/${encodeURIComponent(id)}`);
+  renderMockReport(body, test, report);
+}
+
+function renderMockReport(body, test, report) {
+  const res = report.questions;
+  const fails = report.sections.filter(s => !s.met_minimum);
+  const verdict = report.passed
+    ? el("p", { class: "feedback ok mock-verdict" }, "✓ Estimated: pass")
+    : el("p", { class: "feedback bad mock-verdict" }, fails.length
+      ? `✗ Estimated: not yet. ${fails.map(s => s.title).join(" and ")} below the section minimum`
+      : `✗ Estimated: not yet. ${report.pass_mark - report.score} points below the pass mark`);
+  const groups = MOCK_GROUP_ORDER.concat(["reading", "listening"]).filter(g => report.groups[g]);
+  const missedWords = Object.values(res).filter(r => !r.correct && r.word).map(r => r.word);
+
+  const addMissed = el("button", { class: "btn", type: "button", disabled: !missedWords.length },
+    missedWords.length ? `＋ Add ${missedWords.length} missed word${missedWords.length > 1 ? "s" : ""} to reviews` : "No missed words");
+  addMissed.addEventListener("click", async () => {
+    addMissed.disabled = true;
+    const r = await api.post("/api/quiz/add-missed", { words: missedWords, kanji: [] });
+    addMissed.textContent = `${r.added} word${r.added === 1 ? "" : "s"} added ✓`;
+    refreshBadge();
+  });
+
+  // Each question again, with the right answer and the explanation.
+  const reviewChoices = (id, choices, jp) => {
+    const r = res[id];
+    return el("div", { class: "quiz-choices reading-choices" }, choices.map((c, i) =>
+      el("div", { class: `quiz-choice reading-choice${jp ? " jp" : ""}${i === r.answer ? " ok" : i === r.chosen ? " bad" : ""}` },
+        el("span", { class: "key" }, i + 1), mockChoice(c))));
+  };
+  const verdictLine = id => {
+    const r = res[id];
+    return el("div", {},
+      el("p", { class: `feedback ${r.correct ? "ok" : "bad"}` }, r.correct ? "✓ Correct" : r.chosen == null ? `Not answered. The answer is ${r.answer + 1}` : `✗ The answer is ${r.answer + 1}`),
+      el("div", { class: "quiz-explain" }, r.why));
+  };
+  let number = 0;
+  const review = [
+    ...[...test.vocab, ...test.grammar].map(q => el("div", { class: "reading-q mock-q" },
+      el("div", { class: "reading-q-head" }, el("span", { class: "reading-q-num" }, `${++number}`), mockPrompt(q),
+        el("span", { class: "tag tag-level" }, MOCK_GROUPS[q.group][1])),
+      reviewChoices(q.id, q.choices, q.jp_choices), verdictLine(q.id))),
+    ...test.passages.map(p => el("div", { class: "mock-passage" },
+      el("div", { class: "reading-text" }, p.text.map(t => el("div", { class: "reading-para" }, richEl("div", { class: "jp-line", lang: "ja" }, t.segments)))),
+      el("details", { class: "reading-translation" }, el("summary", {}, "English translation"),
+        (report.translations[p.id] || []).map(t => el("p", { class: "reading-en" }, t))),
+      p.questions.map(q => el("div", { class: "reading-q" },
+        el("div", { class: "reading-q-head" }, el("span", { class: "reading-q-num" }, `${++number}`), richEl("div", { class: "jp-line", lang: "ja" }, q.segments)),
+        reviewChoices(q.id, q.choices, true), verdictLine(q.id))))),
+    ...test.listening.map(it => {
+      const lr = report.listening_review[it.qid];
+      return el("div", { class: "reading-q mock-q" },
+        el("div", { class: "reading-q-head" }, el("span", { class: "reading-q-num" }, `${++number}`),
+          el("div", {}, el("span", { lang: "ja" }, it.kind_jp), ` ${it.title}`)),
+        reviewChoices(it.qid, lr.choices, true), verdictLine(it.qid),
+        el("details", { class: "reading-translation" }, el("summary", {}, "Transcript"),
+          el("div", { class: "listen-transcript" }, lr.transcript.map(line =>
+            el("div", { class: `listen-line role-${line.who}` },
+              el("span", { class: "listen-who" }, line.label),
+              el("div", { class: "listen-text" },
+                richEl("div", { class: "jp-line", lang: "ja" }, line.segments),
+                line.en && el("div", { class: "en" }, line.en)),
+              el("span"))))));
+    }),
+  ];
+
+  body.replaceChildren(
+    el("div", { class: "lesson-head" },
+      el("a", { class: "back", href: "#mock" }, "← Mock tests"),
+      el("div", { class: "lesson-level" }, `JLPT ${test.level} mock test`),
+      el("h2", {}, `${report.score} / ${report.max} points`),
+      el("p", { class: "goal" }, `Pass mark ${report.pass_mark} · ${report.correct} of ${report.total} questions right`)),
+    verdict,
+    el("table", { class: "vocab-table mock-sections" }, el("tbody", {}, report.sections.map(s =>
+      el("tr", {},
+        el("td", { lang: "ja" }, s.title),
+        el("td", {}, el("strong", {}, `${s.score}`), ` / ${s.max}`),
+        el("td", { class: s.met_minimum ? "muted" : "bad-text" }, `minimum ${s.minimum}`),
+        el("td", { class: "muted" }, `${s.correct} / ${s.total} right`))))),
+    el("div", { class: "lesson-section" },
+      el("h3", {}, "By question type"),
+      el("div", { class: "mock-breakdown" }, groups.map(g => {
+        const { correct, total } = report.groups[g];
+        return el("div", { class: "meter" },
+          el("div", { class: "meter-label" }, el("span", {}, el("span", { lang: "ja" }, MOCK_GROUPS[g][0]), ` ${MOCK_GROUPS[g][1]}`),
+            el("span", { class: "value" }, `${correct} / ${total}`)),
+          el("div", { class: "meter-track" }, el("div", { class: "meter-fill", style: `width:${total ? correct / total * 100 : 0}%` })));
+      })),
+      Object.keys(report.elapsed_ms || {}).length ? el("p", { class: "muted" }, "Time used: ",
+        test.parts.filter(p => report.elapsed_ms[p.key] != null).map(p =>
+          `${p.title} ${mmss(report.elapsed_ms[p.key])}${p.minutes ? ` of ${p.minutes}:00` : ""}`).join(" · ")) : ""),
+    el("div", { class: "lesson-actions" },
+      addMissed,
+      el("button", { class: "btn btn-primary", type: "button", onclick: e => startMock(body, test.level, e.currentTarget) },
+        el("span", { class: "arrow" }, `Take another ${test.level} test`))),
+    el("div", { class: "lesson-section" },
+      el("h3", {}, "Your answers"),
+      el("div", { class: "reading-page no-furigana" }, review)),
+  );
+  window.scrollTo(0, 0);
+}
+
 /* ================= quiz ================= */
 
 const QUIZ_TYPES = {
@@ -2615,7 +3016,7 @@ async function renderQuiz() {
 
   body.replaceChildren(
     el("div", { class: "panel-head" },
-      el("h2", {}, "JLPT practice quiz"),
+      quizTabs("quiz"),
       el("span", { class: "muted" }, "Questions come from verified lessons and dictionaries, never from the AI")),
     el("div", { class: "field" },
       el("div", { class: "field-label" }, "Lessons",

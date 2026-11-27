@@ -141,6 +141,20 @@ CREATE TABLE IF NOT EXISTS listening_results (
     created_at  REAL    NOT NULL
 );
 
+-- Mock tests (app/mock.py): the test with its answer key, and the result once submitted.
+CREATE TABLE IF NOT EXISTS mock_tests (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    level       TEXT    NOT NULL,
+    data        TEXT    NOT NULL,   -- JSON from mock.build()
+    created_at  REAL    NOT NULL,
+    finished_at REAL,
+    correct     INTEGER,
+    total       INTEGER,
+    score       INTEGER,            -- estimated JLPT points
+    passed      INTEGER,
+    result      TEXT                -- JSON: answers, per-question results, section scores, time used
+);
+
 CREATE TABLE IF NOT EXISTS deck_reviews (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     card_id     INTEGER NOT NULL REFERENCES deck_cards (id) ON DELETE CASCADE,

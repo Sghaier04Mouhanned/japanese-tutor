@@ -1,0 +1,528 @@
+"""Timed JLPT mock tests, one per level, built from verified content only.
+
+A test follows the real JLPT's parts and scoring, at about half the length:
+
+- 言語知識（文字・語彙）: kanji readings, spellings and meanings of words from the
+  level's word list (app/words.py), with kanji up to that level
+- 言語知識（文法）: hand-written grammar questions (GRAMMAR below), plus particle
+  questions from the lessons for N5 and N4
+- 読解: passages of the level from app/reading.py
+- 聴解: items of the level from app/listening.py, each heard once
+
+N2 and N1 sit the language and reading parts together, as on the real test. The
+score report scales each section to the JLPT's points (0-60 or 0-120) and
+compares it with the real pass marks. The JLPT equates scores across tests, so
+ours is an estimate.
+
+    python -m app.mock             # check the grammar questions and build a test per level
+    python -m app.mock --readings  # print the grammar questions' furigana to proofread
+"""
+
+from __future__ import annotations
+
+import math
+import random
+import re
+from functools import lru_cache
+
+from . import dictionary, furigana, lessons, listening, quiz, reading, words
+
+LEVELS = ("N5", "N4", "N3", "N2", "N1")
+
+# Each level's timed parts (the real test's minutes in brackets in REAL_MINUTES), how
+# many questions of each kind, and how the JLPT scores it.
+SPEC = {
+    "N5": {"vocab": 14, "grammar": 8, "particles": 4, "listening": 6, "joined": False},
+    "N4": {"vocab": 14, "grammar": 8, "particles": 4, "listening": 6, "joined": False},
+    "N3": {"vocab": 14, "grammar": 10, "particles": 0, "listening": 7, "joined": False},
+    "N2": {"vocab": 14, "grammar": 10, "particles": 0, "listening": 7, "joined": True},
+    "N1": {"vocab": 14, "grammar": 10, "particles": 0, "listening": 7, "joined": True},
+}
+REAL_MINUTES = {  # 言語知識（文字・語彙） / 言語知識（文法）・読解 / 聴解
+    "N5": (20, 40, 30), "N4": (25, 55, 35), "N3": (30, 70, 40), "N2": (105, None, 50), "N1": (110, None, 55),
+}
+# Minutes allowed per question, on top of each passage's own suggested minutes.
+VOCAB_MINUTES = 0.6
+GRAMMAR_MINUTES = 0.8
+
+# Scored sections: points, and which question groups count toward them.
+SCORING = {
+    "N5": {"pass": 80, "sections": [("language_reading", "言語知識（文字・語彙・文法）・読解", 120, 38),
+                                     ("listening", "聴解", 60, 19)]},
+    "N4": {"pass": 90, "sections": [("language_reading", "言語知識（文字・語彙・文法）・読解", 120, 38),
+                                     ("listening", "聴解", 60, 19)]},
+    "N3": {"pass": 95, "sections": [("language", "言語知識（文字・語彙・文法）", 60, 19), ("reading", "読解", 60, 19),
+                                     ("listening", "聴解", 60, 19)]},
+    "N2": {"pass": 90, "sections": [("language", "言語知識（文字・語彙・文法）", 60, 19), ("reading", "読解", 60, 19),
+                                     ("listening", "聴解", 60, 19)]},
+    "N1": {"pass": 100, "sections": [("language", "言語知識（文字・語彙・文法）", 60, 19), ("reading", "読解", 60, 19),
+                                      ("listening", "聴解", 60, 19)]},
+}
+# Question group -> scored section, per scoring style.
+_SECTION_OF = {
+    "joined": {"vocab": "language_reading", "grammar": "language_reading", "reading": "language_reading",
+               "listening": "listening"},
+    "split": {"vocab": "language", "grammar": "language", "reading": "reading", "listening": "listening"},
+}
+
+GROUP_LABELS = {
+    "kanji_reading": ("漢字読み", "Kanji reading"),
+    "spelling": ("表記", "Spelling"),
+    "meaning": ("語彙", "Word meaning"),
+    "grammar": ("文法形式の判断", "Grammar"),
+    "particle": ("助詞", "Particles"),
+    "reading": ("読解", "Reading"),
+    "listening": ("聴解", "Listening"),
+}
+
+# ---------------------------------------------------------------------------
+# Grammar (文法形式の判断): choose what fits the blank. Hand-written so that exactly
+# one choice is right; the distractors are other forms of the level that are wrong
+# here in form or meaning.
+# ---------------------------------------------------------------------------
+
+GRAMMAR: dict[str, list[dict]] = {
+    "N5": [
+        {"q": "わたしは毎朝7時（　）おきます。", "choices": ["に", "で", "を", "が"], "answer": 0,
+         "why": "A clock time takes に: 7時に (at 7 o'clock)."},
+        {"q": "きのう、デパート（　）くつを買いました。", "choices": ["で", "に", "を", "へ"], "answer": 0,
+         "why": "The place where an action happens takes で: デパートで買いました (bought at the department store)."},
+        {"q": "A「この本は（　）ですか。」B「わたしのです。」", "choices": ["だれの", "だれ", "どれ", "なに"], "answer": 0,
+         "why": "B answers わたしの (mine), so A asks whose: だれの本 / だれのですか."},
+        {"q": "あした、いっしょに映画を（　）。", "choices": ["見ませんか", "見ました", "見ませんでした", "見ている"],
+         "answer": 0, "why": "あした (tomorrow) and いっしょに (together): an invitation, 〜ませんか (won't you...?)."},
+        {"q": "へやの中に、ねこが（　）。", "choices": ["います", "あります", "です", "いきます"], "answer": 0,
+         "why": "Animals and people take います; things take あります."},
+        {"q": "母は今、だいどころで料理を（　）。", "choices": ["しています", "しましょう", "してください", "しませんか"],
+         "answer": 0, "why": "今 (now) and an action going on: 〜ています (is cooking)."},
+        {"q": "このへやはしずか（　）、きれいです。", "choices": ["で", "くて", "と", "な"], "answer": 0,
+         "why": "Joining a な-adjective to the next one: しずかで、きれいです (quiet and clean). くて is for い-adjectives."},
+        {"q": "日本語は英語（　）むずかしいですか。", "choices": ["より", "まで", "から", "ほど"], "answer": 0,
+         "why": "Comparing: AはBよりむずかしい (A is harder than B). ほど only comes with a negative (英語ほどむずかしくない)."},
+        {"q": "ここで写真を（　）もいいですか。", "choices": ["とって", "とる", "とった", "とらない"], "answer": 0,
+         "why": "Asking permission: て-form + もいいですか (may I take...?)."},
+        {"q": "さむい（　）、まどをしめてください。", "choices": ["から", "が", "けど", "のに"], "answer": 0,
+         "why": "Giving a reason: さむいから (because it's cold). が, けど and のに mean \"but\"."},
+        {"q": "ここはきんえんです。ここでたばこを（　）ください。", "choices": ["すわないで", "すわなくて", "すわない", "すわないの"],
+         "answer": 0, "why": "No smoking here, so a request not to: ない-form + でください (please don't smoke)."},
+    ],
+    "N4": [
+        {"q": "わたしは一度、富士山に（　）ことがあります。", "choices": ["のぼった", "のぼる", "のぼって", "のぼり"],
+         "answer": 0, "why": "Experience: た-form + ことがあります (I have climbed it once)."},
+        {"q": "日曜日は、そうじをし（　）、せんたくをしたりします。", "choices": ["たり", "て", "ながら", "たら"],
+         "answer": 0, "why": "〜たり〜たりします lists things you do, and the sentence already has したり."},
+        {"q": "あしたテストがあるので、今晩勉強し（　）なりません。", "choices": ["なければ", "なくても", "ないで", "なくて"],
+         "answer": 0, "why": "A test tomorrow: 〜なければなりません (I have to study). なくてもいい would mean \"don't have to\" and needs いい."},
+        {"q": "わたしは先生に作文を（　）、うれしかったです。", "choices": ["ほめられて", "ほめて", "ほめようと", "ほめるので"],
+         "answer": 0, "why": "The teacher praised me: passive, 先生に作文をほめられて (I was praised by the teacher)."},
+        {"q": "母は子どもに野菜を（　）。", "choices": ["食べさせました", "食べました", "食べたいです", "食べましょう"],
+         "answer": 0, "why": "The mother makes the child eat: causative, 子どもに食べさせました."},
+        {"q": "空が暗くなってきました。もうすぐ雨が（　）。", "choices": ["ふりそうです", "ふりたいです", "ふってあげます", "ふりましょう"],
+         "answer": 0, "why": "The sky is getting dark, so it looks like rain: ます-stem + そうです."},
+        {"q": "友だちがわたしを駅まで車で送って（　）。", "choices": ["くれました", "あげました", "もらいました", "やりました"],
+         "answer": 0, "why": "Someone does something for me (わたしを): 〜てくれました. あげる is never toward the speaker."},
+        {"q": "音楽を聞き（　）、勉強します。", "choices": ["ながら", "て", "たり", "ば"], "answer": 0,
+         "why": "Two things at once: ます-stem + ながら (while listening). 聞きて, 聞きたり and 聞きば aren't forms."},
+        {"q": "日本語が話せる（　）、毎日練習しています。", "choices": ["ように", "ために", "そうに", "ことに"],
+         "answer": 0, "why": "A goal with a potential verb takes ように: 話せるように (so that I can speak). ために needs a verb of will."},
+        {"q": "この薬はとても苦くて、（　）にくいです。", "choices": ["飲み", "飲む", "飲んで", "飲ま"], "answer": 0,
+         "why": "Hard to do: ます-stem + にくい (飲みにくい, hard to swallow)."},
+        {"q": "時間がないので、タクシーで（　）。", "choices": ["行きましょう", "行ったことがあります", "行ったり", "行かせられます"],
+         "answer": 0, "why": "No time, so a suggestion: 行きましょう (let's go by taxi)."},
+    ],
+    "N3": [
+        {"q": "A「今、電話してもいい？」B「ごめん、今からご飯を食べる（　）なんだ。」", "choices": ["ところ", "うち", "まま", "ほど"],
+         "answer": 0, "why": "Just about to do something: dictionary form + ところだ (I'm about to eat)."},
+        {"q": "若い（　）、いろいろな国へ行ってみたい。", "choices": ["うちに", "ところに", "最中に", "たびに"],
+         "answer": 0, "why": "While a state lasts, before it changes: 若いうちに (while I'm young)."},
+        {"q": "弟はゲーム（　）していて、全然勉強しない。", "choices": ["ばかり", "しか", "ほど", "くらい"],
+         "answer": 0, "why": "Doing nothing but: ゲームばかりしている. しか would need a negative verb."},
+        {"q": "十年も日本に住んでいたんですか。日本語が上手な（　）ですね。", "choices": ["わけ", "ため", "ばかり", "まま"],
+         "answer": 0, "why": "Now it makes sense: 上手なわけですね (no wonder you're good)."},
+        {"q": "電車が遅れた（　）、会議に間に合わなかった。", "choices": ["せいで", "おかげで", "たびに", "うちに"],
+         "answer": 0, "why": "A cause with a bad result: せいで. おかげで is for good results."},
+        {"q": "この料理は、作り方（　）味がずいぶん変わる。", "choices": ["によって", "について", "にとって", "として"],
+         "answer": 0, "why": "Varies depending on: 作り方によって (depending on how it's made)."},
+        {"q": "窓を開けた（　）寝てしまって、風邪をひいた。", "choices": ["まま", "ずに", "ながら", "うちに"], "answer": 0,
+         "why": "Left in a state: た-form + まま (with the window left open)."},
+        {"q": "この歌を聞く（　）、子供のころを思い出す。", "choices": ["たびに", "うちに", "ところに", "最中に"],
+         "answer": 0, "why": "Every time: dictionary form + たびに."},
+        {"q": "社長（　）、この計画はとても大切なものだ。", "choices": ["にとって", "によって", "について", "に対して"],
+         "answer": 0, "why": "From someone's point of view: 社長にとって (for the company president)."},
+        {"q": "説明書の（　）に組み立てたのに、動かない。", "choices": ["とおり", "うち", "ほど", "わけ"], "answer": 0,
+         "why": "Just as: 説明書のとおりに (exactly as the manual says)."},
+        {"q": "こんな簡単な問題は、子供で（　）できる。", "choices": ["さえ", "しか", "ばかり", "ほど"], "answer": 0,
+         "why": "Even: 子供でさえできる (even a child can do it). しか would need a negative."},
+        {"q": "医者に、お酒を飲みすぎない（　）言われた。", "choices": ["ように", "ために", "そうに", "ことに"],
+         "answer": 0, "why": "Reporting advice or an order: 〜ように言われた (I was told not to drink too much)."},
+    ],
+    "N2": [
+        {"q": "雨が降っている（　）、試合は予定通り行われた。", "choices": ["にもかかわらず", "からこそ", "次第", "ばかりか"],
+         "answer": 0, "why": "Despite: 雨にもかかわらず / 降っているにもかかわらず (even though it was raining)."},
+        {"q": "あなたのことを大切に思う（　）、厳しく言うのです。", "choices": ["からこそ", "にもかかわらず", "次第", "つつある"],
+         "answer": 0, "why": "Precisely because: 思うからこそ (it's because I care that I'm strict)."},
+        {"q": "あんなに練習したのだから、彼は合格する（　）。", "choices": ["に違いない", "ざるを得ない", "一方だ", "にすぎない"],
+         "answer": 0, "why": "A confident guess: 〜に違いない (he's sure to pass). 合格するざるを得ない isn't a form."},
+        {"q": "準備ができ（　）、すぐに出発します。", "choices": ["次第", "ものの", "うえに", "ばかりか"], "answer": 0,
+         "why": "As soon as: ます-stem + 次第 (as soon as we're ready)."},
+        {"q": "台風が来たので、旅行を中止せ（　）。", "choices": ["ざるを得なかった", "るにすぎなかった", "つつあった", "ないことはなかった"],
+         "answer": 0, "why": "Had no choice but to: する → せざるを得ない. The others don't follow せ."},
+        {"q": "この町の人口は、年々減る（　）だ。", "choices": ["一方", "次第", "反面", "うえ"], "answer": 0,
+         "why": "Keeps going one way: dictionary form + 一方だ (keeps falling)."},
+        {"q": "彼は英語（　）、中国語や韓国語も話せる。", "choices": ["ばかりか", "にもかかわらず", "にすぎず", "に限って"],
+         "answer": 0, "why": "Not only... but also: 英語ばかりか中国語も."},
+        {"q": "この病気は、子ども（　）大人もかかることがある。", "choices": ["に限らず", "に限って", "にすぎず", "にしては"],
+         "answer": 0, "why": "Not limited to: 子どもに限らず大人も (not only children, adults too)."},
+        {"q": "社長と言っても、彼は小さな会社の社長（　）。", "choices": ["にすぎない", "ざるを得ない", "一方だ", "次第だ"],
+         "answer": 0, "why": "No more than: 〜にすぎない (he's only the head of a small company)."},
+        {"q": "この雨が続けば、川の水があふれる（　）。", "choices": ["おそれがある", "次第だ", "反面だ", "にかけてはいる"],
+         "answer": 0, "why": "A risk of something bad: dictionary form + おそれがある."},
+        {"q": "約束した（　）、必ず守らなければならない。", "choices": ["からには", "ものの", "にしては", "反面"], "answer": 0,
+         "why": "Now that, since: 約束したからには (since you promised, you must keep it)."},
+        {"q": "初めて作った（　）、このケーキはとてもおいしい。", "choices": ["にしては", "からには", "次第", "上で"],
+         "answer": 0, "why": "Considering: 初めて作ったにしては (for a first attempt, it's very good)."},
+    ],
+    "N1": [
+        {"q": "この祭りは、この町（　）の伝統行事だ。", "choices": ["ならでは", "ともなると", "をよそに", "といえども"],
+         "answer": 0, "why": "Only found here: 町ならではの伝統 (a tradition unique to this town)."},
+        {"q": "大学生（　）、自分のことは自分で決めるべきだ。", "choices": ["ともなれば", "ならでは", "をもって", "なり"],
+         "answer": 0, "why": "Once someone reaches that stage: 大学生ともなれば (once you're a university student)."},
+        {"q": "家族の心配（　）、彼は危険な山へ一人で出かけた。", "choices": ["をよそに", "とあって", "ならではの", "たりとも"],
+         "answer": 0, "why": "Ignoring others' feelings: 心配をよそに (paying no attention to his family's worry)."},
+        {"q": "子どもは家に帰る（　）、かばんを置いて遊びに行った。", "choices": ["なり", "べく", "まじき", "ずくめ"],
+         "answer": 0, "why": "The moment: dictionary form + なり (as soon as he got home)."},
+        {"q": "試験に合格す（　）、毎日10時間勉強している。", "choices": ["べく", "なり", "がてら", "ながら"], "answer": 0,
+         "why": "In order to: する → すべく (to pass the exam). The others don't follow す."},
+        {"q": "一円（　）無駄にはできない。", "choices": ["たりとも", "ならでは", "をもって", "ずくめ"], "answer": 0,
+         "why": "Not even one: 一円たりとも (not a single yen), with a negative."},
+        {"q": "生徒に暴力をふるうなど、教師にある（　）行為だ。", "choices": ["まじき", "べく", "なり", "ならでは"],
+         "answer": 0, "why": "Unbecoming of: あるまじき行為 (conduct unworthy of a teacher)."},
+        {"q": "これ（　）、本日の会議を終わります。", "choices": ["をもって", "をよそに", "たりとも", "なり"], "answer": 0,
+         "why": "Formal \"with this\": これをもって終わります (with this, the meeting ends)."},
+        {"q": "散歩（　）、駅前の本屋に寄った。", "choices": ["がてら", "ずくめ", "まじき", "たりとも"], "answer": 0,
+         "why": "While doing one thing, also do another: 散歩がてら (while out for a walk)."},
+        {"q": "今日は朝から、いいこと（　）だった。", "choices": ["ずくめ", "がてら", "たりとも", "なり"], "answer": 0,
+         "why": "Full of: いいことずくめ (nothing but good things)."},
+        {"q": "被害者の話を聞いて、同情を（　）。", "choices": ["禁じ得なかった", "ものともしなかった", "よそにした", "きらいがあった"],
+         "answer": 0, "why": "Couldn't help feeling: 同情を禁じ得ない (I can't help feeling sympathy)."},
+        {"q": "彼は、物事を悪い方に考える（　）がある。", "choices": ["きらい", "べき", "まじき", "ならでは"], "answer": 0,
+         "why": "A (bad) tendency: dictionary form + きらいがある."},
+    ],
+}
+
+# Reading: a mix like the test's mondai, by passage kind.
+_READING_PLAN = {"Short passage": 2, "Medium passage": 1}
+_READING_OTHER = 1  # plus one information search, comparison or long passage
+LISTENING_ORDER = ("task", "point", "summary", "utterance", "quick", "integrated")
+
+_KANJI = re.compile(r"[㐀-鿿々]")
+_HIRAGANA = re.compile(r"^[ぁ-ゖー]+$")
+_STOP = {"to", "a", "an", "the", "of", "be", "in", "on", "for", "one", "s", "e", "g", "etc", "something",
+         "someone", "with", "and", "or", "as", "at", "by", "up", "out", "do", "get", "make", "take", "have"}
+
+
+def level_of(test_level: str) -> int:
+    return LEVELS.index(test_level)
+
+
+def known_kanji(level: str) -> set[str] | None:
+    from .reading_api import _known_kanji  # the passages' rule: study lists up to the level, plus lesson kanji
+    return _known_kanji(level)
+
+
+# ---------- vocabulary ----------
+
+def _content_words(meaning: str) -> set[str]:
+    return {w for w in re.findall(r"[a-z]+", meaning.lower()) if w not in _STOP and len(w) > 2}
+
+
+def _vocab_pool(level: str) -> list[dict]:
+    known = known_kanji(level)
+    pool = []
+    for w in words.by_level(level):
+        if "～" in w["word"] or not w["entry_id"]:
+            continue
+        kanji_ok = known is None or all(c in known for c in _KANJI.findall(w["word"]))
+        pool.append({**w, "kanji_ok": kanji_ok})
+    return pool
+
+
+def _all_readings(w: dict) -> frozenset[str]:
+    return _entry_readings(w["entry_id"]) or frozenset({w["reading"]})
+
+
+@lru_cache(maxsize=16384)
+def _entry_readings(entry_id: int | None) -> frozenset[str]:
+    e = dictionary.entry(entry_id) if entry_id else None
+    return frozenset(e["readings"]) if e else frozenset()
+
+
+def _vocab_questions(level: str, count: int) -> list[dict]:
+    pool = _vocab_pool(level)
+    kanji_words = [w for w in pool if w["kanji_ok"] and _KANJI.search(w["word"]) and _HIRAGANA.match(w["reading"])
+                   and len(w["word"]) <= 4]
+    random.shuffle(kanji_words)
+    plan = [("kanji_reading", round(count * 0.4)), ("spelling", round(count * 0.25))]
+    plan.append(("meaning", count - sum(n for _t, n in plan)))
+    used: set[str] = set()
+    out: list[dict] = []
+    for group, n in plan:
+        source = kanji_words if group != "meaning" else random.sample(pool, len(pool))
+        made = 0
+        for w in source:
+            if made == n:
+                break
+            if w["id"] in used:
+                continue
+            q = {"kanji_reading": _reading_q, "spelling": _spelling_q, "meaning": _meaning_q}[group](w, pool)
+            if q:
+                used.add(w["id"])
+                out.append(q)
+                made += 1
+    return out
+
+
+def _reading_q(w: dict, pool: list[dict]) -> dict | None:
+    valid = _all_readings(w)
+    # ぢ/づ only where the word has them: ぢゅうがっこう is no real-looking mistake.
+    misses = [r for r in quiz._near_misses(w["reading"]) if r not in valid
+              and not (set("ぢづ") & set(r)) - set(w["reading"])]
+    random.shuffle(misses)
+    others = [p["reading"] for p in pool if len(p["reading"]) == len(w["reading"]) and p["reading"] not in valid]
+    random.shuffle(others)
+    distractors = quiz._pick_distractors(w["reading"], misses + others)
+    if not distractors:
+        return None
+    return _choice_q("kanji_reading", {"word": w["word"]}, w["reading"], distractors,
+                     f"{w['word']} is read {w['reading']}: {w['meaning']}.", w)
+
+
+def _spelling_q(w: dict, pool: list[dict]) -> dict | None:
+    # Words read the same way would also be right (かわ: 川 and 皮), so they never appear.
+    shared = set(_KANJI.findall(w["word"]))
+    others = [p for p in pool if p["kanji_ok"] and _KANJI.search(p["word"]) and p["word"] != w["word"]
+              and p["reading"] != w["reading"]]
+    # Look-alikes first: the same shape (kanji only, or kanji and kana), sharing a kanji, the same length.
+    shape = bool(re.search(r"[ぁ-ゖ]", w["word"]))
+    others.sort(key=lambda p: (bool(re.search(r"[ぁ-ゖ]", p["word"])) != shape, not (set(p["word"]) & shared),
+                               abs(len(p["word"]) - len(w["word"])), random.random()))
+    others = [p for p in others[:20] if w["reading"] not in _all_readings(p)]
+    distractors = quiz._pick_distractors(w["word"], [p["word"] for p in others[:12]])
+    if not distractors:
+        return None
+    return _choice_q("spelling", {"reading": w["reading"]}, w["word"], distractors,
+                     f"{w['reading']} is written {w['word']}: {w['meaning']}.", w)
+
+
+def _meaning_q(w: dict, pool: list[dict]) -> dict | None:
+    mine = _content_words(w["meaning"])
+    if not mine:
+        return None
+    # No wrong answer may share a content word with the right one ("to finish" / "to finish off").
+    others = [p["meaning"] for p in pool if p["id"] != w["id"] and not (_content_words(p["meaning"]) & mine)
+              and _content_words(p["meaning"])]
+    random.shuffle(others)
+    distractors = quiz._pick_distractors(w["meaning"], others)
+    if not distractors:
+        return None
+    from .words_api import _ruby_parts
+    return _choice_q("meaning", {"word": w["word"], "parts": _ruby_parts(w["word"], w["reading"])}, w["meaning"],
+                     distractors, f"{w['word']} ({w['reading']}) means \"{w['meaning']}\".", w)
+
+
+def _choice_q(group: str, prompt: dict, correct: str, distractors: list[str], why: str, w: dict) -> dict:
+    choices = [correct, *distractors]
+    random.shuffle(choices)
+    return {"group": group, "prompt": prompt, "choices": choices, "answer": choices.index(correct), "why": why,
+            "word": {"word": w["word"], "reading": w["reading"], "meaning": w["meaning"]}}
+
+
+# ---------- grammar ----------
+
+def _grammar_questions(level: str, count: int, particles: int) -> list[dict]:
+    out = []
+    for g in random.sample(GRAMMAR[level], min(count, len(GRAMMAR[level]))):
+        order = list(range(4))
+        random.shuffle(order)
+        out.append({"group": "grammar", "prompt": {"text": g["q"]}, "choices": [g["choices"][i] for i in order],
+                    "answer": order.index(g["answer"]), "why": g["why"]})
+    examples = [e for les in lessons.LESSONS if lessons.level(les) == level for e in les["examples"]]
+    random.shuffle(examples)
+    made = 0
+    for ex in examples:
+        if made == particles:
+            break
+        q = quiz._particle_q(ex)
+        if q:
+            # With the meaning, as in the practice quiz: 母（　）叱られました could take が or に otherwise.
+            out.append({"group": "particle", "prompt": {"text": "".join(s["t"] for s in q["prompt"]["segments"]),
+                                                        "hint": q["prompt"]["hint"]},
+                        "choices": q["choices"], "answer": q["answer"], "why": q["explain"]})
+            made += 1
+    return out
+
+
+# ---------- reading and listening ----------
+
+def _passages(level: str) -> list[dict]:
+    of_level = [p for p in reading.PASSAGES if reading.level(p) == level]
+    chosen = []
+    for kind, n in _READING_PLAN.items():
+        chosen += random.sample([p for p in of_level if p["kind"] == kind], n)
+    others = [p for p in of_level if p["kind"] not in _READING_PLAN]
+    chosen += random.sample(others, min(_READING_OTHER, len(others)))
+    return chosen
+
+
+def _listening_items(level: str, count: int) -> list[dict]:
+    of_level = [i for i in listening.ITEMS if listening.level(i) == level]
+    random.shuffle(of_level)
+    chosen, kinds = [], set()
+    for i in of_level:  # one of each kind first, then any
+        if i["kind"] not in kinds:
+            chosen.append(i)
+            kinds.add(i["kind"])
+    chosen += [i for i in of_level if i not in chosen][: max(0, count - len(chosen))]
+    chosen = chosen[:count]
+    return sorted(chosen, key=lambda i: LISTENING_ORDER.index(i["kind"]))
+
+
+# ---------- the test ----------
+
+def build(level: str) -> dict:
+    """A new test. Answers stay in this dict (stored server-side); public() strips them."""
+    spec = SPEC[level]
+    vocab = _vocab_questions(level, spec["vocab"])
+    grammar = _grammar_questions(level, spec["grammar"], spec["particles"])
+    passages = _passages(level)
+    items = _listening_items(level, spec["listening"])
+
+    n = 0
+    def qid() -> str:
+        nonlocal n
+        n += 1
+        return f"q{n}"
+
+    for q in vocab + grammar:
+        q["id"] = qid()
+    reading_qs = [{"id": qid(), "passage": p["id"], "index": i} for p in passages for i in range(len(p["questions"]))]
+    listening_qs = [{"id": qid(), "item": i["id"]} for i in items]
+
+    vocab_min = len(vocab) * VOCAB_MINUTES
+    grammar_reading_min = len(grammar) * GRAMMAR_MINUTES + sum(p["minutes"] for p in passages)
+    parts = []
+    if spec["joined"]:
+        parts.append({"key": "language_reading", "title": "言語知識（文字・語彙・文法）・読解",
+                      "minutes": math.ceil(vocab_min + grammar_reading_min), "groups": ["vocab", "grammar", "reading"]})
+    else:
+        parts.append({"key": "vocab", "title": "言語知識（文字・語彙）", "minutes": math.ceil(vocab_min), "groups": ["vocab"]})
+        parts.append({"key": "grammar_reading", "title": "言語知識（文法）・読解",
+                      "minutes": math.ceil(grammar_reading_min), "groups": ["grammar", "reading"]})
+    parts.append({"key": "listening", "title": "聴解", "minutes": None, "groups": ["listening"]})
+    return {"level": level, "parts": parts, "vocab": vocab, "grammar": grammar,
+            "passages": [p["id"] for p in passages], "reading": reading_qs, "listening": listening_qs}
+
+
+def answer_key(test: dict) -> dict[str, dict]:
+    """Question id -> {group, answer, why} for every question of a test."""
+    key = {q["id"]: {"group": q["group"], "answer": q["answer"], "why": q["why"], "word": q.get("word")}
+           for q in test["vocab"] + test["grammar"]}
+    for r in test["reading"]:
+        q = reading.get(r["passage"])["questions"][r["index"]]
+        key[r["id"]] = {"group": "reading", "answer": q["answer"], "why": q["why"]}
+    for r in test["listening"]:
+        item = listening.get(r["item"])
+        key[r["id"]] = {"group": "listening", "answer": item["answer"], "why": item["why"]}
+    return key
+
+
+def score(test: dict, answers: dict[str, int | None]) -> dict:
+    """Raw counts per question group and estimated JLPT section scores."""
+    level = test["level"]
+    rules = SCORING[level]
+    section_of = _SECTION_OF["joined" if level in ("N5", "N4") else "split"]
+    key = answer_key(test)
+    groups: dict[str, list[int]] = {}
+    sections: dict[str, list[int]] = {}
+    per_question = {}
+    for qid, k in key.items():
+        chosen = answers.get(qid)
+        ok = chosen == k["answer"]
+        per_question[qid] = {"chosen": chosen, "answer": k["answer"], "correct": ok, "why": k["why"]}
+        if k.get("word"):
+            per_question[qid]["word"] = k["word"]  # so missed words can go into the reviews
+        g = groups.setdefault(k["group"], [0, 0])
+        g[0] += ok
+        g[1] += 1
+        family = "grammar" if k["group"] in ("grammar", "particle") else (
+            "vocab" if k["group"] in ("kanji_reading", "spelling", "meaning") else k["group"])
+        s = sections.setdefault(section_of[family], [0, 0])
+        s[0] += ok
+        s[1] += 1
+    report = []
+    for key_name, title, points, minimum in rules["sections"]:
+        right, total = sections.get(key_name, [0, 0])
+        scaled = round(right / total * points) if total else 0
+        report.append({"key": key_name, "title": title, "correct": right, "total": total, "score": scaled,
+                       "max": points, "minimum": minimum, "met_minimum": scaled >= minimum})
+    total_score = sum(s["score"] for s in report)
+    return {
+        "questions": per_question,
+        "groups": {g: {"correct": c, "total": t} for g, (c, t) in groups.items()},
+        "sections": report,
+        "score": total_score, "max": sum(s["max"] for s in report), "pass_mark": rules["pass"],
+        "passed": total_score >= rules["pass"] and all(s["met_minimum"] for s in report),
+        "correct": sum(1 for q in per_question.values() if q["correct"]), "total": len(per_question),
+    }
+
+
+def _check(show_readings: bool = False) -> int:
+    problems = []
+    for level, qs in GRAMMAR.items():
+        need = SPEC[level]["grammar"]
+        if len(qs) < need:
+            problems.append(f"{level}: {len(qs)} grammar questions, the test needs {need}")
+        for g in qs:
+            if g["q"].count("（　）") != 1:
+                problems.append(f"{level} {g['q']}: needs exactly one blank （　）")
+            if len(g["choices"]) != 4 or len(set(g["choices"])) != 4:
+                problems.append(f"{level} {g['q']}: needs 4 different choices")
+            if not 0 <= g["answer"] < len(g["choices"]):
+                problems.append(f"{level} {g['q']}: answer out of range")
+            if not g["why"]:
+                problems.append(f"{level} {g['q']}: no explanation")
+            if show_readings:
+                filled = g["q"].replace("（　）", g["choices"][g["answer"]])
+                segs = furigana.annotate(filled)
+                print(level, "".join(f"{s['t']}({s['k']})" if s.get("parts") else s["t"] for s in segs))
+    for level in LEVELS:
+        for _ in range(20):  # random builds: every one must be complete
+            test = build(level)
+            spec = SPEC[level]
+            if len(test["vocab"]) != spec["vocab"]:
+                problems.append(f"{level}: built {len(test['vocab'])} vocabulary questions, expected {spec['vocab']}")
+                break
+            if len(test["grammar"]) != spec["grammar"] + spec["particles"]:
+                problems.append(f"{level}: built {len(test['grammar'])} grammar questions")
+                break
+            if len(test["listening"]) != spec["listening"]:
+                problems.append(f"{level}: built {len(test['listening'])} listening items")
+                break
+            for q in test["vocab"] + test["grammar"]:
+                if len(set(q["choices"])) != len(q["choices"]):
+                    problems.append(f"{level}: repeated choice in {q['choices']}")
+        t = build(level)
+        mins = " + ".join(f"{p['title']} {p['minutes']} min" for p in t["parts"] if p["minutes"])
+        print(f"{level}: {len(t['vocab'])} vocabulary, {len(t['grammar'])} grammar, {len(t['reading'])} reading "
+              f"({len(t['passages'])} passages), {len(t['listening'])} listening · {mins}")
+    print(f"{sum(len(q) for q in GRAMMAR.values())} grammar questions, {len(problems)} problem(s)")
+    for p in problems:
+        print("  " + p)
+    return len(problems)
+
+
+if __name__ == "__main__":
+    import sys
+
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.exit(1 if _check("--readings" in sys.argv) else 0)

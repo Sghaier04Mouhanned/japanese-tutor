@@ -18,7 +18,7 @@ def _item_or_404(item_id: str) -> dict:
     return item
 
 
-async def _voices() -> dict[str, int] | None:
+async def voices() -> dict[str, int] | None:
     """VOICEVOX speaker id per role, or None when the engine isn't running (the page
     then falls back to the browser's voice)."""
     if not await tts.running():
@@ -61,6 +61,15 @@ async def get_item(item_id: str):
     test (summary, quick, utterance) come back as numbers; the answer comes with the check."""
     item = _item_or_404(item_id)
     index = listening.ITEMS.index(item)
+    return {
+        **public_item(item),
+        "voices": await voices(),
+        "next_id": listening.ITEMS[index + 1]["id"] if index + 1 < len(listening.ITEMS) else None,
+    }
+
+
+def public_item(item: dict) -> dict:
+    """An item as shown before answering (also used by the mock tests)."""
     printed = listening.KINDS[item["kind"]][2]
     return {
         "id": item["id"], "title": item["title"], **_kind(item),
@@ -69,8 +78,16 @@ async def get_item(item_id: str):
         "question_segments": furigana.annotate(item["question"]) if item["question"] else [],
         "choices": [furigana.annotate(c) for c in item["choices"]] if printed else [None] * len(item["choices"]),
         "script": [{"who": s["who"], "text": s["text"]} for s in listening.script(item)],  # no translations yet
-        "voices": await _voices(),
-        "next_id": listening.ITEMS[index + 1]["id"] if index + 1 < len(listening.ITEMS) else None,
+    }
+
+
+def review_item(item: dict) -> dict:
+    """What an answer reveals: every choice, and the transcript with translations."""
+    return {
+        "choices": [furigana.annotate(c) for c in item["choices"]],
+        "transcript": [{"who": s["who"], "label": listening.ROLE_LABELS[s["who"]], "jp": s["text"],
+                        "segments": furigana.annotate(s["text"]), "en": s["en"]}
+                       for s in listening.script(item)],
     }
 
 
@@ -89,10 +106,7 @@ def check_answer(item_id: str, body: Answer):
         saved = {(r["word"], r["reading"]) for r in conn.execute("SELECT word, reading FROM vocab")}
     return {
         "correct": correct, "answer": item["answer"], "why": item["why"],
-        "choices": [furigana.annotate(c) for c in item["choices"]],
-        "transcript": [{"who": s["who"], "label": listening.ROLE_LABELS[s["who"]], "jp": s["text"],
-                        "segments": furigana.annotate(s["text"]), "en": s["en"]}
-                       for s in listening.script(item)],
+        **review_item(item),
         "vocab": [{**v, "segments": furigana.annotate(v["word"]), "saved": (v["word"], v["reading"]) in saved}
                   for v in item["vocab"]],
     }
