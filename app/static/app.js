@@ -420,10 +420,11 @@ async function renderHome() {
     api.get(`/api/kana/groups?script=${script}`),
   ]);
 
-  // Hero button leads to whatever is most useful right now.
+  // Hero button leads to whatever is most useful right now (refined by the plan below).
   const due = stats.due_count;
   $("#hero-primary").href = due ? "#review" : "#lessons";
   $("#hero-primary-label").textContent = due ? `Start review (${due})` : "Continue learning";
+  renderPlan().catch(showError);
   setState("state-due", due ? `${due} due` : "all clear", due ? "todo" : "ok");
   setState("state-streak", stats.streak_days ? "on track" : "start today", stats.streak_days ? "ok" : "todo");
   setState("state-today", stats.reviews_today ? "studied" : "not yet", stats.reviews_today ? "ok" : "todo");
@@ -469,6 +470,55 @@ async function renderHome() {
       )),
     );
   }));
+}
+
+/* ================= today's plan ================= */
+
+// Some steps open a page whose level or script is a saved preference.
+const PLAN_PREFS = { words: s => prefs.set("words.level", s.level), kana: s => s.script && prefs.set("script.learn", s.script) };
+
+async function renderPlan() {
+  const plan = await api.get("/api/plan");
+  const panel = $("#plan-panel");
+  const { steps } = plan;
+  const done = steps.filter(s => s.done).length;
+  const next = steps.find(s => !s.done);
+
+  if (next) {
+    $("#hero-primary").href = next.href;
+    $("#hero-primary").onclick = () => PLAN_PREFS[next.id]?.(next);
+    $("#hero-primary-label").textContent = done ? "Continue today's plan" : "Start today's plan";
+  }
+
+  const streak = plan.streak
+    ? `${plan.streak} day${plan.streak > 1 ? "s" : ""} in a row`
+    : plan.days_done ? "Finish today to start a new streak" : "";
+  panel.replaceChildren(
+    el("div", { class: "panel-head" },
+      el("h2", {}, "Today's plan"),
+      el("span", { class: "muted" },
+        plan.complete ? `${plan.level} · all done` : `${plan.level} · about ${plan.minutes_left} min left`)),
+    el("div", { class: "progress-line" },
+      el("div", { class: "progress" }, el("div", { class: "progress-fill",
+        style: `width:${steps.length ? done / steps.length * 100 : 0}%` })),
+      el("span", {}, `${done} / ${steps.length} done`)),
+    el("ol", { class: "plan-list" }, steps.map(s =>
+      el("li", {},
+        el("a", { class: `plan-step${s.done ? " done" : ""}${s === next ? " next" : ""}`, href: s.href,
+          onclick: () => PLAN_PREFS[s.id]?.(s) },
+          el("span", { class: "plan-check", "aria-hidden": "true" }, s.done ? "✓" : ""),
+          el("span", {},
+            el("div", { class: "plan-title" }, s.title, s.jp && el("span", { class: "jp", lang: "ja" }, s.jp)),
+            el("div", { class: "plan-detail" }, s.detail)),
+          el("span", { class: "plan-time" }, s.done ? "Done" : s.minutes ? `~${s.minutes} min` : ""))))),
+    plan.complete
+      ? el("div", { class: "plan-done", role: "status" },
+          el("strong", {}, "Done for today. お疲れさまでした！"),
+          streak && el("span", {}, streak))
+      : el("p", { class: "hint" },
+          "Steps tick themselves off as you study, and the plan starts fresh each day.",
+          streak && ` Plan streak: ${streak}.`),
+  );
 }
 
 /* ================= progress dashboard ================= */

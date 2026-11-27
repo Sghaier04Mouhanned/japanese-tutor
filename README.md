@@ -5,6 +5,16 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
 
 ## Features
 
+**Today's plan (Home)**
+- A short daily checklist built from your progress: due reviews, the next kana set, the next
+  lesson, 10 new words, one reading passage and one listening item at your level, and up to 5
+  missed questions to retry
+- Your level is the level of your next unfinished lesson; words, reading and listening join once
+  hiragana is learned (or a lesson is finished)
+- Steps tick themselves off from what you did today (mock tests count for reading and listening),
+  with a time estimate and a streak of fully finished days
+- The Home button leads to the next open step
+
 **JLPT N5 lessons**
 - 30 hand-written lessons covering the core N5 grammar: greetings, self-introduction, です,
   questions, これ/それ/あれ, の, polite verbs, past tense, particles, time, い- and な-adjectives,
@@ -272,6 +282,7 @@ app/
   quiz.py       JLPT-style question generator (+ quiz_api.py)
   mock.py       timed mock tests: grammar questions, test builder and scoring (+ mock_api.py)
   missed_api.py reading and listening questions whose latest answer was wrong
+  plan_api.py   today's study plan on Home
   speech.py     Whisper transcription and shadowing comparison (+ speech_api.py)
   tts.py        VOICEVOX engine control and cached speech synthesis (+ tts_api.py)
   kanji.py      kanji index from KANJIDIC2 + KanjiVG strokes (+ kanji_api.py)
