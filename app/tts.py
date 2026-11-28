@@ -143,7 +143,10 @@ _SAY_FIXES = [("何ですか", "なんですか"), ("何でしょう", "なん�
               ("海の幸", "うみのさち"),  # the engine says うみのこう
               ("自由な分", "じゆうなぶん"),  # the engine says じゆうなわけ
               ("同じ味", "おなじあじ"),  # the engine says どうじみ
-              ("何と言", "なんと言"), ("何階", "なんがい"), ("日本", "にほん")]  # the engine sometimes says にっぽん; the furigana shows にほん
+              ("何と言", "なんと言"), ("何階", "なんがい"),
+              ("お手数", "おてすう"),  # the engine says おてかず
+              ("果物狩り", "くだものがり"), ("ぶどう狩り", "ぶどうがり"), ("ぶどう畑", "ぶどうばたけ"),  # it drops the rendaku
+              ("日本", "にほん")]  # the engine sometimes says にっぽん; the furigana shows にほん
 
 
 def _for_engine(text: str) -> str:

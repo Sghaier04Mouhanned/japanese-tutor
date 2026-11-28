@@ -2797,6 +2797,220 @@ PASSAGES: list[dict] = [
             {"word": "翌日", "reading": "よくじつ", "meaning": "the next day"},
         ],
     },
+    {
+        "id": "n3-r22",
+        "title": "Swapping a shift",
+        "jp_title": "アルバイトの交代",
+        "kind": "Short passage",
+        "minutes": 3,
+        "text": [
+            "山下さん",
+            "お疲れさまです。リンです。\n"
+            "来週の土曜日のアルバイトのことですが、大学の試験が入ってしまい、出られなくなりました。申し訳ありません。",
+            "その日が休みの田村さんに聞いてみたところ、代わりに出てくれることになりました。そのかわり、わたしは、田村さんが入る予定だった"
+            "再来週の日曜日に出ます。店長には、わたしから今日中に連絡しておきます。よろしくお願いします。",
+            "リン",
+        ],
+        "en": [
+            "Ms Yamashita,",
+            "Hello, it's Lin.\n"
+            "About my shift next Saturday: I've got a university exam that day, so I can't work. I'm sorry.",
+            "I asked Mr Tamura, who has that day off, and he's agreed to work instead of me. In return, I'll work the Sunday after "
+            "next, when he was due to work. I'll tell the manager myself today. Thank you.",
+            "Lin",
+        ],
+        "questions": [
+            {
+                "q": "リンさんは、このあと何をしますか。",
+                "choices": [
+                    "田村さんに、土曜日に出られるか聞く。",
+                    "店長に、田村さんと交代することを伝える。",
+                    "来週の土曜日に、アルバイトに出る。",
+                    "再来週の日曜日に、試験を受ける。",
+                ],
+                "answer": 1,
+                "why": "店長には、わたしから今日中に連絡しておきます. She has already asked Tamura (聞いてみたところ), she can't "
+                       "work on Saturday, and the Sunday after next is a shift, not the exam.",
+            },
+        ],
+        "vocab": [
+            {"word": "代わりに", "reading": "かわりに", "meaning": "instead (of someone)"},
+            {"word": "再来週", "reading": "さらいしゅう", "meaning": "the week after next"},
+            {"word": "今日中", "reading": "きょうじゅう", "meaning": "some time today, by the end of today"},
+            {"word": "交代", "reading": "こうたい", "meaning": "swapping, taking turns"},
+        ],
+    },
+    {
+        "id": "n3-r23",
+        "title": "Food in season",
+        "jp_title": "旬の野菜",
+        "kind": "Medium passage",
+        "minutes": 6,
+        "text": [
+            "最近は、スーパーに行けば、一年中いろいろな野菜や果物が手に入る。冬でもトマトやきゅうりが並んでいるし、夏にみかんを見かけることもある。"
+            "便利になったものだと思う。",
+            "しかし、わたしの祖母は「野菜は旬のものを食べなさい」とよく言っていた。旬とは、その食べ物がいちばんおいしい季節のことだ。"
+            "旬の野菜は味が濃く、栄養も多いと言われている。それに、たくさんとれるので、値段も安い。",
+            "季節に関係なく何でも買えるのはありがたいが、そのせいで、わたしたちは季節を感じる機会を失っているのかもしれない。"
+            "これからは、店で旬の野菜を探して、季節の味を楽しんでみたいと思う。",
+        ],
+        "en": [
+            "These days, if you go to the supermarket, you can get all kinds of vegetables and fruit all year round. Tomatoes and "
+            "cucumbers are on the shelves even in winter, and you sometimes see mandarins in summer. Things have certainly become "
+            "convenient.",
+            "But my grandmother often used to say, \"Eat vegetables that are in season.\" A food's season (shun) is the time of "
+            "year when it tastes best. Vegetables in season are said to have a richer taste and more nutrients. And because so "
+            "many are harvested, they're cheap too.",
+            "Being able to buy anything whatever the season is welcome, but because of it, we may be losing chances to feel the "
+            "seasons. From now on, I'd like to look for vegetables in season at the shop and enjoy the taste of each season.",
+        ],
+        "questions": [
+            {
+                "q": "「旬」とは、何のことか。",
+                "choices": [
+                    "一年中とれる野菜のこと",
+                    "食べ物がいちばんおいしい季節のこと",
+                    "値段がいちばん高い季節のこと",
+                    "祖母が育てた野菜のこと",
+                ],
+                "answer": 1,
+                "why": "旬とは、その食べ物がいちばんおいしい季節のことだ. The passage defines it directly.",
+            },
+            {
+                "q": "旬の野菜について、正しいものはどれか。",
+                "choices": [
+                    "味は薄いが、栄養が多い。",
+                    "たくさんとれるので、安く買える。",
+                    "冬にしか手に入らない。",
+                    "スーパーでは売っていない。",
+                ],
+                "answer": 1,
+                "why": "たくさんとれるので、値段も安い. Their taste is rich (味が濃く), not weak.",
+            },
+            {
+                "q": "筆者は、これからどうしたいと考えているか。",
+                "choices": [
+                    "一年中、同じ野菜を食べたい。",
+                    "祖母に、野菜の育て方を習いたい。",
+                    "旬の野菜を選んで、季節の味を楽しみたい。",
+                    "スーパーで買い物をするのをやめたい。",
+                ],
+                "answer": 2,
+                "why": "店で旬の野菜を探して、季節の味を楽しんでみたい. She still shops, just choosing what's in season.",
+            },
+        ],
+        "vocab": [
+            {"word": "手に入る", "reading": "てにはいる", "meaning": "to get, obtain"},
+            {"word": "旬", "reading": "しゅん", "meaning": "(food) in season"},
+            {"word": "濃い", "reading": "こい", "meaning": "rich, strong (taste)"},
+            {"word": "栄養", "reading": "えいよう", "meaning": "nutrition"},
+            {"word": "機会", "reading": "きかい", "meaning": "chance, opportunity"},
+        ],
+    },
+    {
+        "id": "n3-r24",
+        "title": "Removal prices",
+        "jp_title": "引っ越しの料金",
+        "kind": "Information search",
+        "minutes": 5,
+        "text": [
+            "さくら引っ越しセンター　料金のご案内",
+            "◆単身プラン（荷物が少ない方）\n・同じ市内　25,000円\n・県外　45,000円",
+            "◆家族プラン（2〜4人）\n・同じ市内　60,000円\n・県外　100,000円",
+            "◆オプション\n・エアコンの取り外し・取り付け　1台10,000円\n・荷造り（荷物を箱に詰める作業）　15,000円",
+            "※土曜日・日曜日・祝日は、プランの料金が2割高くなります。（オプションの料金は変わりません）\n"
+            "※平日の午後（1時以降）に作業を始める場合は、5,000円引きになります。",
+        ],
+        "en": [
+            "Sakura Removals: prices",
+            "Single plan (for people with few belongings)\n- Within the same city: 25,000 yen\n- To another prefecture: 45,000 yen",
+            "Family plan (2 to 4 people)\n- Within the same city: 60,000 yen\n- To another prefecture: 100,000 yen",
+            "Options\n- Removing and refitting an air conditioner: 10,000 yen per unit\n- Packing (putting your things into boxes): "
+            "15,000 yen",
+            "* On Saturdays, Sundays and public holidays, the plan price is 20% higher. (Option prices stay the same.)\n"
+            "* If work starts on a weekday afternoon (from 1 pm), there's 5,000 yen off.",
+        ],
+        "questions": [
+            {
+                "q": "一人暮らしのグエンさんは、同じ市内に引っ越します。平日の午前に、エアコン1台の取り外しと取り付けも頼むつもりです。"
+                     "料金はいくらですか。",
+                "choices": ["25,000円", "30,000円", "35,000円", "40,000円"],
+                "answer": 2,
+                "why": "Single plan in the same city, 25,000 yen, plus 10,000 yen for one air conditioner. A weekday morning gets no "
+                       "surcharge and no afternoon discount.",
+            },
+            {
+                "q": "家族3人の木村さんは、県外に引っ越します。日曜日に引っ越して、荷造りも頼みます。料金はいくらですか。",
+                "choices": ["120,000円", "135,000円", "115,000円", "138,000円"],
+                "answer": 1,
+                "why": "Family plan to another prefecture is 100,000 yen, 20% more on a Sunday (120,000), plus packing at the usual "
+                       "15,000 yen, because options don't go up.",
+            },
+        ],
+        "vocab": [
+            {"word": "単身", "reading": "たんしん", "meaning": "single, living alone"},
+            {"word": "県外", "reading": "けんがい", "meaning": "outside the prefecture"},
+            {"word": "取り外し", "reading": "とりはずし", "meaning": "removal, taking off"},
+            {"word": "荷造り", "reading": "にづくり", "meaning": "packing"},
+            {"word": "割", "reading": "わり", "meaning": "ten percent"},
+        ],
+    },
+    {
+        "id": "n3-r25",
+        "title": "A café job advert",
+        "jp_title": "アルバイト募集",
+        "kind": "Information search",
+        "minutes": 5,
+        "text": [
+            "アルバイト募集　カフェ・ミドリ",
+            "◆仕事の内容\nキッチンでの調理、またはホールでの接客",
+            "◆時間\n・朝　7:00〜11:00\n・昼　11:00〜16:00\n・夜　16:00〜22:00\n※週3日以上、1日4時間以上働ける方",
+            "◆時給\n・1,100円（夜は1,250円）\n・高校生は、朝と夜は働けません。昼のみ、時給1,000円です。",
+            "◆応募方法\nお店に電話をしてから、履歴書を持って来てください。\n電話：03-1234-5678（受付　14:00〜17:00）",
+        ],
+        "en": [
+            "Part-time staff wanted: Café Midori",
+            "The work\nCooking in the kitchen, or serving customers in the dining area",
+            "Hours\n- Morning: 7:00 to 11:00\n- Daytime: 11:00 to 16:00\n- Evening: 16:00 to 22:00\n"
+            "* For people who can work at least 3 days a week and at least 4 hours a day",
+            "Hourly pay\n- 1,100 yen (1,250 yen in the evening)\n- High school students can't work mornings or evenings. "
+            "Daytime only, at 1,000 yen an hour.",
+            "How to apply\nPhone the café first, then bring your CV.\nPhone: 03-1234-5678 (calls taken 14:00 to 17:00)",
+        ],
+        "questions": [
+            {
+                "q": "次の人のうち、このカフェで働けるのは誰ですか。",
+                "choices": [
+                    "月曜日と水曜日だけ、夜に働きたい大学生",
+                    "週4日、朝7時から9時まで働きたい会社員",
+                    "週3日、夜に働きたい高校生",
+                    "金曜日と土曜日と日曜日、昼に働きたい大学生",
+                ],
+                "answer": 3,
+                "why": "Three days of daytime shifts (5 hours each) meets both conditions. Two days is too few, 7 to 9 is only 2 "
+                       "hours, and high school students can't work evenings.",
+            },
+            {
+                "q": "応募したい人は、まず何をしなければなりませんか。",
+                "choices": [
+                    "履歴書を郵便で送る。",
+                    "午後2時から5時の間に、お店に電話する。",
+                    "履歴書を持って、すぐにお店に行く。",
+                    "お店のホームページから申し込む。",
+                ],
+                "answer": 1,
+                "why": "お店に電話をしてから、履歴書を持って来てください, and calls are taken from 14:00 to 17:00. The CV comes "
+                       "after the call.",
+            },
+        ],
+        "vocab": [
+            {"word": "募集", "reading": "ぼしゅう", "meaning": "recruitment, call for applicants"},
+            {"word": "接客", "reading": "せっきゃく", "meaning": "serving customers"},
+            {"word": "時給", "reading": "じきゅう", "meaning": "hourly wage"},
+            {"word": "履歴書", "reading": "りれきしょ", "meaning": "CV, résumé"},
+            {"word": "応募", "reading": "おうぼ", "meaning": "applying"},
+        ],
+    },
     # ------------------------------------------------------------------ N2
     {
         "id": "n2-r01",
@@ -3932,6 +4146,215 @@ PASSAGES: list[dict] = [
             {"word": "ふと", "reading": "ふと", "meaning": "suddenly, by chance"},
         ],
     },
+    {
+        "id": "n2-r21",
+        "title": "Pool closed for repairs",
+        "jp_title": "プール改修工事のお知らせ",
+        "kind": "Short passage",
+        "minutes": 3,
+        "text": [
+            "会員の皆様へ",
+            "いつもスポーツクラブ・アオバをご利用いただき、ありがとうございます。\n"
+            "当クラブでは、設備の老朽化に伴い、3月1日から3月20日まで、プールの改修工事を行います。工事期間中、プールはご利用いただけませんが、"
+            "トレーニングルームとスタジオは通常どおり営業いたします。",
+            "なお、プールのみをご利用の「スイム会員」の方につきましては、工事期間中の会費を半額とさせていただきます。手続きは不要です。\n"
+            "ご不便をおかけしますが、ご理解のほどよろしくお願いいたします。",
+        ],
+        "en": [
+            "To all members,",
+            "Thank you for using Aoba Sports Club.\n"
+            "Because our facilities are ageing, we will be renovating the pool from 1 to 20 March. The pool can't be used during "
+            "the work, but the training room and studios will be open as usual.",
+            "Members on the pool-only \"Swim\" membership will pay half their fee for the period of the work. You don't need to do "
+            "anything.\n"
+            "We apologise for the inconvenience and thank you for your understanding.",
+        ],
+        "questions": [
+            {
+                "q": "このお知らせからわかることは何か。",
+                "choices": [
+                    "3月の間は、クラブ全体が休みになる。",
+                    "工事期間中も、トレーニングルームは使える。",
+                    "スイム会員は、会費を半額にするために手続きをしなければならない。",
+                    "工事が終わるまで、スタジオのレッスンは中止になる。",
+                ],
+                "answer": 1,
+                "why": "トレーニングルームとスタジオは通常どおり営業いたします. Only the pool closes, and the half fee needs no "
+                       "procedure (手続きは不要).",
+            },
+        ],
+        "vocab": [
+            {"word": "老朽化", "reading": "ろうきゅうか", "meaning": "ageing, deterioration"},
+            {"word": "改修", "reading": "かいしゅう", "meaning": "renovation, repair"},
+            {"word": "通常", "reading": "つうじょう", "meaning": "usual, normal"},
+            {"word": "会費", "reading": "かいひ", "meaning": "membership fee"},
+            {"word": "手続き", "reading": "てつづき", "meaning": "procedure, paperwork"},
+        ],
+    },
+    {
+        "id": "n2-r22",
+        "title": "Relying on others",
+        "jp_title": "人に頼ること",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "人に頼ることを苦手とする人は多い。迷惑をかけたくない、自分の弱さを見せたくないという気持ちがあるのだろう。",
+            "しかし、頼られた側は、案外うれしいものである。自分が必要とされていると感じられるからだ。一人で抱え込んで結局うまくいかないよりも、"
+            "早めに助けを求めるほうが、相手にとっても自分にとってもよい結果になることが多い。上手に頼ることも、一つの能力なのだ。",
+        ],
+        "en": [
+            "Many people find it hard to rely on others. Perhaps they don't want to be a bother, or don't want to show their "
+            "weakness.",
+            "But the person relied on is often surprisingly pleased, because they feel needed. Rather than taking everything on "
+            "alone and having it go wrong in the end, asking for help early often leads to a better result for both sides. "
+            "Knowing how to rely on others well is a skill too.",
+        ],
+        "questions": [
+            {
+                "q": "筆者の考えに合うものはどれか。",
+                "choices": [
+                    "人に迷惑をかけないように、何でも自分でするべきだ。",
+                    "人に頼まれると、多くの人は迷惑に感じる。",
+                    "必要なときに人に助けを求めることは、悪いことではない。",
+                    "弱さを見せない人ほど、能力が高い。",
+                ],
+                "answer": 2,
+                "why": "早めに助けを求めるほうが…よい結果になる, and 上手に頼ることも、一つの能力. Choice 2 is the opposite of "
+                       "頼られた側は、案外うれしい.",
+            },
+        ],
+        "vocab": [
+            {"word": "頼る", "reading": "たよる", "meaning": "to rely on"},
+            {"word": "迷惑", "reading": "めいわく", "meaning": "trouble, bother"},
+            {"word": "案外", "reading": "あんがい", "meaning": "unexpectedly, surprisingly"},
+            {"word": "抱え込む", "reading": "かかえこむ", "meaning": "to take on by yourself"},
+            {"word": "求める", "reading": "もとめる", "meaning": "to ask for, seek"},
+        ],
+    },
+    {
+        "id": "n2-r23",
+        "title": "Mending things",
+        "jp_title": "直して使う",
+        "kind": "Medium passage",
+        "minutes": 7,
+        "text": [
+            "先日、十年以上使っているかばんの持ち手が切れてしまった。新しいものを買おうかとも考えたが、近所の修理店に持っていくと、"
+            "三千円ほどで直してもらえた。戻ってきたかばんは、以前より丈夫になったようにさえ感じられた。",
+            "今の時代、物は壊れたら買い替えるのが当たり前になっている。修理するより新品を買ったほうが安い場合も多く、それ自体を責めることは"
+            "できないだろう。しかし、買い替えるたびに、まだ使える部分まで捨てていることを考えると、もったいないという気持ちにならずにはいられない。",
+            "直しながら使い続けることには、お金以上の価値があると思う。長く使った物には、その分だけ思い出が詰まっている。修理をすれば、"
+            "その思い出ごと、物を次の時間へとつないでいくことができるのだ。",
+        ],
+        "en": [
+            "The other day, the handle of a bag I've used for over ten years broke. I thought about buying a new one, but when I "
+            "took it to a repair shop nearby, they fixed it for about 3,000 yen. The bag that came back even felt sturdier than "
+            "before.",
+            "Nowadays it's normal to replace things when they break. Buying new is often cheaper than repairing, so you can't "
+            "really blame people for it. But when I think that each time we replace something we throw away parts that still "
+            "work, I can't help feeling it's a waste.",
+            "I think using things and mending them as you go has a value beyond money. Something you've used for a long time is "
+            "full of memories, as many as the years. By repairing it, you can carry it, memories and all, on into the future.",
+        ],
+        "questions": [
+            {
+                "q": "筆者がかばんを修理に出して感じたことは何か。",
+                "choices": [
+                    "修理代が、思ったより高かった。",
+                    "前より丈夫になったように思えた。",
+                    "新しいかばんを買えばよかった。",
+                    "持ち手の色が変わってしまった。",
+                ],
+                "answer": 1,
+                "why": "以前より丈夫になったようにさえ感じられた. Nothing suggests the price was too high.",
+            },
+            {
+                "q": "物を買い替えることについて、筆者はどう考えているか。",
+                "choices": [
+                    "安いのだから、買い替えるのは当然で、何も問題はない。",
+                    "買い替える人を、厳しく責めるべきだ。",
+                    "仕方がない面もあるが、使える部分まで捨てるのはもったいない。",
+                    "修理より高いので、買い替えるべきではない。",
+                ],
+                "answer": 2,
+                "why": "責めることはできないだろう (it's understandable), but もったいないという気持ちにならずにはいられない. "
+                       "New is often cheaper, so choice 4 has it backwards.",
+            },
+            {
+                "q": "筆者が最も言いたいことは何か。",
+                "choices": [
+                    "物を修理すると、思い出とともに長く使い続けられる。",
+                    "修理店は、もっと料金を安くするべきだ。",
+                    "古い物より、新しい物のほうが思い出が多い。",
+                    "物は、壊れる前に買い替えたほうがいい。",
+                ],
+                "answer": 0,
+                "why": "The last paragraph: 修理をすれば、その思い出ごと、物を次の時間へとつないでいくことができる.",
+            },
+        ],
+        "vocab": [
+            {"word": "持ち手", "reading": "もちて", "meaning": "handle"},
+            {"word": "丈夫", "reading": "じょうぶ", "meaning": "sturdy, strong"},
+            {"word": "買い替える", "reading": "かいかえる", "meaning": "to replace (with a new one)"},
+            {"word": "責める", "reading": "せめる", "meaning": "to blame"},
+            {"word": "もったいない", "reading": "もったいない", "meaning": "wasteful, a shame to waste"},
+            {"word": "詰まる", "reading": "つまる", "meaning": "to be packed, full"},
+        ],
+    },
+    {
+        "id": "n2-r24",
+        "title": "Allotments for rent",
+        "jp_title": "市民農園　利用者募集",
+        "kind": "Information search",
+        "minutes": 6,
+        "text": [
+            "みどり市　市民農園　利用者募集",
+            "◆区画と利用料（1年間）\n・A区画（10平方メートル）　6,000円\n・B区画（20平方メートル）　10,000円\n"
+            "・C区画（20平方メートル・水道付き）　14,000円",
+            "◆申し込みできる方\n・市内に住んでいる方、または市内の会社・学校に通っている方\n・1世帯につき1区画まで",
+            "◆申し込み方法\n・2月1日〜2月14日に、市役所の窓口か市のホームページで申し込んでください。\n"
+            "・申し込みが多い場合は、抽選になります。結果は2月末までにお知らせします。",
+            "◆その他\n・利用期間は、4月1日から翌年3月31日までです。\n・市内に住む65歳以上の方は、利用料が半額になります。",
+        ],
+        "en": [
+            "Midori City allotments: gardeners wanted",
+            "Plots and fees (for one year)\n- Plot A (10 m²): 6,000 yen\n- Plot B (20 m²): 10,000 yen\n"
+            "- Plot C (20 m², with a water tap): 14,000 yen",
+            "Who can apply\n- People living in the city, or working or studying at a company or school in the city\n"
+            "- Up to one plot per household",
+            "How to apply\n- Apply between 1 and 14 February at the city hall counter or on the city website.\n"
+            "- If there are many applications, there will be a draw. We'll tell you the result by the end of February.",
+            "Other\n- Plots are rented from 1 April to 31 March the following year.\n"
+            "- City residents aged 65 or over pay half the fee.",
+        ],
+        "questions": [
+            {
+                "q": "隣の市に住んでいて、みどり市の会社に勤めている山田さん（40歳）は、水道付きの区画を借りたい。利用料はいくらか。",
+                "choices": ["6,000円", "7,000円", "10,000円", "14,000円"],
+                "answer": 3,
+                "why": "Working in the city is enough to apply, and the plot with a tap is C, 14,000 yen. The half price is only for "
+                       "residents of 65 or over.",
+            },
+            {
+                "q": "みどり市に住む70歳の佐藤さんは、20平方メートルの区画を借りたいが、水道は必要ない。正しいものはどれか。",
+                "choices": [
+                    "2月中なら、いつでも申し込める。",
+                    "利用料は5,000円で、抽選になることもある。",
+                    "妻の分と合わせて、2区画申し込める。",
+                    "利用料は10,000円で、必ず借りられる。",
+                ],
+                "answer": 1,
+                "why": "Plot B is 10,000 yen, half for a resident over 65, so 5,000 yen, and a draw is possible. Applications close "
+                       "on 14 February, and it's one plot per household.",
+            },
+        ],
+        "vocab": [
+            {"word": "区画", "reading": "くかく", "meaning": "plot, section"},
+            {"word": "世帯", "reading": "せたい", "meaning": "household"},
+            {"word": "窓口", "reading": "まどぐち", "meaning": "counter, window"},
+            {"word": "抽選", "reading": "ちゅうせん", "meaning": "draw, lottery"},
+            {"word": "翌年", "reading": "よくねん", "meaning": "the following year"},
+        ],
+    },
     # ------------------------------------------------------------------ N1
     {
         "id": "n1-r01",
@@ -4614,6 +5037,442 @@ PASSAGES: list[dict] = [
             {"word": "向き合う", "reading": "むきあう", "meaning": "to face, confront"},
             {"word": "抱える", "reading": "かかえる", "meaning": "to hold, carry"},
             {"word": "見直す", "reading": "みなおす", "meaning": "to reconsider, see in a new light"},
+        ],
+    },
+    {
+        "id": "n1-r13",
+        "title": "New hall fees",
+        "jp_title": "施設利用料金の改定について",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "市民各位",
+            "平素より市民文化会館をご利用いただき、誠にありがとうございます。\n"
+            "近年の光熱費の高騰を受け、当館では来年4月1日より、ホールおよび会議室の利用料金を改定させていただくこととなりました。"
+            "改定後の料金は、市のホームページに掲載しております。",
+            "なお、本年度中にお申し込みいただいた分につきましては、ご利用日が改定後であっても、現行の料金を適用いたします。\n"
+            "何卒ご理解賜りますよう、お願い申し上げます。",
+        ],
+        "en": [
+            "To all residents,",
+            "Thank you for your continued use of the Civic Cultural Hall.\n"
+            "Following the steep rise in energy costs in recent years, the hall will revise its fees for the main hall and meeting "
+            "rooms from 1 April next year. The new fees are posted on the city website.",
+            "Bookings made within this financial year will be charged at the current fees, even if the date of use falls after "
+            "the change.\n"
+            "We kindly ask for your understanding.",
+        ],
+        "questions": [
+            {
+                "q": "この文書の内容と合うものはどれか。",
+                "choices": [
+                    "4月1日以降の利用は、申し込みの時期にかかわらず新しい料金になる。",
+                    "本年度中に申し込めば、4月以降の利用でも今の料金で使える。",
+                    "料金の改定は、会議室だけが対象である。",
+                    "新しい料金は、窓口でしか確認できない。",
+                ],
+                "answer": 1,
+                "why": "本年度中にお申し込みいただいた分…ご利用日が改定後であっても、現行の料金を適用. Both the hall and meeting "
+                       "rooms change, and the new fees are online.",
+            },
+        ],
+        "vocab": [
+            {"word": "平素", "reading": "へいそ", "meaning": "always, ordinarily (formal)"},
+            {"word": "高騰", "reading": "こうとう", "meaning": "sharp rise (in prices)"},
+            {"word": "改定", "reading": "かいてい", "meaning": "revision (of a rule or price)"},
+            {"word": "掲載", "reading": "けいさい", "meaning": "posting, publishing"},
+            {"word": "現行", "reading": "げんこう", "meaning": "current, existing"},
+            {"word": "適用", "reading": "てきよう", "meaning": "applying (a rule)"},
+        ],
+    },
+    {
+        "id": "n1-r14",
+        "title": "In praise of boredom",
+        "jp_title": "退屈の効用",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "スマートフォンが普及してから、私たちは退屈する時間をほとんど持たなくなった。電車を待つ数分間でさえ、画面を眺めていれば過ぎていく。",
+            "だが、退屈とは、本当に取り除くべきものなのだろうか。何もすることがない時間にこそ、人はとりとめもなく考えを巡らせ、"
+            "思いがけない発想に行き着くことがある。暇を埋めることに慣れきった私たちは、その貴重な機会を、自ら手放しているのかもしれない。",
+        ],
+        "en": [
+            "Since smartphones became widespread, we've hardly had any time to be bored. Even the few minutes waiting for a train "
+            "pass as we look at a screen.",
+            "But is boredom really something to get rid of? It's precisely when there's nothing to do that people let their "
+            "thoughts wander aimlessly and sometimes arrive at unexpected ideas. Having grown so used to filling every spare "
+            "moment, we may be giving up that precious chance ourselves.",
+        ],
+        "questions": [
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "退屈な時間は無駄なので、できるだけ減らすべきだ。",
+                    "退屈な時間は、新しい考えが生まれるきっかけになりうる。",
+                    "スマートフォンを使えば、よい発想が得られる。",
+                    "電車を待つ時間には、本を読むべきだ。",
+                ],
+                "answer": 1,
+                "why": "何もすることがない時間にこそ…思いがけない発想に行き着く. The writer questions removing boredom, so "
+                       "choice 1 is the view being challenged.",
+            },
+        ],
+        "vocab": [
+            {"word": "普及", "reading": "ふきゅう", "meaning": "spreading, becoming widespread"},
+            {"word": "退屈", "reading": "たいくつ", "meaning": "boredom"},
+            {"word": "巡らせる", "reading": "めぐらせる", "meaning": "to turn over (in your mind)"},
+            {"word": "発想", "reading": "はっそう", "meaning": "idea, way of thinking"},
+            {"word": "行き着く", "reading": "いきつく", "meaning": "to arrive at, end up at"},
+            {"word": "手放す", "reading": "てばなす", "meaning": "to let go of, give up"},
+        ],
+    },
+    {
+        "id": "n1-r15",
+        "title": "A product recall",
+        "jp_title": "製品交換のお知らせ",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "お客様各位",
+            "弊社が販売しております加湿器「HM-50」の一部におきまして、長期間ご使用いただいた場合に、電源コードの付け根部分が過熱する"
+            "おそれがあることが判明いたしました。",
+            "つきましては、製造番号が「A」で始まる製品を対象に、無償で新しい製品と交換させていただきます。お手数ですが、製品底面の製造番号を"
+            "ご確認のうえ、下記の窓口までご連絡ください。対象製品をお持ちの方は、交換品がお手元に届くまで、ご使用をお控えください。\n"
+            "ご迷惑をおかけしますことを、深くお詫び申し上げます。",
+        ],
+        "en": [
+            "To our customers,",
+            "We have found that in some of the HM-50 humidifiers sold by our company, the base of the power cord may overheat "
+            "after long use.",
+            "We will therefore replace products whose serial number begins with \"A\" with new ones free of charge. We're sorry "
+            "for the trouble, but please check the serial number on the bottom of the product and contact the office below. If "
+            "you have an affected product, please don't use it until the replacement reaches you.\n"
+            "We sincerely apologise for the inconvenience.",
+        ],
+        "questions": [
+            {
+                "q": "製造番号が「A」で始まる製品を持っている人は、どうすればよいか。",
+                "choices": [
+                    "製品を、すぐに販売店に持っていく。",
+                    "窓口に連絡し、新しい製品が届くまで使用をやめる。",
+                    "電源コードを自分で交換してから使う。",
+                    "修理代を払って、製品を修理してもらう。",
+                ],
+                "answer": 1,
+                "why": "下記の窓口までご連絡ください, and 交換品がお手元に届くまで、ご使用をお控えください. The exchange is "
+                       "free (無償).",
+            },
+        ],
+        "vocab": [
+            {"word": "弊社", "reading": "へいしゃ", "meaning": "our company (humble)"},
+            {"word": "過熱", "reading": "かねつ", "meaning": "overheating"},
+            {"word": "判明", "reading": "はんめい", "meaning": "becoming clear, being found"},
+            {"word": "無償", "reading": "むしょう", "meaning": "free of charge"},
+            {"word": "控える", "reading": "ひかえる", "meaning": "to refrain from"},
+            {"word": "詫びる", "reading": "わびる", "meaning": "to apologise"},
+        ],
+    },
+    {
+        "id": "n1-r16",
+        "title": "Comfortable silence",
+        "jp_title": "沈黙",
+        "kind": "Short passage",
+        "minutes": 4,
+        "text": [
+            "会話の途中で沈黙が訪れると、多くの人は気まずさを覚え、何とか言葉で埋めようとする。沈黙は、会話がうまくいっていない証拠だと"
+            "考えられがちだからだ。",
+            "しかし、信頼し合っている者どうしであれば、沈黙はむしろ心地よいものになりうる。無理に話題を探さずとも、同じ時間を共有しているという"
+            "安心感があるからだ。沈黙を恐れなくなったとき、人と人との関係は一段深まったと言えるのかもしれない。",
+        ],
+        "en": [
+            "When a silence falls in the middle of a conversation, most people feel awkward and try somehow to fill it with "
+            "words. That's because silence tends to be seen as proof that the conversation isn't going well.",
+            "But between people who trust each other, silence can actually be pleasant. Even without forcing yourself to find a "
+            "topic, there's the reassurance of sharing the same time. Perhaps when we stop fearing silence, a relationship can "
+            "be said to have deepened a step.",
+        ],
+        "questions": [
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "沈黙は、会話が失敗している証拠である。",
+                    "信頼関係があれば、沈黙も心地よく感じられる。",
+                    "沈黙が続かないように、話題を準備しておくべきだ。",
+                    "親しい人とは、沈黙せずに話し続けるほうがいい。",
+                ],
+                "answer": 1,
+                "why": "信頼し合っている者どうしであれば、沈黙はむしろ心地よいものになりうる. Choice 1 is the common view the "
+                       "writer argues against (考えられがち).",
+            },
+        ],
+        "vocab": [
+            {"word": "沈黙", "reading": "ちんもく", "meaning": "silence"},
+            {"word": "気まずい", "reading": "きまずい", "meaning": "awkward"},
+            {"word": "証拠", "reading": "しょうこ", "meaning": "proof, evidence"},
+            {"word": "心地よい", "reading": "ここちよい", "meaning": "pleasant, comfortable"},
+            {"word": "共有", "reading": "きょうゆう", "meaning": "sharing"},
+            {"word": "深まる", "reading": "ふかまる", "meaning": "to deepen"},
+        ],
+    },
+    {
+        "id": "n1-r17",
+        "title": "Tourists and the people who live there",
+        "jp_title": "観光と地域の暮らし",
+        "kind": "Medium passage",
+        "minutes": 8,
+        "text": [
+            "ある港町が、テレビで紹介されたのをきっかけに、一躍人気の観光地となった。週末ともなれば、狭い路地に観光客があふれ、写真を撮るために"
+            "民家の敷地に入り込む人まで現れた。町の商店は潤ったものの、住民の間には疲れの色が見え始めている。",
+            "観光客の増加は、地域経済にとって確かに歓迎すべきことである。人口が減り続ける地方の町にとって、外から人が訪れることは、数少ない"
+            "活性化の手段だと言ってよい。だからといって、そこに暮らす人々の生活が損なわれてよいはずはない。住民が町を離れてしまえば、"
+            "観光客を引きつけていた町の魅力そのものが失われてしまうからだ。",
+            "必要なのは、観光客を拒むことではなく、受け入れ方を工夫することだろう。訪問できる時間帯や場所を定める、混雑の状況を事前に知らせるなど、"
+            "方法はいくらでもある。観光とは本来、その土地の暮らしに触れることである。訪れる側もまた、自分が他人の生活の場に足を踏み入れている"
+            "という意識を持つべきではないだろうか。",
+        ],
+        "en": [
+            "After being featured on TV, a certain port town suddenly became a popular tourist spot. At weekends its narrow alleys "
+            "overflow with tourists, and some have even walked onto private property to take photos. The town's shops have "
+            "profited, but signs of weariness are beginning to show among residents.",
+            "More tourists are certainly welcome for the local economy. For a rural town whose population keeps falling, people "
+            "visiting from outside is one of the few ways to revitalise it. Even so, that can't justify harming the lives of "
+            "the people who live there. If residents leave, the very charm of the town that drew tourists will be lost.",
+            "What's needed is not to turn tourists away but to find better ways of receiving them. Setting the times and places "
+            "people can visit, or letting them know in advance how crowded it is: there are any number of ways. Tourism is "
+            "really about touching the life of a place. Shouldn't visitors, too, be aware that they're stepping into the place "
+            "where other people live?",
+        ],
+        "questions": [
+            {
+                "q": "港町で起きていることとして、本文に合うものはどれか。",
+                "choices": [
+                    "観光客が減り、商店の売り上げが落ちている。",
+                    "観光客が増え、住民の生活に負担がかかっている。",
+                    "住民が観光客のために、新しい路地を作った。",
+                    "テレビ局が、観光客の数を制限している。",
+                ],
+                "answer": 1,
+                "why": "路地に観光客があふれ…住民の間には疲れの色が見え始めている. The shops are doing well (潤った).",
+            },
+            {
+                "q": "筆者が、住民の生活を守るべきだと考える理由は何か。",
+                "choices": [
+                    "住民がいなくなると、町の魅力自体がなくなるから。",
+                    "観光は、地域経済の役に立たないから。",
+                    "住民は、観光客に来てほしくないと考えているから。",
+                    "観光客が増えると、人口がさらに減るから。",
+                ],
+                "answer": 0,
+                "why": "住民が町を離れてしまえば、観光客を引きつけていた町の魅力そのものが失われてしまうからだ. The writer "
+                       "calls tourism welcome for the economy.",
+            },
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "住民を守るために、観光客を受け入れるべきではない。",
+                    "観光地は、住民の生活より経済を優先すべきだ。",
+                    "受け入れ方を工夫し、訪れる側も住民の生活に配慮すべきだ。",
+                    "混雑を避けるため、観光はテレビで楽しむべきだ。",
+                ],
+                "answer": 2,
+                "why": "観光客を拒むことではなく、受け入れ方を工夫すること, and visitors should be aware they're entering others' "
+                       "living space.",
+            },
+        ],
+        "vocab": [
+            {"word": "一躍", "reading": "いちやく", "meaning": "suddenly, at a stroke"},
+            {"word": "路地", "reading": "ろじ", "meaning": "alley, lane"},
+            {"word": "敷地", "reading": "しきち", "meaning": "grounds, property"},
+            {"word": "潤う", "reading": "うるおう", "meaning": "to profit, be enriched"},
+            {"word": "活性化", "reading": "かっせいか", "meaning": "revitalisation"},
+            {"word": "損なう", "reading": "そこなう", "meaning": "to harm, damage"},
+            {"word": "拒む", "reading": "こばむ", "meaning": "to refuse, turn away"},
+        ],
+    },
+    {
+        "id": "n1-r18",
+        "title": "Photos and memory",
+        "jp_title": "記録と記憶",
+        "kind": "Medium passage",
+        "minutes": 8,
+        "text": [
+            "旅先で美しい景色に出会うと、私たちはすぐにカメラを向ける。今やスマートフォン一つで、何百枚もの写真を気軽に残せる時代だ。"
+            "だが、帰宅後にそれらを見返すことは、意外なほど少ないのではないか。",
+            "ある心理学の実験では、博物館の展示品を写真に撮った人のほうが、ただ見て回った人よりも、展示品の細部をよく覚えていなかったという。"
+            "写真に残したという安心感から、脳が覚えておく努力を怠ってしまうのだと考えられている。記録することが、かえって記憶を妨げることが"
+            "あるのだ。",
+            "もちろん、写真には写真の価値がある。時が経ってから見返せば、忘れかけていた出来事がよみがえることもあるだろう。ただ、撮ることに"
+            "夢中になるあまり、目の前の景色そのものを味わい損ねているとしたら、本末転倒である。時にはカメラをしまい、自分の目に焼き付けることを"
+            "選んでもよいのではないだろうか。",
+        ],
+        "en": [
+            "When we come across a beautiful view on a trip, we immediately point a camera at it. These days a single smartphone "
+            "lets us keep hundreds of photos without a second thought. But don't we look back at them surprisingly rarely once "
+            "we're home?",
+            "In one psychology experiment, people who photographed museum exhibits remembered their details less well than "
+            "people who simply walked round looking. It's thought that, reassured that the photo is saved, the brain neglects "
+            "the effort of remembering. Recording can actually get in the way of remembering.",
+            "Of course, photos have their own value. Looking back at them after time has passed can bring back events we'd half "
+            "forgotten. But if we're so absorbed in taking pictures that we fail to take in the view itself, that's putting the "
+            "cart before the horse. Sometimes, couldn't we put the camera away and choose to burn the scene into our own eyes?",
+        ],
+        "questions": [
+            {
+                "q": "実験の結果について、本文の内容と合うものはどれか。",
+                "choices": [
+                    "写真を撮った人のほうが、展示品の細部をよく覚えていた。",
+                    "写真を撮らなかった人のほうが、展示品の細部をよく覚えていた。",
+                    "どちらの人も、展示品をほとんど覚えていなかった。",
+                    "写真を撮った人は、展示品を見返すことが多かった。",
+                ],
+                "answer": 1,
+                "why": "写真に撮った人のほうが…細部をよく覚えていなかった, so those who only looked remembered more.",
+            },
+            {
+                "q": "「本末転倒である」とあるが、筆者は何が本末転倒だと考えているか。",
+                "choices": [
+                    "写真を見返して、出来事を思い出すこと。",
+                    "撮影に夢中になって、景色そのものを十分に楽しめないこと。",
+                    "旅先で、写真を一枚も撮らないこと。",
+                    "帰宅してから、写真を整理すること。",
+                ],
+                "answer": 1,
+                "why": "撮ることに夢中になるあまり、目の前の景色そのものを味わい損ねているとしたら、本末転倒. Looking back at "
+                       "photos is presented as their value.",
+            },
+            {
+                "q": "筆者の考えに最も近いものはどれか。",
+                "choices": [
+                    "記憶を守るために、写真は撮らないほうがいい。",
+                    "写真を撮るなら、必ず後で見返すべきだ。",
+                    "写真の価値は認めつつも、自分の目で味わうことも大切にしたい。",
+                    "スマートフォンの写真は、カメラの写真より価値が低い。",
+                ],
+                "answer": 2,
+                "why": "写真には写真の価値がある, but 時にはカメラをしまい、自分の目に焼き付けることを選んでもよい. Not "
+                       "\"never\", only \"sometimes\".",
+            },
+        ],
+        "vocab": [
+            {"word": "見返す", "reading": "みかえす", "meaning": "to look back at"},
+            {"word": "細部", "reading": "さいぶ", "meaning": "details"},
+            {"word": "怠る", "reading": "おこたる", "meaning": "to neglect"},
+            {"word": "妨げる", "reading": "さまたげる", "meaning": "to hinder, get in the way of"},
+            {"word": "本末転倒", "reading": "ほんまつてんとう", "meaning": "putting the cart before the horse"},
+            {"word": "焼き付ける", "reading": "やきつける", "meaning": "to burn into (your memory)"},
+        ],
+    },
+    {
+        "id": "n1-r19",
+        "title": "Coworking space prices",
+        "jp_title": "コワーキングスペース　料金プラン",
+        "kind": "Information search",
+        "minutes": 7,
+        "text": [
+            "コワーキングスペース・ソラ　料金プラン",
+            "◆ドロップイン（一時利用）\n・1時間500円（1日の上限2,000円）",
+            "◆月額会員\n・平日プラン　月12,000円（平日9:00〜18:00利用可）\n・フルタイムプラン　月18,000円（毎日7:00〜23:00利用可）",
+            "◆オプション（月額会員のみ）\n・個人ロッカー　月1,500円\n・会議室　1時間1,000円（フルタイムプランの方は、月4時間まで無料）\n"
+            "・住所利用（郵便物の受け取り）　月3,000円",
+            "◆ご注意\n・月額会員の入会時には、入会金5,000円が別途必要です。\n"
+            "・学生の方は、学生証の提示により、月額料金が2割引になります。（オプション・入会金は対象外）",
+        ],
+        "en": [
+            "Sora Coworking Space: price plans",
+            "Drop-in (occasional use)\n- 500 yen an hour (up to 2,000 yen a day)",
+            "Monthly membership\n- Weekday plan: 12,000 yen a month (weekdays 9:00 to 18:00)\n"
+            "- Full-time plan: 18,000 yen a month (every day 7:00 to 23:00)",
+            "Options (monthly members only)\n- Personal locker: 1,500 yen a month\n"
+            "- Meeting room: 1,000 yen an hour (free for up to 4 hours a month on the full-time plan)\n"
+            "- Use of our address (receiving post): 3,000 yen a month",
+            "Please note\n- Monthly members pay a 5,000 yen joining fee when they sign up.\n"
+            "- Students get 20% off the monthly fee on showing a student card (options and the joining fee aren't included).",
+        ],
+        "questions": [
+            {
+                "q": "大学院生のリンさんは、フルタイムプランに入会し、個人ロッカーも借りたい。最初の月に支払う金額はいくらか。",
+                "choices": ["15,900円", "19,400円", "20,900円", "24,500円"],
+                "answer": 2,
+                "why": "18,000 yen less 20% for a student is 14,400, plus the locker at the full 1,500 and the 5,000 joining fee: "
+                       "20,900 yen.",
+            },
+            {
+                "q": "この案内の内容と合うものはどれか。",
+                "choices": [
+                    "ドロップインでも、会議室を借りることができる。",
+                    "平日プランの会員は、土曜日も利用できる。",
+                    "学生は、入会金も2割引になる。",
+                    "フルタイムプランの会員は、月4時間までなら会議室を無料で使える。",
+                ],
+                "answer": 3,
+                "why": "フルタイムプランの方は、月4時間まで無料. Options are for monthly members only, the weekday plan is "
+                       "weekdays only, and the discount excludes the joining fee.",
+            },
+        ],
+        "vocab": [
+            {"word": "上限", "reading": "じょうげん", "meaning": "upper limit, cap"},
+            {"word": "月額", "reading": "げつがく", "meaning": "monthly amount"},
+            {"word": "入会金", "reading": "にゅうかいきん", "meaning": "joining fee"},
+            {"word": "別途", "reading": "べっと", "meaning": "separately, in addition"},
+            {"word": "提示", "reading": "ていじ", "meaning": "showing, presenting"},
+            {"word": "対象外", "reading": "たいしょうがい", "meaning": "not covered, excluded"},
+        ],
+    },
+    {
+        "id": "n1-r20",
+        "title": "A four-day working week",
+        "jp_title": "週休三日制",
+        "kind": "Comparison (A/B)",
+        "minutes": 7,
+        "text": [
+            "A\n週休三日制の導入を進める企業が増えている。休日が増えれば、社員は心身を十分に休めることができ、家族との時間や自己研鑽にも"
+            "充てられる。限られた時間で成果を出そうとする意識が高まり、かえって仕事の効率が上がったという報告もある。優秀な人材を確保する"
+            "上でも、魅力的な制度だと言えよう。",
+            "B\n週休三日制の理念には共感するが、すべての職場に一律に当てはめられるものではない。顧客への対応が欠かせない業種では、休みを増やせば"
+            "その分を他の社員が補わなければならず、かえって負担が偏るおそれがある。また、勤務日数の減少に伴って給与が下がる制度であれば、"
+            "生活に不安を抱える社員も出てくるだろう。導入にあたっては、職場の実情を踏まえた慎重な検討が求められる。",
+        ],
+        "en": [
+            "A\nMore and more companies are introducing a four-day working week. With more days off, employees can rest body and "
+            "mind properly and use the time for family or self-improvement. There are also reports that people become more "
+            "focused on getting results in limited time, so efficiency actually rises. It's an attractive system for securing "
+            "talented staff, too.",
+            "B\nI sympathise with the idea behind a four-day week, but it can't be applied uniformly to every workplace. In "
+            "industries where dealing with customers is essential, more days off mean other staff must make up the difference, "
+            "and the burden may become lopsided. And if pay falls along with the number of working days, some employees will "
+            "worry about making ends meet. Introducing it calls for careful consideration based on the reality of each workplace.",
+        ],
+        "questions": [
+            {
+                "q": "週休三日制について、AとBに共通する考えはどれか。",
+                "choices": [
+                    "給与が下がるので、導入すべきではない。",
+                    "制度の考え方そのものには、よい面がある。",
+                    "どの職場でも、すぐに導入すべきだ。",
+                    "社員の負担が偏るおそれがある。",
+                ],
+                "answer": 1,
+                "why": "A calls it 魅力的な制度, and B begins 理念には共感する. The uneven burden and the pay worry are only in B.",
+            },
+            {
+                "q": "AとBは、週休三日制の導入についてどのように述べているか。",
+                "choices": [
+                    "Aは積極的に評価し、Bは職場の事情に合わせて慎重に考えるべきだとしている。",
+                    "Aは慎重な立場で、Bは積極的な立場である。",
+                    "AもBも、人材確保のために必要だとしている。",
+                    "AもBも、給与の問題を最も重視している。",
+                ],
+                "answer": 0,
+                "why": "A lists the benefits; B ends 職場の実情を踏まえた慎重な検討が求められる.",
+            },
+        ],
+        "vocab": [
+            {"word": "導入", "reading": "どうにゅう", "meaning": "introduction (of a system)"},
+            {"word": "自己研鑽", "reading": "じこけんさん", "meaning": "self-improvement"},
+            {"word": "一律", "reading": "いちりつ", "meaning": "uniformly, across the board"},
+            {"word": "補う", "reading": "おぎなう", "meaning": "to make up for"},
+            {"word": "偏る", "reading": "かたよる", "meaning": "to be lopsided, uneven"},
+            {"word": "実情", "reading": "じつじょう", "meaning": "actual situation"},
         ],
     },
 ]

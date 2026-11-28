@@ -48,7 +48,7 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
 - Vocabulary: kanji reading, spelling and word meaning from the level's word list, using kanji up to
   that level; readings never offer another valid reading as a wrong answer, spellings never offer
   a word read the same way
-- Grammar: 175 hand-written questions (`app/mock.py`, 40 for N5 and N4, 30 or more for N3 to N1) on
+- Grammar: 238 hand-written questions (`app/mock.py`, 40 for N5 and N4, 50 or more for N3 to N1) on
   the level's patterns, where only one choice fits in form or meaning, plus particle questions from
   the N5 and N4 lessons
 - Reading: two short passages, a medium one and an information search, comparison or long passage;
@@ -60,8 +60,8 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
   tests, so it's an estimate. Then every question again with the answer and explanation,
   transcripts and translations, and one click to add missed words to your reviews
 - Each new test picks the passages, listening items and grammar questions you've met least in
-  earlier mock tests (then ones you haven't practised), so N5 and N4 give 5 full tests and N3 to N1
-  give 3 before anything repeats; the level's card says how many fresh tests are left
+  earlier mock tests (then ones you haven't practised), so every level gives 5 full tests before
+  anything repeats; the level's card says how many fresh tests are left
 - `python -m app.mock` checks the grammar questions, builds sample tests and checks that each level's
   fresh tests in a row share nothing (`--readings` prints their furigana)
 
@@ -120,12 +120,14 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
 - 20 N4 passages (30 questions): memos, emails, notices, a diary entry, simple essays, a timetable,
   rubbish collection rules, part-time job ads, a lift inspection, learning to swim, station bicycle
   parking, a first part-time job, Japanese classes and bicycle hire
-- 21 hand-written N3 passages: notes, emails, notices, short essays and information-search pages,
-  with 38 JLPT-style questions in Japanese and an English explanation for every answer
-- 20 N2 passages (40 questions): formal notices and emails, opinion essays, information-search pages,
+- 25 hand-written N3 passages: notes, emails, notices, short essays and information-search pages
+  such as removal prices and a café job advert, with 46 JLPT-style questions in Japanese and an
+  English explanation for every answer
+- 24 N2 passages (47 questions): formal notices and emails, opinion essays, information-search pages,
   and A/B comparisons where two writers argue opposite sides, as in the N2 test
-- 12 N1 passages (23 questions): formal notices, dense opinion essays, a long passage with four
-  questions, an A/B comparison and an information-search page
+- 20 N1 passages (37 questions): formal notices, a product recall, dense opinion essays on boredom,
+  silence, tourism and memory, a long passage with four questions, A/B comparisons and
+  information-search pages
 - Furigana toggle; kanji beyond the passage's level keep their furigana, as on the real test
 - Tap any word to look it up; 🔊 reads each paragraph; after answering, see the translation and add
   the key words to your reviews. Scores are saved, and the dashboard counts passages read
@@ -138,12 +140,13 @@ passing the JLPT (N5, then N4, N3, N2 and N1), powered by a free AI API or a loc
 - 30 N4 items: shopping for a party, a first clinic visit, a library card, a changed meeting time, a
   noisy flat, a doctor's advice, which platform, a lost umbrella, plus utterance expressions
   (発話表現: what would you say in this situation?) and quick responses
-- 21 hand-written N3 items in the four test formats: task-based (課題理解), key point (ポイント理解),
+- 35 hand-written N3 items in the four test formats: task-based (課題理解), key point (ポイント理解),
   summary (概要理解) and quick response (即時応答)
-- 21 N2 items, adding integrated comprehension (統合理解): a staff member explains three or four
+- 35 N2 items, adding integrated comprehension (統合理解): a staff member explains three or four
   options, two people discuss them, and you work out which one they choose
-- 21 N1 items: a thesis supervision, city hall procedures, a film review, lectures on dialects and
-  failure, business and honorific quick responses, and integrated items weighing four options
+- 35 N1 items: a thesis supervision, city hall procedures, expense claims, a film review, lectures on
+  dialects, free services and forestry, business and honorific quick responses, and integrated
+  items weighing four options
 - Read by VOICEVOX with a different voice per role (narrator 九州そら, woman 春日部つむぎ, man 玄野武宏,
   staff 青山龍星);
   the clips are made before the first play so lines follow each other smoothly. Without VOICEVOX the
